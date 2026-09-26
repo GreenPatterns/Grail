@@ -91,11 +91,11 @@ source env.sh
 python code/analyze_cohort.py                    # rewrites cohort_summary.json from the 30 cohort files
 python code/analyze_common_set.py                # rewrites common_set_summary.json
 python code/make_r2_tables.py                    # rows of Table II, Table S1, the official-release and common-set tables
-python code/make_trivial_table.py                # Table S5 and the shares in Fig. 3b
+python code/make_trivial_table.py                # Table S5 and the shares in Fig. 2b
 python code/make_reputation_table.py             # Tables S3 and S4
 python code/make_stats_paragraph.py              # the Section VI statistics paragraph and Table S6
-python code/experiments/make_cohort_figure.py    # Fig. 2  -> figures/fig_cohort.pdf
-python code/experiments/make_evidence_figure.py  # Fig. 3  -> figures/fig_evidence.pdf
+python code/experiments/make_cohort_figure.py    # Fig. 3  -> figures/fig_cohort.pdf
+python code/experiments/make_evidence_figure.py  # Fig. 2  -> figures/fig_evidence.pdf
 ```
 
 The summaries and figures are written over the shipped copies in `results/unified/` and
@@ -156,7 +156,7 @@ is the naive total effect; Section IV of the paper separates its propagation-onl
 
 | Paper item | Command (prefix each with `source env.sh`) | Output in `results/unified/` | Logged time |
 |---|---|---|---|
-| Table II, Fig. 1 flip labels, Fig. 2, abstract and conclusion rates | `GRAIL_DATASETS=otc GRAIL_SEEDS=42,1,2,3,4,5,6,7,8,9 python code/experiments/run_cohort_seeds.py`, then the same with `alpha` and `edg60000`; then `python code/analyze_cohort.py`, `python code/make_r2_tables.py cohort` and `python code/experiments/make_cohort_figure.py` | `cohort/cohort_{otc,alpha,edg60000}_s{42,1..9}.json`, `cohort_summary.json` | per seed: OTC 0.3 h, Alpha 0.2 h, dated Epinions 0.9 h |
+| Table II, Fig. 1 flip labels, Fig. 3, abstract and conclusion rates | `GRAIL_DATASETS=otc GRAIL_SEEDS=42,1,2,3,4,5,6,7,8,9 python code/experiments/run_cohort_seeds.py`, then the same with `alpha` and `edg60000`; then `python code/analyze_cohort.py`, `python code/make_r2_tables.py cohort` and `python code/experiments/make_cohort_figure.py` | `cohort/cohort_{otc,alpha,edg60000}_s{42,1..9}.json`, `cohort_summary.json` | per seed: OTC 0.3 h, Alpha 0.2 h, dated Epinions 0.9 h |
 | Table I, clean AUC and MCC of the Bitcoin graphs | printed at the start of every seed-42 log, e.g. `loo_flip_table.log` | (log line) | |
 | Table I, SNAP Epinions row | one call of `experiment_common.train_model('epn30000')`; no script writes it | `epn_clean.log` (the matching `epn_clean.json` holds null values) | 0.2 h |
 | Table I, dated Epinions row | from the Section III run on `edg60000` below (`clean_perf`, `train_edges`) and `data/cyberdata/edg60000-provenance.json` | `p0_linchpin_edgfull.json` | |
@@ -165,11 +165,11 @@ is the naive total effect; Section IV of the paper separates its propagation-onl
 | Table IV, retrain rows; Table S11 | `GRAIL_DATASETS=otc,alpha GRAIL_SEEDS=42,1,2,3,4 GRAIL_NVICTIMS=24 GRAIL_POISON_PARTS=causal GRAIL_POISON_OUT=causal_retrain_s5.json python code/experiments/run_poison_matrix.py` | `causal_retrain_s5.json` | 0.1 h |
 | Table V (three-way decomposition); Section VI rank shift | `GRAIL_DATASETS=otc,alpha python code/experiments/run_stats_rigor.py` | `stats_rigor.json` (`decomp_B1`, `decomp_B5`, `decision_cost`) | 0.1 h |
 | Table VI (official releases) | Section 7 below; then `python code/make_r2_tables.py official_compact` | see Section 7 | |
-| Fig. 3a (placement signature) | `GRAIL_DATASETS=otc,alpha,epn30000 GRAIL_OUT=p0b_main.json python code/experiments/run_p0b_verify.py`; `GRAIL_DATASETS=edg60000 GRAIL_OUT=p0b_edgfull.json python code/experiments/run_p0b_verify.py`; `GRAIL_DATASETS=otc,alpha python code/experiments/run_p2_arch_signature.py`; TrustGuard as in Section 7; then `python code/experiments/make_evidence_figure.py` | `p0b_main.json`, `p0b_edgfull.json`, `p2_arch_signature.json`, `p0b_trustguard_{otc,alpha}.json` | edg60000: 0.15 h |
-| Fig. 3b, Section IX, Table S5 (source selection) | `GRAIL_DATASETS=otc,alpha GRAIL_P1_OUT=p1_sota.json python code/experiments/run_p1_efficient.py`; the same with `GRAIL_DATASETS=epn30000 GRAIL_P1_OUT=p1_sota_epn.json` and with `GRAIL_DATASETS=edg60000 GRAIL_P1_OUT=p1_sota_edgfull.json`; then `python code/make_trivial_table.py` | `p1_sota.json`, `p1_sota_epn.json`, `p1_sota_edgfull.json` | 1.1 h; 2.5 h; 0.65 h |
-| Fig. 3c, Section VIII, Table S2 (common target set) | `GRAIL_DATASETS=otc python code/experiments/run_common_set.py`, then with `alpha`; then `python code/analyze_common_set.py` and `python code/make_r2_tables.py common` | `common_set_{otc,alpha}.json`, `common_set_summary.json` | 0.85 h; 0.5 h |
+| Fig. 2a (placement signature) | `GRAIL_DATASETS=otc,alpha,epn30000 GRAIL_OUT=p0b_main.json python code/experiments/run_p0b_verify.py`; `GRAIL_DATASETS=edg60000 GRAIL_OUT=p0b_edgfull.json python code/experiments/run_p0b_verify.py`; `GRAIL_DATASETS=otc,alpha python code/experiments/run_p2_arch_signature.py`; TrustGuard as in Section 7; then `python code/experiments/make_evidence_figure.py` | `p0b_main.json`, `p0b_edgfull.json`, `p2_arch_signature.json`, `p0b_trustguard_{otc,alpha}.json` | edg60000: 0.15 h |
+| Fig. 2b, Section IX, Table S5 (source selection) | `GRAIL_DATASETS=otc,alpha GRAIL_P1_OUT=p1_sota.json python code/experiments/run_p1_efficient.py`; the same with `GRAIL_DATASETS=epn30000 GRAIL_P1_OUT=p1_sota_epn.json` and with `GRAIL_DATASETS=edg60000 GRAIL_P1_OUT=p1_sota_edgfull.json`; then `python code/make_trivial_table.py` | `p1_sota.json`, `p1_sota_epn.json`, `p1_sota_edgfull.json` | 1.1 h; 2.5 h; 0.65 h |
+| Fig. 2c, Section VIII, Table S2 (common target set) | `GRAIL_DATASETS=otc python code/experiments/run_common_set.py`, then with `alpha`; then `python code/analyze_common_set.py` and `python code/make_r2_tables.py common` | `common_set_{otc,alpha}.json`, `common_set_summary.json` | 0.85 h; 0.5 h |
 | Section II, time-decayed reputation | `GRAIL_DATASETS=otc,alpha GRAIL_OUT=p0d_otcalpha.json python code/experiments/run_p0d_harden.py`; the same with `GRAIL_REP_MODE=decayed GRAIL_OUT=p0d_decayed.json` | `p0d_otcalpha.json`, `p0d_decayed.json` | |
-| Section III, in-window vs. appended | `GRAIL_DATASETS=otc,alpha python code/experiments/run_p0_linchpin.py`; `GRAIL_DATASETS=edg60000 GRAIL_P0_OUT=p0_linchpin_edgfull.json python code/experiments/run_p0_linchpin.py`; SNAP Epinions from `p0b_main.json` (Fig. 3a row) | `p0_linchpin.json`, `p0_linchpin_edgfull.json` | edg60000: 0.65 h |
+| Section III, in-window vs. appended | `GRAIL_DATASETS=otc,alpha python code/experiments/run_p0_linchpin.py`; `GRAIL_DATASETS=edg60000 GRAIL_P0_OUT=p0_linchpin_edgfull.json python code/experiments/run_p0_linchpin.py`; SNAP Epinions from `p0b_main.json` (Fig. 2a row) | `p0_linchpin.json`, `p0_linchpin_edgfull.json` | edg60000: 0.65 h |
 | Section VI, paired statistics over ten models | `GRAIL_DATASETS=otc,alpha GRAIL_SEEDS=42,1,2,3,4,5,6,7,8,9 GRAIL_OUT=stats_hier_s10.json python code/experiments/run_stats_hier.py`; then `python code/make_stats_paragraph.py` | `stats_hier_s10.json` | 1.25 h |
 | Section VI, other gates | `GRAIL_DATASETS=otc,alpha python code/experiments/run_p3_margin.py` | `p3_margin.json` (`by_threshold`) | |
 | Section VIII, query-edge-masked control; Table S7 | `GRAIL_DATASETS=otc,alpha GRAIL_SEEDS=42,1,2,3,4,5,6,7,8,9 GRAIL_BLOCKS=B GRAIL_OUT=masked_control_s10.json python code/experiments/run_reviewer_rebuttal.py` | `masked_control_s10.json` | 0.8 h |

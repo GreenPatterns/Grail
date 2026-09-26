@@ -9,27 +9,27 @@ for appendix tables.
 
 | File(s) | Paper item | Written by |
 |---|---|---|
-| `cohort/cohort_{otc,alpha,edg60000}_s{42,1..9}.json` | Table II, Fig. 1 flip labels, Fig. 2, Table S1 (one file per dataset and model) | `run_cohort_seeds.py` |
-| `cohort_summary.json` | Table II, Fig. 2, abstract, Sections I, VI and XIV rates | `analyze_cohort.py` |
+| `cohort/cohort_{otc,alpha,edg60000}_s{42,1..9}.json` | Table II, Fig. 1 flip labels, Fig. 3, Table S1 (one file per dataset and model) | `run_cohort_seeds.py` |
+| `cohort_summary.json` | Table II, Fig. 3, abstract, Sections I, VI and XIV rates | `analyze_cohort.py` |
 | `loo_flip_table.json` | Table III, Bitcoin rows | `run_loo_flip_table.py` |
 | `loo_flip_edgfull_low.json` | Table III, dated Epinions, low stratum | `run_loo_flip_table.py` |
 | `loo_flip_edgfull_modhigh.json` | Table III, dated Epinions, moderate and high strata | `run_loo_flip_table.py` |
 | `causal_regimes.json` | Table IV: appended, in-window and sliding rows | `run_causal_regimes.py` |
 | `causal_retrain_s5.json` | Table IV retrain rows; Table S11 | run_poison_matrix.py (causal part) |
 | `stats_rigor.json` | Table V (decomp_B1, decomp_B5); Section VI rank shift (decision_cost); Appendix G regression (dose_response) | `run_stats_rigor.py` |
-| `p0b_trustguard_otc.json` | Table VI, Fig. 3a, Table S8 (TrustGuard, OTC) | `run_trustguard_placement.py` |
-| `p0b_trustguard_alpha.json` | Table VI, Fig. 3a, Table S8 (TrustGuard, Alpha) | `run_trustguard_placement.py` |
+| `p0b_trustguard_otc.json` | Table VI, Fig. 2a, Table S8 (TrustGuard, OTC) | `run_trustguard_placement.py` |
+| `p0b_trustguard_alpha.json` | Table VI, Fig. 2a, Table S8 (TrustGuard, Alpha) | `run_trustguard_placement.py` |
 | `official_signedgcn.json` | Table VI (SignedGCN) | `run_official_signedgcn.py` |
 | `evolvegcn_placement_egcn_{o,h}_{otc,alpha}.json` | Table VI, Table S9 (EvolveGCN-O and -H) | `run_evolvegcn_placement.py` |
 | `dysat_placement_{otc,alpha}.json` | Table VI, Table S9 (DySAT) | `run_dysat_placement.py` |
-| `p0b_main.json` | Fig. 3a (OTC, Alpha, SNAP Epinions); Section III, SNAP Epinions | `run_p0b_verify.py` |
-| `p0b_edgfull.json` | Fig. 3a (dated Epinions) | `run_p0b_verify.py` |
-| `p2_arch_signature.json` | Fig. 3a (the two in-house builds) | `run_p2_arch_signature.py` |
-| `p1_sota.json` | Fig. 3b, Section IX, Table S5 (OTC, Alpha) | `run_p1_efficient.py` |
-| `p1_sota_epn.json` | Fig. 3b, Section IX, Table S5 (SNAP Epinions) | `run_p1_efficient.py` |
-| `p1_sota_edgfull.json` | Fig. 3b, Section IX, Table S5 (dated Epinions) | `run_p1_efficient.py` |
-| `common_set_{otc,alpha}.json` | Fig. 3c, Section VIII, Table S2 (per-target rows) | `run_common_set.py` |
-| `common_set_summary.json` | Fig. 3c, Section VIII, Table S2 | `analyze_common_set.py` |
+| `p0b_main.json` | Fig. 2a (OTC, Alpha, SNAP Epinions); Section III, SNAP Epinions | `run_p0b_verify.py` |
+| `p0b_edgfull.json` | Fig. 2a (dated Epinions) | `run_p0b_verify.py` |
+| `p2_arch_signature.json` | Fig. 2a (the two in-house builds) | `run_p2_arch_signature.py` |
+| `p1_sota.json` | Fig. 2b, Section IX, Table S5 (OTC, Alpha) | `run_p1_efficient.py` |
+| `p1_sota_epn.json` | Fig. 2b, Section IX, Table S5 (SNAP Epinions) | `run_p1_efficient.py` |
+| `p1_sota_edgfull.json` | Fig. 2b, Section IX, Table S5 (dated Epinions) | `run_p1_efficient.py` |
+| `common_set_{otc,alpha}.json` | Fig. 2c, Section VIII, Table S2 (per-target rows) | `run_common_set.py` |
+| `common_set_summary.json` | Fig. 2c, Section VIII, Table S2 | `analyze_common_set.py` |
 | `p0d_otcalpha.json` | Section II, time decay (mean reputation) | `run_p0d_harden.py` |
 | `p0d_decayed.json` | Section II, time decay (decayed reputation) | run_p0d_harden.py (GRAIL_REP_MODE=decayed) |
 | `p0_linchpin.json` | Section III, in-window vs. appended (OTC, Alpha) | `run_p0_linchpin.py` |

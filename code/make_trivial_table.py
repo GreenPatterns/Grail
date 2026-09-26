@@ -1,4 +1,4 @@
-"""Print the source-selection LaTeX rows (supplement table; shares for Figure 3b) from JSON.
+"""Print the source-selection LaTeX rows (supplement table; shares for Figure 2b) from JSON.
 
 Sources (results/unified/), one run per dataset column:
   p1_sota.json      -> OTC, Alpha   (run_p1_efficient.py, GRAIL_P1_OUT=p1_sota.json)
@@ -68,7 +68,7 @@ def latex_rows(res, columns=COLUMNS):
     return out
 
 
-SUPP_COLUMNS = ['otc', 'alpha', 'edt', 'epn']   # the order of Figure 3b
+SUPP_COLUMNS = ['otc', 'alpha', 'edt', 'epn']   # the order of Figure 2b
 
 
 def supplement_rows(res, columns=SUPP_COLUMNS):

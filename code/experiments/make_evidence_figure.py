@@ -1,5 +1,5 @@
 """
-Figure 3 of the AAAI-27 paper (figure*, three panels), drawn only from saved JSONs:
+Figure 2 of the paper (figure*, three panels), drawn only from saved JSONs:
 
   a  placement signature : label-Delta of one distrust edge vs the snapshot it is injected
                            into (s0..s6) or appended past the window, for GDTE on four
