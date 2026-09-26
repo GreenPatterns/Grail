@@ -1,0 +1,103 @@
+{
+  "bitcoinotc": {
+    "model": "egcn_o",
+    "T": 109,
+    "window": [
+      99,
+      109
+    ],
+    "epochs_cap": 1000,
+    "n_targets_rep": 178,
+    "sweep": {
+      "99": {
+        "dR_total": 0.05530443290869395,
+        "dR_prop": 0.0,
+        "emb_change": 0.0,
+        "label_delta": 0.0
+      },
+      "100": {
+        "dR_total": 0.05530443290869395,
+        "dR_prop": 0.0,
+        "emb_change": 0.0,
+        "label_delta": 0.0
+      },
+      "101": {
+        "dR_total": 0.05530443290869395,
+        "dR_prop": 0.0,
+        "emb_change": 0.0,
+        "label_delta": 0.0
+      },
+      "102": {
+        "dR_total": 0.05530443290869395,
+        "dR_prop": 0.0,
+        "emb_change": 0.0,
+        "label_delta": 0.0
+      },
+      "103": {
+        "dR_total": 0.05530443290869395,
+        "dR_prop": 0.0,
+        "emb_change": 0.0,
+        "label_delta": 0.0
+      },
+      "104": {
+        "dR_total": 0.05530443290869395,
+        "dR_prop": 0.0,
+        "emb_change": 0.0,
+        "label_delta": 0.0
+      },
+      "105": {
+        "dR_total": 0.05530443290869395,
+        "dR_prop": 0.0,
+        "emb_change": 0.0,
+        "label_delta": 0.0
+      },
+      "106": {
+        "dR_total": 0.05530443290869395,
+        "dR_prop": 0.0,
+        "emb_change": 0.0,
+        "label_delta": 0.0
+      },
+      "107": {
+        "dR_total": 0.05530443290869395,
+        "dR_prop": 0.0,
+        "emb_change": 0.0,
+        "label_delta": 0.0
+      },
+      "108": {
+        "dR_total": 0.05530443290869395,
+        "dR_prop": 0.0,
+        "emb_change": 0.0,
+        "label_delta": 0.0
+      },
+      "109": {
+        "dR_total": 0.04690283536911011,
+        "dR_prop": 0.07953005532423656,
+        "emb_change": 2.544130732615789,
+        "label_delta": 0.0
+      },
+      "110": {
+        "dR_total": 0.05530443290869395,
+        "dR_prop": 0.0,
+        "emb_change": 0.0,
+        "label_delta": 0.0
+      }
+    },
+    "past_window_step": 110,
+    "held_out": {
+      "selected_epoch": 267,
+      "valid_f1_class0": 0.38855160450997406,
+      "test_microavg_f1": 0.7186261558784677,
+      "test_f1_class0": 0.18702290076335876,
+      "test_f1_class1": 0.8298722044728435
+    },
+    "flip_low_B1": {
+      "n": 21,
+      "k_total": 1,
+      "k_prop": 2,
+      "total_pct": 4.8,
+      "prop_pct": 9.5,
+      "random_k_total": 1,
+      "random_k_prop": 2
+    }
+  }
+}

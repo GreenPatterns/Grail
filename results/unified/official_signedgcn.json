@@ -1,0 +1,50 @@
+{
+  "otc": {
+    "seed42": {
+      "auc": 0.655,
+      "f1": 0.915,
+      "n_low": 25,
+      "n_eligible": 25,
+      "dR_inenc_distrust": -0.2434,
+      "dR_inenc_trust": 0.0025,
+      "dR_notenc_distrust": -0.0021,
+      "dR_notenc_trust": -0.0021,
+      "label_delta_inenc": 0.2459,
+      "label_delta_notenc": 0.0,
+      "flip_total_pct": 92.0,
+      "flip_prop_pct": 92.0,
+      "flip_total_ci": [
+        0.74,
+        0.99
+      ],
+      "flip_prop_ci": [
+        0.74,
+        0.99
+      ]
+    }
+  },
+  "alpha": {
+    "seed42": {
+      "auc": 0.685,
+      "f1": 0.875,
+      "n_low": 25,
+      "n_eligible": 25,
+      "dR_inenc_distrust": -0.222,
+      "dR_inenc_trust": 0.0014,
+      "dR_notenc_distrust": -0.0029,
+      "dR_notenc_trust": -0.0029,
+      "label_delta_inenc": 0.2234,
+      "label_delta_notenc": 0.0,
+      "flip_total_pct": 100.0,
+      "flip_prop_pct": 96.0,
+      "flip_total_ci": [
+        0.863,
+        1.0
+      ],
+      "flip_prop_ci": [
+        0.796,
+        0.999
+      ]
+    }
+  }
+}

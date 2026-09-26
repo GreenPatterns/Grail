@@ -1,0 +1,49 @@
+{
+  "edg60000": {
+    "low_B1": {
+      "n_eligible": 25,
+      "dR_total": -0.0376,
+      "dR_preexist": -0.0163,
+      "flip_total_pct": 20.0,
+      "flip_preexist_pct": 12.0,
+      "flip_total_ci": [
+        0.068,
+        0.407
+      ],
+      "flip_preexist_ci": [
+        0.025,
+        0.312
+      ]
+    },
+    "low_B3": {
+      "n_eligible": 25,
+      "dR_total": -0.0704,
+      "dR_preexist": -0.0128,
+      "flip_total_pct": 60.0,
+      "flip_preexist_pct": 16.0,
+      "flip_total_ci": [
+        0.387,
+        0.789
+      ],
+      "flip_preexist_ci": [
+        0.045,
+        0.361
+      ]
+    },
+    "low_B5": {
+      "n_eligible": 25,
+      "dR_total": -0.0961,
+      "dR_preexist": -0.0103,
+      "flip_total_pct": 88.0,
+      "flip_preexist_pct": 16.0,
+      "flip_total_ci": [
+        0.688,
+        0.975
+      ],
+      "flip_preexist_ci": [
+        0.045,
+        0.361
+      ]
+    }
+  }
+}

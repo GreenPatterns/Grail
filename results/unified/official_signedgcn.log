@@ -1,0 +1,9 @@
+<ps-env>/lib/python3.10/site-packages/networkx/utils/backends.py:563: RuntimeWarning: Error encountered when loading info for backend cugraph: No module named '_nx_cugraph'
+  backend_info.update(_get_backends("networkx.backend_info", load_and_call=True))
+[07:45:45]   [otc s42] SignedGCN held-out AUC=0.655 F1=0.915
+[07:46:00]   [otc s42] in-enc dR dis/tru=-0.2434/0.0025 lblΔ=0.2459 | not-enc dR dis/tru=-0.0021/-0.0021 lblΔ=0.0 | flip total/prop=92.0/92.0% (n=25)
+[07:46:00] saved paper/results/unified/official_signedgcn.json
+[07:47:29]   [alpha s42] SignedGCN held-out AUC=0.685 F1=0.875
+[07:47:42]   [alpha s42] in-enc dR dis/tru=-0.222/0.0014 lblΔ=0.2234 | not-enc dR dis/tru=-0.0029/-0.0029 lblΔ=0.0 | flip total/prop=100.0/96.0% (n=25)
+[07:47:43] saved paper/results/unified/official_signedgcn.json
+[07:47:43] DONE

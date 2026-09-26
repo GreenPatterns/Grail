@@ -1,0 +1,15 @@
+{
+  "source": "Network Repository soc-epinions-trust-dir (Extended Epinions, Massa & Avesani 2005)",
+  "raw_edges": 841372,
+  "raw_self_loops_dropped": 573,
+  "top_n_by_degree": 30000,
+  "placeholder_time": 979081200,
+  "raw_placeholder_statements": 578996,
+  "placeholder_block_dropped": true,
+  "nodes": 28080,
+  "edges": 237794,
+  "distrust_share": 0.1964,
+  "initial_date_share": 0.0001,
+  "time_min": 979686000,
+  "time_max": 1060639200
+}

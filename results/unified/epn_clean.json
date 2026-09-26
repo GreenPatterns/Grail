@@ -1,0 +1,17 @@
+{
+  "epn30000": {
+    "auc": null,
+    "mcc": null,
+    "keys": [
+      "trainer",
+      "model",
+      "device",
+      "edges",
+      "labels",
+      "index_list",
+      "perf",
+      "performance",
+      "fixed_perf"
+    ]
+  }
+}
