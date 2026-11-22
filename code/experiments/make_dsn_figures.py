@@ -68,6 +68,7 @@ def dataset_legend(fig, keys, y: float) -> None:
 def enforce_print_size(fig, min_font: float, min_marker: float) -> None:
     """Raise every text and marker below the given sizes, so the figure stays readable when
     printed at its size in the paper (the venue asks for no on-screen magnification)."""
+    fig.canvas.draw()  # tick labels exist only after a draw
     for text in fig.findobj(Text):
         if text.get_text() and text.get_fontsize() < min_font:
             text.set_fontsize(min_font)
@@ -94,9 +95,15 @@ def fig_placement(out_dir: str) -> None:
     bottom = fig.add_subplot(grid[1], sharex=top)
     E.panel_placement(top, bottom)
     top.set_title('', loc='left')
-    bottom.set_xticklabels([f'$s_{i}$' for i in range(7)] + ['out'])
+    bottom.set_xticklabels([f's{i}' for i in range(7)] + ['out'])
+    from matplotlib.ticker import FuncFormatter
+    for ax in (top, bottom):
+        ax.tick_params(labelsize=7.5)
+    # Plain '1e-7' labels: superscript exponents would print below 5 pt.
+    bottom.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f'{v:.0e}'.replace('e-0', 'e-')))
+    bottom.yaxis.set_minor_formatter(FuncFormatter(lambda v, _: ''))
     dataset_legend(fig, list(E.DS), 1.0)
-    save(fig, out_dir, 'fig_placement.pdf', min_font=6.6, min_marker=3.2)
+    save(fig, out_dir, 'fig_placement.pdf', min_font=7.4, min_marker=3.2)
 
 
 def fig_sources(out_dir: str) -> None:
@@ -147,7 +154,10 @@ def fig_cohort(out_dir: str) -> None:
     for handles, cols, lo, hi in ((left, 2, pos[0], pos[1]), (right, 3, pos[2], pos[3])):
         fig.legend(handles=handles, loc='lower center', ncol=cols, bbox_to_anchor=((lo.x0 + hi.x1) / 2, y),
                    handletextpad=0.35, columnspacing=1.1, labelspacing=0.25, handlelength=2.4)
-    save(fig, out_dir, 'fig_cohort.pdf', min_font=5.9, min_marker=3.0)
+    for ax in fig.axes[2:3]:  # panel c's margin-bin labels touch at print size; angle them
+        ax.tick_params(axis='x', labelrotation=25)
+        plt.setp(ax.get_xticklabels(), ha='right', rotation_mode='anchor')
+    save(fig, out_dir, 'fig_cohort.pdf', min_font=6.6, min_marker=3.0)
 
 
 def main() -> None:
