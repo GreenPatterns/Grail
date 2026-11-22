@@ -1,15 +1,18 @@
-"""Analyze the complete-cohort, multi-seed single-edge runs (experiments/run_cohort_seeds.py).
+"""Summarize the complete cohort (E3; Table IV, Fig. 3, Table S1): the single-edge runs of
+experiments/run_cohort_seeds.py, one per training seed (a run of the paper).
 
-For every dataset it reports, per genuine training seed and pooled over seeds:
-  * flip rates (%) of the complete eligible cohort (in-degree >= 2, clean R >= 0.5) under one
-    distrust edge from a random or an optimized source, total effect and propagation-only;
-  * the same by distance to the gate (margin R - 0.5 in [0, .05), [.05, .1), [.1, .2), [.2, .3),
-    [.3, .5]);
-  * the fixed cohort: targets eligible under every seed, so seeds are compared on one set;
-  * seed-level uncertainty: mean and std over seeds, a seed-clustered bootstrap 95% interval
-    (seeds resampled, targets kept within their seed), and a two-sided sign test over seeds;
+For every dataset it reports, per run and pooled over runs:
+  * flip rates (%) of the complete cohort (every eligible target: at least two raters, clean
+    R >= 0.5) under one distrust edge from a random or an optimized source, under the total and
+    the propagation-only score;
+  * the same by distance to the threshold (clean margin R - 0.5 in [0, .05), [.05, .1), [.1, .2),
+    [.2, .3), [.3, .5]);
+  * the fixed cohort: targets eligible in every run, so runs are compared on one set;
+  * run-level uncertainty: mean and std over runs, a run-clustered bootstrap 95% interval
+    (runs resampled, targets kept within their run), and a two-sided sign test over runs;
   * the propagation-only shift itself, not thresholded (median, quartiles, share negative), by
-    margin and by the number of raters, and the near-gate cohort (clean R in [0.5, 0.6)).
+    margin and by the number of raters, and the low-reputation targets (clean R in [0.5, 0.6);
+    JSON key `near_gate`).
 
 Run: python3 code/analyze_cohort.py            (writes results/unified/cohort_summary.json)
 """
@@ -84,7 +87,7 @@ def summarize(ds):
                           'ci': seed_bootstrap(rows, src, eff),
                           'by_margin': by_bin}
     out['cells'] = cells
-    # by the target's number of raters (the curated strata of Table 2 preferred about 30)
+    # by the target's number of raters (the strata of Section V take targets with about 30 raters)
     deg_bins = [(2, 3), (4, 5), (6, 10), (11, 30), (31, 10 ** 9)]
     by_deg = {}
     for lo, hi in deg_bins:
@@ -147,7 +150,8 @@ def _shift(sel, src):
 
 
 def _near_gate(rows, width=0.10):
-    """Targets within `width` of the gate (clean R in [0.5, 0.6), the paper's low stratum)."""
+    """Low-reputation targets: those within `width` of the threshold (clean R in [0.5, 0.6)).
+    The low stratum of the paper is a rater-matched sample of them, not this set."""
     sel = {sd: [r for r in rows[sd] if r['r0'] - 0.5 < width] for sd in rows}
     out = {'n_per_seed': {sd: len(v) for sd, v in sel.items()}, 'n_pooled': int(sum(len(v) for v in sel.values()))}
     rate = {}
@@ -179,10 +183,10 @@ def main():
             print(f"  {key:12s} all: {c['mean']:5.1f} ± {c['std']:4.1f}  | by margin: " + '  '.join(
                 f"{b} {v['mean']:5.1f}±{v['std']:4.1f} (n~{v['n_per_seed_mean']:.0f})" for b, v in c['by_margin'].items()))
         print('  opt prop median shift <0 in', r['opt_prop_median_shift']['k_negative'], 'of', r['opt_prop_median_shift']['n'],
-              'seeds, p =', round(r['opt_prop_median_shift']['sign_test_p'], 4))
+              'runs, p =', round(r['opt_prop_median_shift']['sign_test_p'], 4))
         print('  fixed cohort n =', r['fixed_cohort']['n_common'], {k: round(v['mean'], 1) for k, v in r['fixed_cohort'].items() if isinstance(v, dict)})
         ng = r['near_gate']
-        print('  near gate (R<0.6): pooled n =', ng['n_pooled'], {k: (round(ng[k]['mean'], 1), round(ng[k]['std'], 1), [round(x, 1) for x in ng[k]['ci']])
+        print('  low-reputation (R<0.6): pooled n =', ng['n_pooled'], {k: (round(ng[k]['mean'], 1), round(ng[k]['std'], 1), [round(x, 1) for x in ng[k]['ci']])
               for k in ('opt_prop', 'opt_total', 'random_prop', 'random_total')},
               'sign tests', {k: (ng[k]['k_positive'], ng[k]['n_nonzero'], round(ng[k]['sign_test_p'], 4)) for k in ('total_above_prop_opt', 'opt_above_random_prop')})
         print('  shift by margin (opt median):', {k: round(v['opt']['median'], 3) for k, v in r['shift']['by_margin'].items()},

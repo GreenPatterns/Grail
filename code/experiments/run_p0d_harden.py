@@ -1,15 +1,18 @@
 """
-Phase 0d — HARDEN the placement finding at scale (TM-B re-embedding).
+Time-decayed mean (E12; Section VII) and its plain-mean reference, which also gives Section V's
+single-run example (one optimized edge on the OTC low stratum, 68% under the plain mean).
 
-Scales the core claim before any Phase-1 work:
-  - ALL strata (high / moderate / low), n up to ~25 per stratum per dataset.
-  - Budget sweep B in {1, 3, 5, 10}.
-  - Sources: RANDOM (weak attacker) vs OPTIMIZED (processed-counterfactual top-B).
-  - Metrics: mean ΔR (processed placement), THRESHOLD-FLIP rate (R crosses 0.5),
-    bootstrap 95% CI. Plus the APPENDED (paper) baseline for contrast.
+Each stratum (high / moderate / low, up to GRAIL_P0D_PER_STRATUM = 25 targets per dataset, one
+run) receives B in {1, 3, 5, 10} in-window distrust edges from RANDOM sources or OPTIMIZED ones
+(the B best single candidates by exact in-window scoring); the paper reports B = 1 and 5.
+GRAIL_REP_MODE=decayed scores the reputation with the time-decayed mean of Eq. 7 (weight
+GRAIL_DECAY_LAMBDA ** age, default 0.8) instead of the mean of Eq. 1.
 
-All measurements use the realistic TM-B-infer placement (frozen weights, edge spliced
-into the processed window, re-embed) via score_edge_set_processed. Cheap: no retraining.
+Metrics: mean shift, flip rate (R falls below the threshold 0.5) with a bootstrap 95% interval,
+and the out-of-window shift of the same sources for contrast (key `dr_appended_paper`, where
+"paper" marks the appended placement of the first, flawed evaluation). Edges are spliced into the
+processed window and re-embedded with frozen weights (score_edge_set_processed); nothing is
+retrained.
 
 Run: GRAIL_DATASETS=otc,alpha python code/experiments/run_p0d_harden.py
 """
@@ -57,7 +60,7 @@ def run_dataset(ds):
         if not victims:
             continue
         log(f"  stratum={stratum}  n={len(victims)}")
-        # Precompute candidate pools + optimized ranking per victim once.
+        # Precompute candidate pools + optimized ranking per target once.
         pools, opt_rank = {}, {}
         for v in victims:
             existing = set(edges[0, edges[1] == v].tolist())
@@ -76,7 +79,7 @@ def run_dataset(ds):
                 opt_src = opt_rank[v][:B]
                 dr_r, rb, ra_r = o.score_edge_set_processed(edges, labels, rand_src, v, 'distrust', return_after=True)
                 dr_o, _, ra_o = o.score_edge_set_processed(edges, labels, opt_src, v, 'distrust', return_after=True)
-                dr_a = o.score_edge_set(edges, labels, opt_src, v, 'distrust')  # appended (paper)
+                dr_a = o.score_edge_set(edges, labels, opt_src, v, 'distrust')  # out-of-window (appended)
                 dr_rand.append(dr_r); dr_opt.append(dr_o); dr_app.append(dr_a)
                 if rb >= 0.5:
                     n_eligible += 1

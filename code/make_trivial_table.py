@@ -1,13 +1,17 @@
-"""Print the source-selection LaTeX rows (supplement table; shares for Figure 2b) from JSON.
+"""Print the rows of Table S5 (source selection, E10) from JSON, and each strategy's share of
+the optimized in-window shift, which Section VI-F states as ranges and Fig. S2 plots.
 
 Sources (results/unified/), one run per dataset column:
   p1_sota.json      -> OTC, Alpha   (run_p1_efficient.py, GRAIL_P1_OUT=p1_sota.json)
-  p1_sota_epn.json  -> SNAP Epinions-30k (GRAIL_DATASETS=epn30000)
-  p1_sota_edgfull.json -> the complete dated Epinions, genuine creation dates only (GRAIL_DATASETS=edg60000)
+  p1_sota_epn.json  -> Epinions-S (GRAIL_DATASETS=epn30000)
+  p1_sota_edgfull.json -> Epinions-D (GRAIL_DATASETS=edg60000)
 
-Cells are mean naive dR (2 dp) / flip rate (integer %), all scored at the processed
-placement. Also prints the ratios the text cites (each strategy as a share of the
-counterfactual dR). A missing dataset or row prints "--".
+Three blocks are printed. (1) Compact rows, mean total shift (2 dp) / in-window flip rate
+(integer %); the paper no longer has this table. (2) The rows of Table S5: mean total shift
+in-window and out-of-window, and the in-window flip rate. (3) The shares. The JSON keys
+`counterfactual` and `expert` are the optimized and the heuristic strategy. A missing dataset or
+row prints "--". Rates use Python's round (half to even), so 10/16 prints 62 where Table S5
+shows 63.
 
 Run: python3 code/make_trivial_table.py
 """
@@ -20,12 +24,12 @@ RDIR = os.path.join(HERE, '..', 'results', 'unified')
 COLUMNS = ['otc', 'alpha', 'epn', 'edt']
 PUBLISHED = ['prbcd', 'influence', 'node_injection']
 ROWS = [  # (json key, LaTeX label, cost)
-    ('counterfactual', 'Counterfactual', '$60$f'),
-    ('expert', 'Expert', '$0$'),
-    ('ig', 'Integrated Grad', '$16$b'),
-    ('batch_trust', 'Batch-grad', '$1$b'),
-    ('greedy', 'Greedy-grad', '$5$b'),
-    ('random', r'\textbf{Random}', '$0$'),
+    ('counterfactual', 'Optimized', '$60$f'),
+    ('expert', 'Heuristic', '$0$'),
+    ('ig', 'Integrated gradient', '$16$b'),
+    ('batch_trust', 'Batch gradient', '$1$b'),
+    ('greedy', 'Greedy gradient', '$5$b'),
+    ('random', 'Random', '$0$'),
     None,  # \midrule; dagger rows: published attack families adapted to reputation
     ('prbcd', r'PRBCD$^\dagger$', '$30$b'),
     ('influence', r'Influence edit$^\dagger$', '$2$b'),
@@ -68,11 +72,11 @@ def latex_rows(res, columns=COLUMNS):
     return out
 
 
-SUPP_COLUMNS = ['otc', 'alpha', 'edt', 'epn']   # the order of Figure 2b
+SUPP_COLUMNS = ['otc', 'alpha', 'edt', 'epn']   # column order of Table S5 (edt: Epinions-D, epn: Epinions-S)
 
 
 def supplement_rows(res, columns=SUPP_COLUMNS):
-    """Supplement table: per dataset, in-window dR / appended dR / in-window flip (%)."""
+    """Table S5: per dataset, in-window shift / out-of-window shift / in-window flip (%)."""
     out = []
     for row in ROWS:
         if row is None:
@@ -93,7 +97,7 @@ def supplement_rows(res, columns=SUPP_COLUMNS):
 
 
 def shares(res, keys, columns=COLUMNS):
-    """(min, max) of each key's dR as a % of the counterfactual, over available columns."""
+    """(min, max) of each key's shift as a % of the optimized shift, over available columns."""
     vals = [100 * res[ds]['mean_dr'][k] / res[ds]['mean_dr']['counterfactual']
             for ds in columns if ds in res for k in keys if k in res[ds]['mean_dr']]
     return (round(min(vals)), round(max(vals))) if vals else None
@@ -101,10 +105,11 @@ def shares(res, keys, columns=COLUMNS):
 
 def main():
     res = load_results()
+    print('% compact rows (not a table of the paper): mean dR / flip, columns ' + ' '.join(COLUMNS))
     print('\n'.join(latex_rows(res)))
-    print('\n% supplement: in dR / appended dR / flip, columns ' + ' '.join(SUPP_COLUMNS))
+    print('\n% Table S5: in dR / out dR / flip, columns ' + ' '.join(SUPP_COLUMNS))
     print('\n'.join(supplement_rows(res)))
-    print('\n% shares of the counterfactual dR (the text cites the range over datasets)')
+    print('\n% shares of the optimized in-window dR (Section VI-F states the range over datasets)')
     for key in ('random', 'expert', 'prbcd', 'influence', 'node_injection'):
         print(f"% {key:15s} " + '  '.join(
             f"{ds}={100 * res[ds]['mean_dr'][key] / res[ds]['mean_dr']['counterfactual']:.0f}%"

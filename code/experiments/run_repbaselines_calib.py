@@ -1,4 +1,9 @@
 """
+Earlier version of the non-GNN comparison; its output backs no number in the paper. The paper
+uses run_common_set.py (E7) and run_reputation_baselines.py (Supplement D), which imports
+_label_reps from here. Its calibration is in-sample, unlike the held-out calibration of the
+paper (run_detector_calib.py).
+
 Non-GNN reputation baselines under the same attack + calibration
 of the GNN reputation head.
 
@@ -6,14 +11,14 @@ BASELINES. Question: how much MORE vulnerable is the GNN than a simple
 reputation system fed the SAME ratings? A label-space reputation (fraction of
 trust among incoming raters) mechanically drops when distrust edges are added --
 that is shared by any reputation system, not a GNN-specific flaw. We compare, on
-targets initially above the 0.5 gate, the single-/five-edge distrust-injection
+targets initially above the threshold 0.5, the single-/five-edge distrust-injection
 flip rate of:
   signed_mean : #trust / #incoming            (empirical trust fraction)
   beta_bayes  : (1+#trust)/(2+#incoming)      (Beta(1,1) posterior mean)
   wilson      : Wilson 95% lower bound of the trust proportion
-  gnn_full    : GNN reputation over ALL raters (naive; == paper's number)
-The GNN's EXTRA, non-mechanical exposure is the leakage-free propagation term
-measured separately in loo_flip_table.json.
+  gnn_full    : GNN reputation over ALL raters (the total score)
+The GNN's EXTRA exposure beyond dilution is the propagation-only term, measured
+separately in loo_flip_table.json.
 
 CALIBRATION. Over the incoming rater edges that actually feed reputation, we
 compare the head's predicted P(trust|u,v) to the true edge sign and report

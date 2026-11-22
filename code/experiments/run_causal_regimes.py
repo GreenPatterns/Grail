@@ -1,31 +1,30 @@
 """
-Causal next-snapshot evaluation.
+Deployment regimes (E8; Table VIII and Section VI-E): out-of-window, in-window and sliding-window
+placement of random-source distrust edges, with frozen weights.
 
-One objection is that both the appended placement (past the horizon) and the
-in-window placement (spliced retroactively into a historical snapshot s6) are
-artificial. The deployment-faithful test submits the attack edge in the
-chronologically NEXT snapshot and lets the model process it under a realistic
-window policy, with clean and attacked runs ending at the same chronological
-time.
+Out-of-window placement (after the processed window) and in-window placement (spliced
+retroactively into the processed snapshot s6) are both artificial. The deployment-faithful test
+submits the attack edge in the chronologically NEXT snapshot s7 and lets the model process it
+under a realistic window policy, with clean and attacked runs ending at the same time.
 
-The S3R temporal backbone is built with max_seq_len = T_train = 7, so a frozen
-model cannot EXPAND its window past the training horizon (an honest architectural
-fact). The two frozen-weight causal regimes it CAN realize are:
+The temporal layer (S3R) is built with max_seq_len = W = 7 (train_time_slots), so a model with
+frozen weights cannot EXPAND its window past the processed window. The regimes it CAN realize
+(keys of the JSON) are:
 
-  appended     : edge past the processed horizon (s9) -- the silent-no-op bug.
-  inwindow_s6  : edge spliced into the last processed snapshot s6 (paper).
-  sliding_s7   : SLIDING WINDOW of length 7 ending at the NEW snapshot s7
-                 (process s1..s7, drop s0). The attack edge lives in a genuinely
-                 new snapshot -- no retroactive rewrite -- and the frozen model
-                 slides its window forward to embed it. This is the deployment-
-                 faithful frozen-inference regime.
+  appended     : out-of-window, edge after the processed window (s9): the silent no-op, as under
+                 frozen embeddings.
+  inwindow_s6  : in-window, edge spliced into the last processed snapshot s6.
+  sliding_s7   : sliding-window inference, a window of length 7 ending at the NEW snapshot s7
+                 (process s1..s7, drop s0). The attack edge lives in a new snapshot, so nothing
+                 processed is rewritten, and the frozen model slides its window forward to
+                 embed it.
 
-(The periodic-retraining regime, which rebuilds the backbone at T=8, is measured
-separately in run_poison_matrix.py.)
+(Retraining, which rebuilds the temporal layer for W = 8, is measured in run_poison_matrix.py.)
 
-For every regime we report, at that regime's own evaluation horizon: naive dR
-(all raters), leakage-free dR_legit (pre-existing raters only, Eq. R_legit),
-label-Delta, and flip rate vs the regime's own clean reputation.
+For every regime we report, at that regime's own evaluation time: the total shift (all raters;
+key `naive`), the propagation-only shift (pre-existing raters only; key `legit`), the label
+sensitivity Lambda (key `label_delta`), and flip rates against the regime's own clean reputation
+(for sliding_s7, the clean reputation after the same slide).
 
 Run: GRAIL_DATASETS=otc,alpha python code/experiments/run_causal_regimes.py
 """
@@ -152,12 +151,12 @@ def run_dataset(ds):
                 pool = _pool(R.orc, R.pe, t, 50, rng)
                 if len(pool) < B:
                     continue
-                srcs = list(rng.choice(pool, B, replace=False))  # random naive sources
+                srcs = list(rng.choice(pool, B, replace=False))  # random sources (no model access)
                 d = R.score(reg, t, srcs, 'distrust')
                 tr = R.score(reg, t, srcs, 'trust')
                 if d is None or tr is None or d['R0'] != d['R0']:
                     continue
-                if d['R0'] < 0.5:            # eligible: above gate under this regime's clean R
+                if d['R0'] < 0.5:            # eligible: above the threshold under this regime's clean R
                     continue
                 drt.append(d['R_full'] - d['R0'])
                 if d['R_legit'] == d['R_legit']:

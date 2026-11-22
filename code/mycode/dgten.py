@@ -9,9 +9,11 @@ from mycode.s3r import S3R
 from mycode.SL import StructuralNetwork
 
 class DGTEN(torch.nn.Module):
-    """Historical class name for the GDTE model used by mainZ.py.
+    """Historical class name for GDTE (GNN for Dynamic Trust Evaluation), the model of every
+    experiment, trained through mycode/mainz_protocol.py.
 
-    GDTE is inspired by DGTEN, but this implementation is deterministic:
+    GDTE is the paper's simplified variant of DGTEN, not the published DGTEN (Section II and
+    Supplement C of the paper). This implementation is deterministic:
     uncertainty modeling is not used, and structural mappings are provided by
     SpectralGatedMapping in mycode.SL rather than Gaussian mapping.
     """

@@ -3,7 +3,7 @@
 GDTE's structural layer embeds each snapshot from that snapshot's edges alone
 (DGTEN._process_structural_layer; StructuralNetwork keeps no state across snapshots), and the
 temporal layer (S3R) reads the stacked sequence. An edge spliced at the end of snapshot
-s_{T-1}, the processed placement of the paper, therefore changes only that snapshot's slice
+s_{T-1} (s6 with W = T = 7; the in-window placement of the paper) changes only that snapshot's slice
 of the sequence. S6Scorer caches the clean slices s_0..s_{T-2} once per model and, per
 injection, recomputes the s_{T-1} slice and the temporal layer. The result equals the
 oracle's full forward pass up to float nondeterminism (tests/test_fast_s6.py). S3R also
@@ -12,8 +12,8 @@ run along the time axis within a row), so after an injection only the rows that 
 target's reputation (the target, its raters and the injected sources) are recomputed.
 
 Reputation is Eq. 1 of the paper, mean P(trust | u, v) over v's incoming raters: the total
-effect averages all raters including the injected edges, the propagation-only effect only
-the pre-existing ones, both with the attacked embeddings.
+score averages all raters including the sources of the attack edges, the propagation-only
+score only the pre-existing raters, both with the attacked embeddings (Eq. 4).
 """
 import torch
 import torch.nn.functional as F
@@ -79,8 +79,8 @@ class S6Scorer:
         return p[:n_pre], p[n_pre:]
 
     def best_single(self, target, pool):
-        """The candidate whose single distrust edge lowers the total-effect R most (the paper's
-        exact per-candidate counterfactual), with its (R_total, R_prop)."""
+        """The candidate whose single distrust edge lowers the total score most (the paper's
+        optimized source, by exact per-candidate scoring), with its (R_total, R_prop)."""
         best = None
         for s in pool:
             rf, rp = self.attacked(target, [s])

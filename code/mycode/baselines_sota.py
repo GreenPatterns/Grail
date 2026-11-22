@@ -1,15 +1,16 @@
 """
-SOTA 2024--2026 attack baselines for the GRAIL utility comparison.
+Adapted published attacks of experiment E10 (Section VI-F, Supplement E, Table S5): PRBCD,
+influence edit and node injection. The code calls them SOTA baselines.
 
 Each ranker returns a ranked ``List[int]`` of source node ids (most-damaging
 first), matching the interface of ``ReputationAttackOracle.baseline_*_ranking``
 so the experiment runners can score the chosen top-B via
-``oracle.score_edge_set_processed(...)`` (the exact-counterfactual delta-R scorer
-at the processed placement). Do not score them with ``oracle.score_edge_set``:
-it appends past the processed window, where every edge is a silent no-op.
+``oracle.score_edge_set_processed(...)`` (the exact in-window shift scorer). Do not score
+them with ``oracle.score_edge_set``: it appends past the processed window (out-of-window),
+where every edge is a silent no-op.
 
 The three baselines correspond to the dominant recent attack families
-(see paper Sec. 2 and the project plan):
+(Supplement E describes the adaptations):
 
   * ``rank_prbcd``           -- PR/GR-BCD style *iterative* gradient attack
                                (Geisler et al., NeurIPS'21) adapted to the
@@ -26,17 +27,18 @@ Design notes (why these adaptations):
     aggregates with plain ``scatter_mean`` and does NOT consume a per-edge
     weight in the non-robust path, so a classic adjacency-weight PRBCD is not
     available without changing message passing. The model's exposed
-    differentiable handle is the edge-label tensor (the same one GRAIL-Grad
-    uses), so PRBCD here optimises continuous distrust-label *strengths* and
+    differentiable handle is the edge-label tensor (the same one the gradient
+    rankings use), so PRBCD here optimises continuous distrust-label *strengths* and
     discretises to a budget-B edge set -- a faithful PRBCD analogue.
   * The model is frozen at inference, so an edge "influence" is the change it
     induces in the forward pass (no retraining); the influence baseline is a
     curvature-corrected first-order approximation of that change, a fairer
-    "smart gradient" competitor to single-pass GRAIL-Grad.
+    "smart gradient" competitor to the single-pass batch gradient.
   * The frozen model cannot index brand-new node embeddings, so node-injection
-    is modelled by constraining sources to low-degree ("fresh-like") accounts,
-    consistent with the threat model (Sec. 3: attacker controls existing
-    accounts; no zero-history Sybil creation).
+    is modelled by constraining sources to the lowest-degree quarter of the
+    candidates ("fresh-like" existing accounts), the stealth constraint of
+    Supplement E. Newly created accounts are tested separately (E13,
+    experiments/run_p3_sybil.py).
 
 NOTE: This module was authored against the verified oracle/model interfaces but
 requires the torch/GDTE stack to execute. It MUST be smoke-tested on a
@@ -291,8 +293,8 @@ def rank_influence_edge_edit(
     ``score_candidates_gradient``); we then apply a damped Newton rescaling
     g_s / (h_s + damping), where h_s is a Gauss-Newton curvature proxy from the
     second derivative of R along each candidate's strength. This is a fairer
-    "smart gradient" competitor to single-pass GRAIL-Grad without the full
-    per-candidate counterfactual cost of GRAIL-Fwd.
+    "smart gradient" competitor to the single-pass batch gradient without the
+    per-candidate cost of the optimized (exact) ranking.
     """
     if sign != 'distrust':
         raise NotImplementedError("rank_influence_edge_edit supports sign='distrust'.")
@@ -350,8 +352,8 @@ def rank_node_injection(
 
     Models injected fresh accounts by restricting sources to low-degree
     ("fresh-like") nodes -- the stealth/imperceptibility constraint -- then
-    ranks that constrained pool by the exact counterfactual reputation shift at
-    the processed placement (``oracle.score_candidates_counterfactual_processed``).
+    ranks that constrained pool by the exact in-window reputation shift
+    (``oracle.score_candidates_counterfactual_processed``).
     An earlier version reused ``oracle.rank_new_edges``, which appends past the
     processed window, where the label never reaches the encoder, so its ranking
     was label-blind. Returns ranked source ids.

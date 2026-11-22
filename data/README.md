@@ -6,13 +6,13 @@ rebuild each one from its source. The rebuilt files were checked against the bun
 
 ## Files
 
-| Key (`GRAIL_DATASETS`) | Files | Statements | Users with an edge | Source |
+| Key (`GRAIL_DATASETS`) and paper name | Files | Statements | Users with an edge | Source |
 |---|---|---|---|---|
-| `otc` | `bitcoinotc.csv`, `bitcoinotc-rating.txt` | 35,592 | 5,881 | SNAP `soc-sign-bitcoinotc` |
-| `alpha` | `bitcoinalpha.csv`, `bitcoinalpha-rating.txt` | 24,186 | 3,783 | SNAP `soc-sign-bitcoinalpha` |
-| `epn30000` | `epn30000.csv`, `epn30000-rating.txt` | 689,307 | 29,923 | SNAP `soc-sign-epinions` |
-| `edg60000` | `edg60000.csv`, `edg60000-rating.txt`, `edg60000-provenance.json` | 261,803 | 56,499 | Network Repository `soc-epinions-trust-dir` |
-| `edg30000` | `edg30000.csv`, `edg30000-rating.txt`, `edg30000-provenance.json` | 237,794 | 28,080 | Network Repository `soc-epinions-trust-dir` |
+| `otc`, Bitcoin-OTC | `bitcoinotc.csv`, `bitcoinotc-rating.txt` | 35,592 | 5,881 | SNAP `soc-sign-bitcoinotc` |
+| `alpha`, Bitcoin-Alpha | `bitcoinalpha.csv`, `bitcoinalpha-rating.txt` | 24,186 | 3,783 | SNAP `soc-sign-bitcoinalpha` |
+| `epn30000`, Epinions-S | `epn30000.csv`, `epn30000-rating.txt` | 689,307 | 29,923 | SNAP `soc-sign-epinions` |
+| `edg60000`, Epinions-D | `edg60000.csv`, `edg60000-rating.txt`, `edg60000-provenance.json` | 261,803 | 56,499 | Network Repository `soc-epinions-trust-dir` |
+| `edg30000`, dated 30k-user subgraph (Supplement B check) | `edg30000.csv`, `edg30000-rating.txt`, `edg30000-provenance.json` | 237,794 | 28,080 | Network Repository `soc-epinions-trust-dir` |
 
 `raw/soc-epinions-trust-dir.edges` is the raw dated Epinions release, and
 `raw/soc-epinions-trust-dir.readme.html` is its acknowledgement page. They are included so that
@@ -65,7 +65,7 @@ This recipe reproduces `bitcoinotc.csv`, `bitcoinalpha.csv` and `bitcoinalpha-ra
 for byte. It reproduces `bitcoinotc-rating.txt` up to line terminators: the bundled file ends its
 lines with CRLF and has no newline after the last line. The parsed contents are identical.
 
-**SNAP Epinions, 30k-node subgraph (`epn30000`).** The source is `soc-sign-epinions.txt.gz` from
+**Epinions-S: SNAP Epinions, 30k-user subgraph (`epn30000`).** The source is `soc-sign-epinions.txt.gz` from
 https://snap.stanford.edu/data/ (columns source, target, sign; no timestamps). Two steps build
 the subgraph:
 
@@ -95,7 +95,7 @@ GRAIL_DATA_ROOT=DIR PYTHONPATH=code:code/common python -c \
 The recipe reproduces both `epn30000` files byte for byte. Its intermediate `epinions.csv`
 matches the development copy up to line endings.
 
-**Dated Epinions (`edg60000`, `edg30000`).** The source is the Extended Epinions release of
+**Epinions-D and the dated 30k-user subgraph (`edg60000`, `edg30000`).** The source is the Extended Epinions release of
 Massa and Avesani (2005), distributed by the Network Repository as `soc-epinions-trust-dir`
 (https://networkrepository.com/soc-epinions-trust-dir.php; columns source, target, sign, Unix
 time). It holds 841,372 statements, and 578,996 of them (68.8%) carry the release's first date, a
@@ -105,13 +105,13 @@ degree, sorts by time and relabels users by first appearance:
 
 ```bash
 source env.sh
-python code/make_epinions_dated.py 60000 --genuine-dates   # edg60000: all genuinely dated statements
-python code/make_epinions_dated.py 30000 --genuine-dates   # edg30000: the earlier 30k subgraph
+python code/make_epinions_dated.py 60000 --genuine-dates   # edg60000, Epinions-D: every genuinely dated statement
+python code/make_epinions_dated.py 30000 --genuine-dates   # edg30000: the dated 30k-user subgraph (Supplement B)
 python code/make_epinions_dated.py 30000                   # edt30000: placeholder block kept; only a data test reads it
 ```
 
-With N = 60000 the subgraph keeps every user with a dated statement, so `edg60000` is the complete
-dated graph. These commands reproduce all six `edg` files byte for byte, including the
+With N = 60000 the subgraph keeps every user with a dated statement, so `edg60000` (Epinions-D) is
+the complete dated graph. These commands reproduce all six `edg` files byte for byte, including the
 provenance files, which record the counts above.
 
 ## Licenses and citation

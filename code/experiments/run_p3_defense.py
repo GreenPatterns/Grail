@@ -1,22 +1,21 @@
 """
-Phase 3 — rater-history weighting DEFENSE (supports the defense recommendation).
+Rater-history weighting and the adaptive attacker (E13; Section VII), under the total score.
 
-The paper recommends down-weighting low-history raters rather than recency. Here
-we measure that defense directly. A naive attacker (no model access) injects B
-distrust edges at the correct processed placement, choosing sources two ways:
-  * random non-neighbors  (established accounts),
-  * low-history non-neighbors (the fresh / Sybil-account threat: lowest
-    out-degree nodes, a proxy for newly created accounts), and
-  * high-history non-neighbors (the ADAPTIVE attacker, in the sense of
-    Mujkanovic et al. 2022: it knows the rule and rates only from accounts the
-    rule weights fully, out-degree >= h0).
-We then score the SAME attack under two reputation functionals:
-  * 'mean'           (Eq. 1, undefended), and
-  * 'rater_weighted' (weight u by min(1, hist(u)/h0), the defense).
-Flip rate = fraction of eligible (R>=0.5) victims pushed below 0.5.
-
-Defense works if rater-weighting sharply cuts the flip rate of the low-history
-attacker; honestly, it should help less against established-account sources.
+An attacker without model access inserts B in {1, 5} in-window distrust edges per target, for 16
+low- and 16 moderate-stratum targets per dataset in one run (the paper reports the low stratum),
+choosing sources three ways (JSON keys):
+  * random       : random existing accounts that do not rate the target,
+  * low_history  : the existing accounts with the fewest issued ratings (lowest out-degree, a
+                   proxy for new accounts), and
+  * high_history : established accounts, which have issued at least h0 = 5 ratings: the
+                   ADAPTIVE attacker in the sense of Mujkanovic et al. (2022), which knows the
+                   rule and rates only from accounts that it weights fully.
+We then score the SAME attack under two reputation functions:
+  * 'mean'           (Eq. 1, no defense), and
+  * 'rater_weighted' (weight rater u by min(1, hist(u)/h0), Eq. 8, the defense).
+Flip rate = fraction of the eligible targets (clean R >= 0.5 under that function) pushed below
+0.5. Newly created accounts are run_p3_sybil.py. Variables keep the older name `victim` for a
+target.
 
 Run: GRAIL_DATASETS=otc,alpha python code/experiments/run_p3_defense.py
 """
@@ -38,7 +37,7 @@ H0 = 5.0  # rater-history saturation: accounts with >=5 ratings get full weight
 
 
 def pick_sources(source_kind, cands, outdeg, v, B, seed=SEED, h0=H0):
-    """Attacker source choice for victim v. 'high_history' is the adaptive
+    """Attacker source choice for target v. 'high_history' is the adaptive
     attacker: it only uses accounts the rater-history rule weights fully."""
     if source_kind == 'random':
         perm = np.random.RandomState(seed + int(v)).permutation(cands)

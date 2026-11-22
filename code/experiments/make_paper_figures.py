@@ -1,4 +1,7 @@
-"""Generate/refresh paper figures into figures/.
+"""Legacy figure script from an earlier version of this project; none of its figures is in the
+paper. It writes new files into figures/ and needs result files that are not shipped.
+
+Generate/refresh paper figures into figures/.
 
 - scaling_curve.pdf  (NEW): ΔR vs subsample size N (Epinions), from e10 JSONs.
 - boxplot_b5.pdf     (regenerate; was missing): per-target ΔR distribution per

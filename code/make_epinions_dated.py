@@ -1,10 +1,11 @@
-"""Build the dated Epinions subgraph edt<N> from Massa & Avesani's Extended Epinions.
+"""Build the dated Epinions graphs from Massa & Avesani's Extended Epinions: edg<N> with
+--genuine-dates (edg60000 is the paper's Epinions-D, Supplement B) and edt<N> without.
 
 Source: Network Repository `soc-epinions-trust-dir` (Rossi & Ahmed 2015), the Extended
 Epinions release of Massa & Avesani (2005): 841,372 trust (+1) and distrust (-1)
-statements among 131,828 users, each with a creation date (2001-01-10 to 2003-08-11;
-68.8% carry the initial date 2001-01-10). SNAP's soc-sign-epinions has the same
-statements without dates. Raw file: data/cyberdata/raw/soc-epinions-trust-dir.edges
+statements among 131,828 users, each with a creation date (2001-01-09 to 2003-08-11 UTC;
+68.8% carry the earliest stamp, 2001-01-09 23:00 UTC). SNAP's soc-sign-epinions has the
+same statements without dates. Raw file: data/cyberdata/raw/soc-epinions-trust-dir.edges
 (columns: source target sign unix_time; header line starts with '%').
 
 Mirrors run_e10_scaling.make_epn_subsample (top-N nodes by total degree, induced

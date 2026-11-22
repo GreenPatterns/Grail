@@ -1,4 +1,7 @@
-"""Multi-seed E3 utility comparison (for cross-seed robustness / CIs).
+"""Legacy runner from an earlier version of this project; it backs no number in the paper. Its
+experiment number is not an experiment ID of the paper (E1-E14, Table III).
+
+Multi-seed E3 utility comparison (for cross-seed robustness / CIs).
 
 Re-runs the E3 attack-effectiveness comparison -- including the three SOTA
 baselines (PRBCD, InfluenceEdit, NodeInjection) -- across several seeds, so the

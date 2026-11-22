@@ -1,17 +1,12 @@
 """
-Merged Experiment Common — Combines Ai_Attacking (paper 1290) and Grill/GRAIL (paper 590)
-experiments into a single unified module.
+Shared helpers of the experiments: train_model (trains GDTE and prints its forward-chaining
+MCC and AUC, the values of Table II), get_targets (the strata), log, and small statistics.
 
-Experiments:
-  E1: Gradient validation on existing edges (both papers)
-  E2: GRAIL-GRAD vs GRAIL-FWD overlap measurement (Grill)
-  E3: Attack effectiveness — B=1 and B=5 comparison (Ai_Attacking)
-  E4: Budget efficiency curves (Ai_Attacking)
-  E5: Surrogate transfer / black-box (both papers)
-  E6: Stronger model + degree-matched stealth (Grill)
-  E7: Influence distribution — Gini, degree correlation (Ai_Attacking)
-  E8: Attack edge detection — AUC 0.96 (Ai_Attacking)
-  E9-E10: Sparsity ablation, bootstrap CI (Grill)
+The rest of the module holds the runners of an earlier version of this project (run_E1 ...
+run_E10, driven by code/run_all.py). Their E1-E10 labels are not the experiment IDs E1-E14 of
+the paper (its Table III), and they back no number in the paper. They score attacks with
+oracle.score_edge_set, which appends the edges after the processed window: the silent no-op of
+Artifact 1.
 """
 import gc, os, json, time, warnings, copy
 import torch
@@ -97,7 +92,7 @@ def bootstrap_ci(data, n_boot=1000, ci=0.95):
 
 
 # ════════════════════════════════════════════════════════════════════
-# E1: Gradient Validation (both papers)
+# legacy E1 (earlier version): gradient validation
 # ════════════════════════════════════════════════════════════════════
 def run_E1(oracle, edges, labels, strata, ds):
     log(f"E1: Gradient validation ({ds})...")
@@ -138,7 +133,7 @@ def run_E1(oracle, edges, labels, strata, ds):
 
 
 # ════════════════════════════════════════════════════════════════════
-# E2: GRAIL-GRAD vs GRAIL-FWD Overlap (Grill)
+# legacy E2 (earlier version): gradient vs exact ranking overlap
 # ════════════════════════════════════════════════════════════════════
 def run_E2_grad_vs_fwd(oracle, edges, labels, ds, C_values=[50, 100]):
     log(f"E2: GRAIL-GRAD vs GRAIL-FWD ({ds})...")
@@ -262,7 +257,7 @@ def run_E2_grad_vs_fwd(oracle, edges, labels, ds, C_values=[50, 100]):
 
 
 # ════════════════════════════════════════════════════════════════════
-# E3: Attack Effectiveness — B=1 and B=5 (Ai_Attacking)
+# legacy E3 (earlier version): attack effectiveness, B=1 and B=5
 # ════════════════════════════════════════════════════════════════════
 def run_E3_attack_effectiveness(oracle, edges, labels, strata, good_nodes, ds, budget=1):
     log(f"E3: Attack effectiveness ({ds}, B={budget})...")
@@ -356,7 +351,7 @@ def run_E3_attack_effectiveness(oracle, edges, labels, strata, good_nodes, ds, b
 
 
 # ════════════════════════════════════════════════════════════════════
-# E4: Budget Efficiency Curves (Ai_Attacking)
+# legacy E4 (earlier version): budget efficiency curves
 # ════════════════════════════════════════════════════════════════════
 def run_E4_budget_efficiency(oracle, edges, labels, strata, ds):
     log(f"E4: Budget efficiency ({ds})...")
@@ -401,7 +396,7 @@ def run_E4_budget_efficiency(oracle, edges, labels, strata, ds):
 
 
 # ════════════════════════════════════════════════════════════════════
-# E5: Surrogate Transfer / Black-Box (both papers)
+# legacy E5 (earlier version): surrogate transfer / black box
 # ════════════════════════════════════════════════════════════════════
 def run_E5_transfer(defender_oracle, edges, labels, strata, ds, device):
     log(f"E5: Black-box transfer ({ds})...")
@@ -446,7 +441,7 @@ def run_E5_transfer(defender_oracle, edges, labels, strata, ds, device):
 
 
 # ════════════════════════════════════════════════════════════════════
-# E6: Stronger Model + Degree-Matched Stealth (Grill)
+# legacy E6 (earlier version): stronger model + degree-matched stealth
 # ════════════════════════════════════════════════════════════════════
 def run_E6_stronger_stealth(oracle, edges, labels, ds, good_nodes):
     log(f"E6: Stronger model + stealth ({ds})...")
@@ -518,7 +513,7 @@ def run_E6_stronger_stealth(oracle, edges, labels, ds, good_nodes):
 
 
 # ════════════════════════════════════════════════════════════════════
-# E7: Influence Distribution — Gini, Degree Correlation (Ai_Attacking)
+# legacy E7 (earlier version): influence distribution, Gini, degree correlation
 # ════════════════════════════════════════════════════════════════════
 def run_E7_influence_distribution(oracle, edges, labels, strata, ds):
     log(f"E7: Influence distribution ({ds})...")
@@ -574,7 +569,7 @@ def run_E7_influence_distribution(oracle, edges, labels, strata, ds):
 
 
 # ════════════════════════════════════════════════════════════════════
-# E8: Attack Edge Detection — AUC 0.96 (Ai_Attacking)
+# legacy E8 (earlier version): attack edge detection (not the paper's E14 detector)
 # ════════════════════════════════════════════════════════════════════
 def run_E8_detection(oracle, edges, labels, strata, ds):
     log(f"E8: Defence — attack edge detection ({ds})...")
@@ -610,7 +605,7 @@ def run_E8_detection(oracle, edges, labels, strata, ds):
 
 
 # ════════════════════════════════════════════════════════════════════
-# E9-E10: Sparsity Ablation + Bootstrap CI (Grill)
+# legacy E9-E10 (earlier version): sparsity ablation + bootstrap CI
 # ════════════════════════════════════════════════════════════════════
 def run_E9_sparsity_ablation(oracle, edges, labels, ds):
     log(f"E9: Sparsity ablation ({ds})...")

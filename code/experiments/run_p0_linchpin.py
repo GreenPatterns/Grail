@@ -1,17 +1,21 @@
 """
-Placement test: one attack edge out-of-window (appended) against in-window (processed).
+Placement test (E1; Section VI-A): one distrust edge out-of-window (appended after the processed
+window) against in-window (spliced at the end of the last processed snapshot s6), from each of
+the C = 50 candidate sources of 10 moderate and 10 low strata targets. The Epinions-D run
+(GRAIL_DATASETS=edg60000) also gives Table II's Epinions-D row (`clean_perf`, `train_edges`).
+JSON keys keep the code's names: `appended` is out-of-window, `processed` is in-window, and
+`label_delta` is the label sensitivity Lambda.
 
-An edge appended past the trained snapshot horizon lands in an unprocessed snapshot. The
-structural layer never processes it, so its label has zero gradient and the exact counterfactual
-shift collapses to a label-independent reputation-average effect.
+An out-of-window edge lands in a snapshot that the encoder never reads, so its label has zero
+gradient and its exact shift collapses to a label-independent change of the reputation average
+(the dilution term; Proposition 1).
 
 This driver quantifies, across many targets:
 
-  A) APPENDED counterfactual: is it label-independent (distrust shift = trust shift) and weak?
-  B) PROCESSED counterfactual (edge spliced into the last trained snapshot): is it
-     label-dependent and strong?
-  C) Does the single-edge label gradient at the processed placement correlate with the
-     processed counterfactual?
+  A) Out-of-window: is the shift label-independent (distrust shift = trust shift) and weak?
+  B) In-window: is it label-dependent and strong?
+  C) Does the single-edge label gradient correlate with the exact in-window shift? (Not used in
+     the paper.)
 
 Run on GPU:
   GRAIL_DATASETS=otc,alpha python code/experiments/run_p0_linchpin.py
@@ -80,7 +84,7 @@ def run_dataset(ds):
 
     rng = np.random.RandomState(SEED)
 
-    label_indep_appended = []   # mean |distrust - trust| ΔR, appended
+    label_indep_appended = []   # Lambda = mean |distrust - trust| shift, out-of-window (appended)
     label_dep_processed = []    # mean |distrust - trust| ΔR, processed
     mean_dr_appended = []
     mean_dr_processed = []
@@ -92,19 +96,19 @@ def run_dataset(ds):
         if len(pool) < 5:
             continue
 
-        # A) appended counterfactual (paper's placement), distrust + trust
+        # A) out-of-window (appended) exact shift, distrust + trust
         cf_app_dis = dict((int(s), float(d)) for s, d in oracle.rank_new_edges(
             edges, labels, t, candidate_sources=pool, sign='distrust', top_k=len(pool)))
         cf_app_tru = dict((int(s), float(d)) for s, d in oracle.rank_new_edges(
             edges, labels, t, candidate_sources=pool, sign='trust', top_k=len(pool)))
 
-        # B) processed counterfactual (spliced into last trained snapshot)
+        # B) in-window exact shift (spliced into the last processed snapshot)
         cf_proc_dis = oracle.score_candidates_counterfactual_processed(
             edges, labels, t, pool, sign='distrust')
         cf_proc_tru = oracle.score_candidates_counterfactual_processed(
             edges, labels, t, pool, sign='trust')
 
-        # C) corrected single-edge label gradient (same processed placement)
+        # C) corrected single-edge label gradient (same in-window placement)
         g_proc = oracle.score_candidates_gradient_single(edges, labels, t, pool, sign='distrust')
 
         label_indep_appended.append(np.mean([abs(cf_app_dis[s] - cf_app_tru[s]) for s in pool]))
@@ -135,7 +139,7 @@ def run_dataset(ds):
         "rho_grad_vs_processed": _m(rho_grad_vs_processed),
         "rho_grad_vs_appended": _m(rho_grad_vs_appended),
         "rho_grad_vs_processed_values": [v for v in rho_grad_vs_processed if v == v],
-        # clean forward-chaining link prediction of the same trained model (Table 1)
+        # clean forward-chaining link prediction of the same trained model (Table II)
         "clean_perf": {k: trained["perf"].get(k) for k in ("AUC", "AUC_std", "MCC", "MCC_std", "BAcc")},
         "train_edges": int(edges.shape[1]),
     }

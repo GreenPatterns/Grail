@@ -1,22 +1,25 @@
 """
-Placement test on the official EvolveGCN release (Pareja et al., AAAI 2020;
-https://github.com/IBM/EvolveGCN, commit 90869062). The released code, its Bitcoin-OTC /
-Bitcoin-Alpha edge-classification configuration (EGCN-O by default) and its own trainer are
-used unchanged; the only shim is PyYAML's Loader argument, which the 2019 code omits.
+EvolveGCN-O and EvolveGCN-H, official release (E11; Table IX, Table S9, Section VI-G): Pareja et
+al., AAAI 2020; https://github.com/IBM/EvolveGCN, commit 90869062. The released code, its
+Bitcoin-OTC / Bitcoin-Alpha edge-classification configuration (EGCN-O by default) and its own
+trainer are used. Three compatibility steps leave its computation unchanged: PyYAML's Loader
+argument, which the 2019 code omits; the dataset name, since the released OTC configuration
+names the Alpha data; and evaluation mode for the GRCU layers before scoring, which the model's
+own eval() does not reach. The harness restores the weights of the epoch that the release's
+selection rule picks (best validation F1 of the distrust class) and scores on CPU.
 
-EvolveGCN reads a window of num_hist_steps + 1 = 11 three-week adjacency matrices (edge
-counts; the rating sign is only the prediction target) and scores an edge (u, v) from the
-node embeddings at the last step. Reputation (Eq. 1 of the paper) of a target v at the first
-test step T is the mean predicted trust over v's directed raters inside that window. A
-distrust edge is injected at a window step (s_{T-10}..s_T) or past the window (T+1); we report
-the reputation shift, its propagation-only part (pre-existing raters only), the change of the
-target's embedding, and the label sensitivity. EvolveGCN never reads edge labels, so the
-label swap is zero by construction at every placement: the diagnostic that exposes a no-op
-here is the embedding change, which is exactly zero past the window.
+EvolveGCN reads a window of num_hist_steps + 1 = 11 adjacency matrices of 1.2 million seconds
+(about two weeks) each, as edge counts: a rating's sign is only the prediction target. It scores
+an edge (u, v) from the node embeddings at the last step. Reputation (Eq. 1 of the paper) of a
+target v at the first test step T is the mean predicted trust over v's raters inside that
+window. A distrust edge is inserted at a window step (s_{T-10}..s_T) or past the window (T+1);
+we report the total shift, its propagation-only part (pre-existing raters only), the change of
+the target's embedding, and Lambda. EvolveGCN never reads edge labels, so Lambda is zero by
+construction at every placement: the diagnostic that exposes a no-op here is the embedding
+change, which is exactly zero past the window.
 
-Run (GPU, ps env):
-  EVOLVEGCN_DIR=<clone> GRAIL_DATASETS=bitcoinotc,bitcoinalpha \
-      python code/experiments/run_evolvegcn_placement.py
+Run (GPU, main environment):
+  EVOLVEGCN_DIR=<clone> GRAIL_DATASETS=bitcoinotc,bitcoinalpha       python code/experiments/run_evolvegcn_placement.py
   (EGCN_MODEL=egcn_o|egcn_h, EGCN_EPOCHS overrides the configured 1000)
 """
 import copy, functools, json, os, random, sys

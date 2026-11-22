@@ -1,14 +1,14 @@
-"""Print the supplement's reputation-baseline tables (LaTeX rows) from the paired run.
+"""Print the rows of Tables S3 and S4 (Supplement D, low-stratum experiment) from the paired run.
 
 Source: results/unified/reputation_baselines_{otc,alpha,edgfull}.json
-(experiments/run_reputation_baselines.py; the dated Epinions run is low stratum only,
-with warm-started Fairness-Goodness). Every function is scored on the same low-stratum
-targets and the same injections, so rows are directly comparable. Percentages are
+(experiments/run_reputation_baselines.py; the Epinions-D run is low stratum only, with
+warm-started Fairness and Goodness, FG). Every function is scored on the same low-stratum
+targets and the same in-window attack edges, so rows are directly comparable. Percentages are
 recomputed from the eligible count, so a stored 54.5 (6/11) prints as 55, not 54.
 
-  worst_case_rows : flip rate (%) at B = 1, 3, 5, the strongest of the four attackers
-                    against each function (the figure's panel c shows B = 1)
-  attacker_rows   : B = 1 flip rate (%) for each attacker separately
+  worst_case_rows : Table S3, flip rate (%) at B = 1, 3, 5 under the strongest of the four
+                    attackers against each function
+  attacker_rows   : Table S4, B = 1 flip rate (%) for each attacker separately
 
 Run: python3 code/make_reputation_table.py
 """
@@ -29,7 +29,7 @@ ROWS = [  # (function key, LaTeX label)
     ('gdte_median_total', 'GDTE median, total'),
     ('gdte_median_prop', 'GDTE median, prop.-only'),
     None,
-    ('fg', 'Fairness--Goodness'),
+    ('fg', 'FG'),
     ('wilson', 'Wilson lower bound'),
     ('beta', 'Beta mean'),
     ('fraction', 'Trust fraction'),
@@ -99,9 +99,9 @@ def attacker_rows(res):
 
 def main():
     res = load()
-    print('% worst case over attackers: OTC B1 B3 B5 | Alpha B1 B3 B5 | n eligible (OTC/Alpha)')
+    print('% Table S3, strongest attacker: OTC B1 B3 B5 | Alpha B1 B3 B5 | Epinions-D B1 B3 B5 | n eligible (OTC/Alpha/Epinions-D)')
     print('\n'.join(worst_case_rows(res)))
-    print('\n% B = 1 per attacker: OTC random mean_opt median_opt fg_opt | Alpha ...')
+    print('\n% Table S4, B = 1 per attacker: OTC random mean_opt median_opt fg_opt | Alpha ... | Epinions-D ...')
     print('\n'.join(attacker_rows(res)))
     for ds in DATASETS:
         if ds not in res:

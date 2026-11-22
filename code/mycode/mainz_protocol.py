@@ -183,8 +183,9 @@ def train_oracle_mainz_model(
     layers: Optional[list[int]] = None,
 ) -> Dict[str, Any]:
     """
-    Main paper setup: clean mainZ performance sweep plus fixed clean t=7 model
-    for frozen-oracle/counterfactual experiments.
+    Training protocol of every experiment: the forward-chaining performance sweep
+    (train on s0..s_{t-1}, test on s_t, for t = 2..9; Table II) plus a clean model
+    with W = 7 processed snapshots for the attack experiments.
     """
     cache_key = (dataset, seed, epochs, tuple(layers) if layers is not None else None)
     if cache_key in _ORACLE_RUN_CACHE:

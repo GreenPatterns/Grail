@@ -1,17 +1,23 @@
 """
 Reputation Attack Oracle
 ========================
-Core module for "From Trust Prediction to Trust Manipulation."
+Core module of the experiments: GDTE's reputation (Eq. 1 of the paper) and the scoring of
+attack edges.
 
-Uses a frozen, trained DGTEN as a differentiable oracle to compute
-how any interaction in a trust network influences any node's reputation.
+Uses a frozen, trained GDTE as a differentiable oracle to compute how any interaction in a trust
+network changes any node's reputation, either exactly (re-embedding after the edge is inserted)
+or by the gradient of reputation(target) with respect to an edge label, in a SINGLE backward
+pass. GDTE is the class DGTEN of mycode/dgten.py: the paper's simplified variant of the
+published DGTEN, not DGTEN itself.
 
-The key method: compute ∂reputation(target)/∂edge_label in a SINGLE
-backward pass — producing a full influence map over the entire graph
-without re-running the model per edge.
+Placement: score_edge_set and rank_new_edges append the attack edges after the processed window
+(out-of-window), the silent no-op of Artifact 1 (Proposition 1); the *_processed methods splice
+them into the last processed snapshot s6 (in-window), as in every in-window result of the
+paper. Method and variable names keep older terms: "counterfactual" is an exact shift (the
+optimized source is the candidate with the most negative one), "victim" is a target.
 
 Classes:
-    ReputationAttackOracle  — gradient-based influence computation
+    ReputationAttackOracle  — reputation, exact and gradient-based attack scoring
     CounterfactualSimulator — multi-step what-if planning
 """
 
@@ -266,7 +272,7 @@ class ReputationAttackOracle:
             r_after=r_after,
         )
 
-    # ── Influence Map Validation (E9) ──────────────────────────
+    # ── Influence Map Validation (legacy E9, not an experiment of the paper) ──
 
     def validate_influence_map(
         self,
@@ -284,7 +290,8 @@ class ReputationAttackOracle:
         Then compute Pearson correlation between gradient magnitude
         and actual |ΔR|.
 
-        This is Experiment E9 — the method validation.
+        This was experiment E9 of an earlier version of this project (method validation);
+        it backs no number in the paper.
 
         Args:
             edges: current graph

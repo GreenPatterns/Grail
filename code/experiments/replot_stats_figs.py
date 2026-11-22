@@ -1,5 +1,8 @@
 """
-Re-draw Figure 2 (fig_forest, fig_dist) with TrueType fonts and fixed labels.
+Legacy script from an earlier version of this project: fig_forest and fig_dist were its
+Figure 2 and are not in the paper. It writes them to results/unified/figures/.
+
+Re-draw the old Figure 2 (fig_forest, fig_dist) with TrueType fonts and fixed labels.
 
 Some venues reject PDFs whose graphics contain Type 3 fonts; the earlier panels had
 them (matplotlib's default pdf.fonttype=3) and printed "(\\%)" and "OTC\\,hig"

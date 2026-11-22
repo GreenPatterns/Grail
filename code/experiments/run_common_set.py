@@ -1,17 +1,18 @@
 """
-Reputation functions compared on a COMMON target set: every target with in-degree
->= 2 in the processed window, the same candidate pools as run_cohort_seeds.py, the same
-injections for every function, one model (seed 42). Per target and attacker it records the
-clean and attacked reputation under
-  GDTE mean / median, total effect and propagation-only (mycode/fast_s6.S6Scorer),
-  Fairness-Goodness (Kumar et al. 2016; warm-started), trust fraction, Beta mean, Wilson bound,
+Reputation functions compared on the common set (E7; Table VII, Table S2, Fig. S1): every target
+with at least two raters in the processed window, the same candidate pools as
+run_cohort_seeds.py, the same attack edges for every function, one run (seed 42). Per target and
+attacker it records the clean and attacked reputation under
+  GDTE mean / median, total and propagation-only score (mycode/fast_s6.S6Scorer),
+  Fairness and Goodness (FG; Kumar et al. 2016; warm-started), trust fraction, Beta mean,
+  Wilson bound,
 so any subset (targets eligible under every function, a margin band) can be analyzed
 afterwards (code/analyze_common_set.py).
 
 Attackers, each choosing from the target's 50-candidate pool:
   random   : pool[:B]
-  gdte_opt : the B candidates whose single distrust edge lowers GDTE's total-effect R most
-  fg_opt   : the B candidates whose single distrust edge lowers Fairness-Goodness most
+  gdte_opt : the B candidates whose single distrust edge lowers GDTE's total score most
+  fg_opt   : the B candidates whose single distrust edge lowers FG most
 Budgets B in {1, 5}.
 
 Run: GRAIL_DATASETS=otc python code/experiments/run_common_set.py

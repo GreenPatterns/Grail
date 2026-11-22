@@ -5,7 +5,7 @@ so each function is judged on the same targets and the same injected edges. For 
 and budget it reports the flip rate against each attacker and against the strongest attacker per
 target (the best of the three strategies for that target; one rule throughout), and
 the flip rate by the target's clean margin under that function (margin = R - 0.5), which
-controls for gate proximity.
+controls for the distance to the threshold. Experiment E7 (Table VII, Table S2, Fig. S1).
 
 Run: python3 code/analyze_common_set.py        (writes results/unified/common_set_summary.json)
 """

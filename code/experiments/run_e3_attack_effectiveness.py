@@ -1,3 +1,6 @@
+"""Legacy runner from an earlier version of this project; it backs no number in the paper. Its
+experiment number is not an experiment ID of the paper (E1-E14, Table III).
+"""
 import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'common'))
 

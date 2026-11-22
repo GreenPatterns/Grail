@@ -1,20 +1,23 @@
 """
-Phase 2 — silent-no-op SIGNATURE + vulnerability on INDEPENDENT architectures.
+Two further models of our own (E11; Fig. 2, Section VI-G, Supplement H): the silent-no-op
+signature and the in-window response on two architectures that differ from GDTE:
+  * SignedSnapshotGNN  — SGCN/SDGNN-style signed mean pools + GRU temporal head (the paper's
+                         signed snapshot GNN);
+  * EvolveGCNLite      — EvolveGCN-style GRU weight evolution + signed graph convolution.
+GDTE itself uses spectral-gated random-Fourier-feature layers and S3R attention, so the three
+span distinct structural and temporal mechanisms. What they share is that they read only a
+prefix of the snapshots, the data flow of Proposition 1.
 
-Shows the placement hazard is a property of the prefix-snapshot pattern, not of
-GDTE, by reproducing it on two further, deliberately different families:
-  * SignedSnapshotGNN  — SGCN/SDGNN-style signed mean pools + GRU temporal head;
-  * EvolveGCNLite       — EvolveGCN-style GRU weight-evolution + signed graph conv.
-GDTE itself uses spectral-gated RFF layers + S3R attention, so the three span
-distinct structural and temporal mechanisms.
-
-For each architecture we (a) train to a held-out link-prediction AUC (transductive
-10% edge hold-out, so the number is generalization, not in-sample fit), then run
-the SAME diagnostic used for GDTE (run_p0b_verify):
-  * placement sweep: distrust edge into each processed snapshot s0..s_{T-1} vs
-    "appended"; record ΔR and label-Δ (Proposition 1 predicts label-Δ=0 appended);
-  * sign test @ last processed snapshot: trust raises / neutral ~0 / distrust lowers;
-  * flip grid: optimized single/five-edge threshold-flip rate, low+moderate strata.
+For each architecture we (a) train to a held-out link-prediction AUC (random 10% edge
+hold-out, so the number measures generalization, not in-sample fit; it is not comparable with
+GDTE's forward-chaining AUC), then run the SAME diagnostic used for GDTE (run_p0b_verify):
+  * placement sweep on 12 strata targets: a distrust edge into each processed snapshot
+    s0..s_{W-1} vs out-of-window (key `appended`); record the shift and Lambda (key
+    `label_delta`; Proposition 1 predicts Lambda = 0 out-of-window);
+  * sign control at the last processed snapshot: a trust edge raises the score, a distrust
+    edge lowers it;
+  * flip grid: total-score flip rate of one or five optimized edges, 16 targets per stratum
+    (low and moderate). The propagation-only score is not computed for these models.
 
 Run: GRAIL_DATASETS=otc,alpha python code/experiments/run_p2_arch_signature.py
 """

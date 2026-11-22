@@ -1,13 +1,16 @@
 """
-Figure: complete-cohort single-edge attack over ten independently trained models,
-drawn from results/unified/cohort_summary.json (code/analyze_cohort.py).
+Panels of Fig. 3: the complete cohort (E3), one in-window distrust edge, ten runs, drawn from
+results/unified/cohort_summary.json (code/analyze_cohort.py). make_dsn_figures.py draws the
+paper's Fig. 3 from these panels, with the paper's terms. Run on its own, this script writes an
+older-labeled version to figures/fig_cohort.pdf, over the shipped Fig. 3; run
+make_dsn_figures.py afterwards to restore it.
 
-  a, b : flip rate by the target's distance to the 0.5 gate (clean margin R - 0.5), OTC, Alpha;
-         optimized vs random source (colour), propagation-only (solid, filled) vs naive total
-         effect (dashed, hollow); bars are seed-clustered bootstrap 95% intervals
-  c    : the propagation-only shift one edge achieves (median |dR_prop|, pooled over models)
-         against the shift needed to cross the gate (gray: each margin band's range)
-  d    : propagation-only flip rate by the target's number of raters, mean +- std over models
+  a, b : flip rate by the target's distance to the threshold 0.5 (clean margin R - 0.5), OTC,
+         Alpha; optimized vs random source (colour), propagation-only (solid, filled) vs total
+         score (dashed, hollow); bars are run-clustered bootstrap 95% intervals
+  c    : the propagation-only drop one edge achieves (median |dR_prop|, pooled over runs)
+         against the drop needed to cross the threshold (gray: each margin band's range)
+  d    : propagation-only flip rate by the target's number of raters, mean +- std over runs
 Colours: the dataviz skill's validated 2-slot palette (blue, orange); datasets in c and d are
 told apart by marker shape and line style, never by colour alone. TrueType fonts only.
 

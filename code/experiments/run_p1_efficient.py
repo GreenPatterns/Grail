@@ -1,24 +1,26 @@
 """
-Phase 1 — EFFICIENT guided attack at the correct (processed) placement.
+Source selection (E10; Section VI-F, Table S5, Fig. S2; the Section VII example comes from the
+OTC row): strategies choose B = 5 in-window sources for 16 strata targets (8 moderate, 8 low)
+from the same C = 60 candidates; the heuristic ranks every account that does not rate the target.
+Each strategy's edges are scored in-window and, as a control, out-of-window. JSON keys keep the
+code's names: `counterfactual` is the optimized strategy, `expert` the heuristic, and
+`mean_dr_appended` the out-of-window shift.
 
-Phase 0 showed: at the correct placement a single/few distrust edges are devastating,
-but the per-candidate counterfactual costs O(C) forward passes. Phase 1 asks: can a
-GRADIENT method recover that ranking far more cheaply?
+Strategies (all scored in-window with score_edge_set_processed):
+  counterfactual : optimized; exact single-edge shift of every candidate, C forward passes.
+  batch_trust    : batch gradient; ONE backward pass over all C candidates, trust background.
+  batch_neutral  : batch gradient with a neutral [0.5, 0.5] background (not in the paper).
+  ig             : integrated gradient; 16 backward passes along the trust -> distrust path.
+  greedy         : greedy gradient; B backward passes, re-ranking after each committed edge.
+  expert         : model-free heuristic (no model access).
+  random         : random candidates.
+  prbcd          : PRBCD (Geisler et al. 2021), relaxed distrust-label strengths (baselines_sota).
+  influence      : influence edit (Heo et al. 2025) (baselines_sota).
+  node_injection : the lowest-degree quarter of the candidates, ranked by exact in-window shift
+                   (baselines_sota).
 
-Methods compared (all at processed placement; ΔR via score_edge_set_processed):
-  Counterfactual (GOLD)  : O(C) forward, exact.
-  Batch-grad (trust)     : ONE backward, all C candidates, non-saturating trust background.
-  Batch-grad (neutral)   : ONE backward, neutral [0.5,0.5] background.
-  IntegratedGrad         : ~16 backward (joint), trust->distrust label path.
-  Greedy-grad            : B backward, re-rank after each committed edge.
-  Expert (behavioral)    : no model access.
-  Random                 : weak baseline.
-  PRBCD (adapted)        : Geisler et al. 2021, relaxed distrust-label strengths (baselines_sota).
-  Influence edit         : Heo et al. 2025 influence-function edge edits (baselines_sota).
-  Node injection         : low-degree source pool ranked by processed counterfactual (baselines_sota).
-
-Reports per method: mean realized top-B ΔR, Spearman vs counterfactual, cost (passes),
-flip rate. Success = an efficient gradient method matches counterfactual ΔR at << cost.
+Reports per strategy: mean total shift of its top-B edges in-window and out-of-window, Spearman
+correlation with the optimized ranking, cost in passes, and flip rate.
 
 Run: GRAIL_DATASETS=otc,alpha python code/experiments/run_p1_efficient.py
 """
@@ -69,7 +71,7 @@ def run_dataset(ds):
     methods = ["counterfactual", "batch_trust", "batch_neutral", "ig", "greedy",
                "expert", "random", "prbcd", "influence", "node_injection"]
     dr = {m: [] for m in methods}
-    dr_app = {m: [] for m in methods}  # SAME top-B set, APPENDED placement (Q7)
+    dr_app = {m: [] for m in methods}  # SAME top-B set, out-of-window (appended) placement
     rho = {m: [] for m in ["batch_trust", "batch_neutral", "ig"]}
     flips = {m: 0 for m in methods}
     n_elig = 0
@@ -101,7 +103,7 @@ def run_dataset(ds):
                        if s in pool][:B] or o.baseline_expert_heuristic_ranking(edges, labels, t, good, top_k=B),
             "random": pool[:B],
             # published attack families, adapted to reputation; every ranker
-            # sees the SAME pool, and its top-B is scored at the processed placement
+            # sees the SAME pool, and its top-B is scored at the in-window placement
             "prbcd": baselines_sota.rank_prbcd(
                 o, edges, labels, t, candidate_sources=pool, budget=B,
                 max_candidates=C_POOL, top_k=B)[:B],
@@ -115,7 +117,7 @@ def run_dataset(ds):
         for m, srcs in sets.items():
             d, _, ra = o.score_edge_set_processed(edges, labels, srcs, t, 'distrust', return_after=True)
             dr[m].append(d)
-            # Same selected edges, appended placement: shows every method is
+            # Same selected edges, out-of-window (appended) placement: shows every method is
             # null at the wrong placement, end-to-end (not just by argument).
             dr_app[m].append(o.score_edge_set(edges, labels, srcs, t, 'distrust'))
             if elig and ra < 0.5:

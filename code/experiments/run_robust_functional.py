@@ -1,4 +1,7 @@
 """
+Earlier runner, merged into run_reputation_baselines.py (Supplement D), which imports its
+helpers; its own output backs no number in the paper.
+
 Robust-aggregation baseline: does a robust reputation functional blunt the attack?
 
 The paper's reputation is the MEAN of the incoming raters' predicted trust (Eq. 1). A
@@ -8,13 +11,13 @@ same in-window distrust injections under three functionals (mycode/reputation.py
   median
   trimmed  (10% trimmed mean)
 for three attackers, following Mujkanovic et al. (2022) for the adaptive one:
-  mean_opt   : top-B sources by the processed single-edge counterfactual under the MEAN
-  median_opt : top-B sources by the same counterfactual under the MEDIAN (adaptive)
-  random     : B random non-neighbor sources
-Each (attacker, functional) pair reports the total-effect and propagation-only flip rate
+  mean_opt   : top-B sources by the exact single-edge in-window shift under the MEAN
+  median_opt : top-B sources by the same shift under the MEDIAN (adaptive)
+  random     : B random sources that do not rate the target
+Each (attacker, functional) pair reports the total and the propagation-only flip rate
 (eligible: clean reputation >= 0.5 under that functional) and mean shift.
 
-Pools (C=50) are drawn once per target, and both counterfactual rankings are computed
+Pools (C=50) are drawn once per target, and both exact rankings are computed
 once per target and reused for every budget B in {1,3,5}.
 
 Run: GRAIL_DATASETS=otc,alpha python code/experiments/run_robust_functional.py

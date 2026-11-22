@@ -1,15 +1,14 @@
 """
-Phase 3 — genuine new-account (Sybil) attack. Instead of choosing existing
-non-neighbor sources, we inject B \emph{brand-new} zero-history nodes (generic
-features = column-mean of X, i.e. an average-looking fresh account) that each
-rate the target with distrust, spliced into the processed window and re-embedded.
-This tests deployment realism: can an attacker who only creates new accounts
-(rather than controlling established nodes) still flip low-reputation targets?
+Newly created accounts (E13; Section VII). Instead of existing sources that do not rate the
+target, we insert B brand-new nodes without any rating (node features = the column mean of X, an
+average-looking fresh account), each rating the target with distrust, spliced into the processed
+window and re-embedded. Can an attacker who only creates new accounts, rather than controlling
+established ones, still flip low-reputation targets?
 
-We compare three source regimes at the correct placement:
-  existing  : random existing non-neighbor accounts (current setup),
-  dormant   : lowest-out-degree existing accounts (minimal history),
-  new-Sybil : freshly injected nodes with no prior edges.
+We compare three source kinds, in-window, on 16 low-stratum targets:
+  existing  : random existing accounts that do not rate the target,
+  dormant   : the existing accounts with the fewest issued ratings (low-history accounts),
+  new-Sybil : newly created nodes with no prior edges (key `new_sybil`).
 
 Run: GRAIL_DATASETS=otc,alpha python code/experiments/run_p3_sybil.py
 """

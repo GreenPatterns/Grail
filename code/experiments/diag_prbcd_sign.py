@@ -1,4 +1,8 @@
-"""Diagnostic: is PRBCD's projected-gradient direction correct, or is the
+"""Legacy diagnostic from an earlier version of this project; it backs no number in the paper.
+It scores with score_edge_set, which appends the edges after the processed window (the silent
+no-op of Artifact 1), and its "E3" and "paper" refer to that earlier version.
+
+Diagnostic: is PRBCD's projected-gradient direction correct, or is the
 differentiable relaxation genuinely anti-aligned with executable impact?
 
 For a few targets, compares the TRUE counterfactual delta-R (via score_edge_set)

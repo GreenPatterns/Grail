@@ -1,17 +1,20 @@
 """
-Rigorous detector metrics + out-of-sample calibration.
+Structural detector (E14; Section VII, Table S12) and the calibration of GDTE's head on held-out
+edges (Section V, Supplement F).
 
-#9 DETECTOR. The paper previously reported a balanced-split AUC and (wrongly)
-described it as changing at a 1% FPR operating point. Here we report the correct
-threshold-independent ROC-AUC AND operating-point metrics (TPR at 1%/5% FPR,
-PR-AUC under realistic imbalance), under an ENTITY-DISJOINT split (attack targets
-partitioned into train/test halves so target/campaign identity cannot leak), and
-we evaluate an ADAPTIVE attacker that makes injected edges symmetric to defeat the
-dominant edge-symmetry feature.
+DETECTOR. A logistic regression on five structural features of an edge (degree and reputation of
+both endpoints, and whether the reverse edge exists) separates attack edges (B = 5 random-source
+edges per target, 25 low and 25 moderate strata targets) from organic distrust edges. The targets
+are split into disjoint training and test halves, so target identity cannot leak. We report the
+threshold-independent ROC-AUC and PR-AUC at the test half's natural imbalance, and the
+true-positive rate at 1% and 5% false positives. An ADAPTIVE attacker adds the reverse edge to
+each attack edge, to defeat the reverse-edge feature.
 
-#10 CALIBRATION out-of-sample. The head's P(trust|u,v) is calibrated on the
-HELD-OUT future edges (snapshots s7..s9, the temporal tail the model never
-trained on): Brier, ECE (10 bins), reliability curve, AUC, base rate.
+CALIBRATION. The head's P(trust|u,v) is evaluated on the held-out edges of snapshot s7 whose two
+endpoints appear in the processed window (1,046 on OTC, 883 on Alpha): Brier score, ECE (10
+bins), reliability curve, AUC and base trust rate. The JSON field `held_out_snapshots` reads
+s7-s9, a stale label; trainer.test_edges holds s7 alone in the single-snapshot prediction mode
+that every run uses.
 
 Run: GRAIL_DATASETS=otc,alpha python code/experiments/run_detector_calib.py
 """

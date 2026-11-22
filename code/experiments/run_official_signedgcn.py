@@ -1,27 +1,27 @@
 """
-Official-architecture reproduction on PyTorch-Geometric SignedGCN.
+SignedGCN of PyTorch Geometric (E11; Table IX, Section VI-G, Supplement H).
 
-SignedGCN is a STATIC signed GNN, so it has no temporal window; we therefore
-reproduce the two artifacts through the general data-flow control that
-Proposition 1 rests on, namely whether the injected edge enters the encoder:
+SignedGCN is a STATIC signed GNN, so it has no temporal window; we therefore construct the
+data-flow condition that Proposition 1 rests on, namely whether the attack edge enters the
+encoder:
 
-  in-encoder   (analog of in-window): the injected edge is added to the
-               message-passing graph, so it re-embeds the target -> label-sensitive,
-               single-edge propagation flip.
-  not-in-encoder (analog of out-of-window / appended): the injected edge enters
-               only the reputation average, scored from clean embeddings the edge
-               never touched -> label-independent no-op (Prop 1).
+  in-encoder     (analog of in-window): the attack edge is added to the message-passing graph,
+                 so it re-embeds the target -> label-sensitive, single-edge propagation flip.
+  not-in-encoder (analog of out-of-window): the attack edge enters only the reputation
+                 average, scored from clean embeddings that the edge never touched ->
+                 label-independent no-op (Proposition 1).
 
-Reputation(v) = mean over incoming edges (u,v) of P(positive | u,v), where P is
-SignedGCN's own discriminator softmax. We report the four-cell placement/label
-diagnostic and the single-edge low-stratum flip (total vs propagation-only).
+Reputation(v) = mean over v's raters u of P(trust | u,v) (Eq. 1), where P is SignedGCN's own
+discriminator softmax. We report the four-cell placement/label diagnostic (Lambda in- and
+not-in-encoder; keys `label_delta_inenc`, `label_delta_notenc`) and the single-edge flip of
+low-reputation targets under the total and the propagation-only score, with the source chosen
+as the best of 30 random candidates by the propagation-only score.
 
-This covers the propagation and self-conditioning claims on an official public
-implementation; the temporal out-of-window artifact itself is shown on the
-temporal models (Section Generality). Single seed (42) unless GRAIL_SEEDS set.
+This covers propagation and self-conditioning on an official public implementation; the
+temporal out-of-window artifact itself is shown on the temporal models (Section VI-G). Single
+seed (42) unless GRAIL_SEEDS is set.
 
-Run: GRAIL_DATASETS=otc,alpha CUDA_VISIBLE_DEVICES=0 \
-     python code/experiments/run_official_signedgcn.py
+Run: GRAIL_DATASETS=otc,alpha CUDA_VISIBLE_DEVICES=0      python code/experiments/run_official_signedgcn.py
 """
 import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'common'))

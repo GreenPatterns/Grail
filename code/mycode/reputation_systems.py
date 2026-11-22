@@ -7,7 +7,7 @@ fairness_goodness : Kumar, Spezzano, Subrahmanian & Faloutsos (ICDM 2016), "Edge
         f(u) = 1 - (1/(2|out(u)|)) * sum_{v in out(u)} |W(u,v) - g(v)|   (fairness, [0, 1])
     from f = g = 1 until convergence. A node with no incoming rating has goodness 0; a node
     that rates nobody keeps fairness 1. Goodness is the reputation; (g + 1) / 2 maps it to
-    [0, 1] so the paper's 0.5 trust gate corresponds to g = 0.
+    [0, 1] so the paper's threshold 0.5 corresponds to g = 0.
     init=(f, g) warm-starts the iteration, e.g. from the clean graph's fixed point when a
     few edges are added; the iteration reaches the same fixed point in fewer steps.
 """

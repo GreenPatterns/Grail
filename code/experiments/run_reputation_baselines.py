@@ -1,30 +1,30 @@
 """
-Reputation-function baselines, paired: every function is scored on the SAME targets,
-the SAME candidate pools and the SAME in-window distrust injections in ONE run, so the
-comparison carries no run-to-run training noise. It merges run_robust_functional.py
-(robust GNN aggregation) and run_graph_reputation.py (non-GNN reputation):
+Low-stratum experiment of Supplement D (Tables S3 and S4; also cited in Sections V and VI-D):
+every reputation function is scored on the SAME targets, the SAME candidate pools and the SAME
+in-window distrust edges in ONE run, so the comparison carries no run-to-run training noise. It
+merges run_robust_functional.py (robust GNN aggregation) and run_graph_reputation.py (non-GNN
+reputation):
 
-  GDTE mean / median / trimmed (10%) : aggregate of the incoming raters' predicted trust
-      (mycode/reputation.py), total effect (all raters) and propagation-only
-      (pre-existing raters, attacked embeddings; Eq. 3 of the paper)
-  FG      : Fairness-Goodness goodness (Kumar et al. 2016) on the same +1/-1 labels,
+  GDTE mean / median / trimmed (10%) : aggregate of the raters' predicted trust
+      (mycode/reputation.py), under the total score (all raters) and the propagation-only score
+      (pre-existing raters, attacked embeddings; Eq. 4 of the paper)
+  FG      : Fairness and Goodness (Kumar et al. 2016) on the same +1/-1 labels,
             reputation (g + 1) / 2 (mycode/reputation_systems.py)
-  fraction, beta, wilson : label-space aggregators (run_repbaselines_calib._label_reps)
+  fraction, beta, wilson : label-count functions (run_repbaselines_calib._label_reps)
 
 Attackers (top-B of one C=50 pool per target):
   random     : B random candidates
-  mean_opt   : processed single-edge counterfactual under the GDTE mean
-  median_opt : the same counterfactual under the GDTE median (adaptive against the median)
-  fg_opt     : FG's own single-edge counterfactual (adaptive against FG)
+  mean_opt   : exact single-edge in-window shift under the GDTE mean (optimized)
+  median_opt : the same under the GDTE median (adaptive against the median)
+  fg_opt     : FG's own single-edge shift (adaptive against FG)
 
 Per (stratum, attacker, function, B): eligible targets (clean reputation >= 0.5 under that
 function), flip rate with a Clopper-Pearson interval, and mean shift. Per-target values are
 kept for paired analyses.
 
-Run: GRAIL_DATASETS=otc,alpha GRAIL_OUT=reputation_baselines.json \
-     python code/experiments/run_reputation_baselines.py
+Run: GRAIL_DATASETS=otc,alpha GRAIL_OUT=reputation_baselines.json      python code/experiments/run_reputation_baselines.py
      GRAIL_FG_WARM=1 warm-starts every attacked FG solve from the clean fixed point (same
-     fixed point, far fewer iterations; used for the 689k-edge dated Epinions).
+     fixed point, far fewer iterations; used for Epinions-D, edg60000).
 """
 import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'common'))

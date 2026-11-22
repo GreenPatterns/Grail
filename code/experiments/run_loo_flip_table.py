@@ -1,17 +1,14 @@
 """
-Leakage-free flip table (headline configuration).
+Strata and budgets (E4; Table V): flip rates of B in {1, 3, 5} optimized in-window distrust
+edges per stratum (each candidate's single edge in s6 is scored exactly, and the B best are
+taken), under both scores. JSON keys keep the code's names:
 
-Reproduces the main flip table's setup -- OPTIMIZED (per-candidate processed
-counterfactual) sources, per stratum, budgets {1,3,5} -- but reports BOTH:
+  flip_total     : total score, over ALL raters (sources and pre-existing raters)
+  flip_preexist  : propagation-only score, over the PRE-EXISTING raters only, with embeddings
+                   recomputed after the attack. It removes the own-edge terms (dilution and
+                   self-conditioning) and keeps propagation to the target.
 
-  flip_total     : naive processed reputation over ALL raters (injected + legit)
-                   == the paper's current number
-  flip_preexist  : leakage-free reputation over PRE-EXISTING (legit) raters only,
-                   embeddings from enc(G+A). Removes self-edge conditioning and
-                   mechanical aggregation; keeps genuine propagation to v*.
-
-If flip_preexist stays high, the headline is a real vulnerability. If it falls,
-the naive number was inflated by self-conditioning.
+The Epinions-D runs use GRAIL_STRATA (low; moderate,high) and GRAIL_OUT.
 
 Run: GRAIL_DATASETS=otc,alpha python code/experiments/run_loo_flip_table.py
 """
@@ -67,7 +64,7 @@ def _pool(oracle, edges, target, C, rng):
 
 
 def _variants(oracle, edges, labels, target, srcs):
-    """Return (R0, R_full, R_preexist) at processed placement, distrust."""
+    """Return (R0, R_full, R_preexist) at the in-window placement (s6), distrust."""
     B = len(srcs)
     T = oracle.model.args.train_time_slots
     split = oracle.model.index_list[T - 1] + 1
@@ -109,12 +106,12 @@ def run_dataset(ds):
                 pool = _pool(oracle, edges, t, C_POOL, rng)
                 if len(pool) < B:
                     continue
-                # optimized: rank by processed single-edge counterfactual, take top-B
+                # optimized: rank by exact single-edge in-window shift, take top-B
                 cf = oracle.score_candidates_counterfactual_processed(
                     edges, labels, t, pool, sign='distrust')
                 srcs = [s for s, _ in sorted(cf.items(), key=lambda x: x[1])[:B]]
                 R0, Rf, Rp = _variants(oracle, edges, labels, t, srcs)
-                if R0 != R0 or R0 < 0.5:   # only targets initially above the gate are eligible
+                if R0 != R0 or R0 < 0.5:   # only targets initially above the threshold are eligible
                     continue
                 drt.append(Rf - R0); drp.append(Rp - R0)
                 ft.append(1 if Rf < 0.5 else 0)

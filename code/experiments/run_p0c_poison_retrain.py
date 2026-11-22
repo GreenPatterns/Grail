@@ -1,4 +1,8 @@
 """
+Legacy script from an earlier version of this project: it backs no number in the paper, and its
+output (p0c_poison_retrain.json) is not shipped. The paper's poisoning controls (E9, Table S10)
+come from run_poison_matrix.py. Variables keep the older name `victim` for a target.
+
 Phase 0c — the UNIMPEACHABLE realism test: genuine retraining with poison edges.
 
 Phase 0/0b measured the realistic deployment (fixed weights, forward-pass the current
@@ -13,8 +17,9 @@ Design (cancels retraining noise):
   R_distrust(v) : retrain with B (src->v) edges labelled DISTRUST, measure v.
   R_trust(v)    : retrain with the SAME B edges labelled TRUST, same seed -> isolates
                   the LABEL-poison effect (everything else identical).
-  Placebo       : retrain with B distrust edges to an UNRELATED node w; victims' R
-                  should be ~unchanged (bounds cross-talk / retraining noise).
+  Placebo       : retrain with B distrust edges on the first target (victims[0]) and
+                  measure the last one (victims[-1]), whose R should be ~unchanged
+                  (bounds cross-talk / retraining noise).
 
 If R_distrust < R_trust and R_distrust < R_clean across victims, genuine training-time
 poisoning works -> the threat model is real beyond any frozen-weight artifact.

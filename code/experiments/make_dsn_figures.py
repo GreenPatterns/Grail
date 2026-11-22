@@ -9,6 +9,11 @@ writes the three evidence panels as separate single-column figures:
   fig_functions.pdf  reputation functions on the common target set                  (Fig. S1 of the supplement)
   fig_sources.pdf    source-selection strategies, in-window and out-of-window       (Fig. S2 of the supplement)
 
+Fig. 2 labels the snapshots s0..s6 and out, and writes the small values of its lower axis as
+1e-7; Fig. 3 angles the margin-bin labels of panel c. In both, every text, tick labels included,
+is raised to a minimum size at the figure's own width (7.4 pt in Fig. 2, 6.6 pt in Fig. 3), which
+prints at about 6.9 and 7.1 pt in the paper. Fig. S1 and S2 keep the sizes they are drawn with.
+
 Run: python code/experiments/make_dsn_figures.py [output_dir]   (no GPU; default: figures/dsn)
 """
 import json
@@ -82,7 +87,7 @@ def save(fig, out_dir: str, name: str, min_font: float = 0.0, min_marker: float 
     if min_font or min_marker:
         enforce_print_size(fig, min_font, min_marker)
     path = os.path.join(out_dir, name)
-    fig.savefig(path, bbox_inches='tight', pad_inches=0.01)
+    fig.savefig(path, bbox_inches='tight', pad_inches=0.01, metadata={'CreationDate': None})
     plt.close(fig)
     print('wrote', os.path.abspath(path))
 

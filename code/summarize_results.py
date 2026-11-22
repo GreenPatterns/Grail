@@ -1,4 +1,8 @@
 """
+Legacy from an earlier version of this project: it backs no number in the paper, and its E1-E10
+are not the experiment IDs E1-E14 of the paper (Table III). The scripts behind the paper are
+listed in Sections 4 to 7 of README.md.
+
 ReputationAttack Results Summarizer
 ====================================
 Reads all JSON results from the unified results directory and prints

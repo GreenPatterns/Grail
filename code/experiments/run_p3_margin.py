@@ -1,15 +1,17 @@
 """
-Phase 3 — margin / threshold robustness (addresses "are you just flipping users
-already at 0.5?").
+Margin and other thresholds (Supplement F, "Other thresholds", cited in Section VI-B): does the
+attack only flip users that already sit at 0.5? A separate one-run experiment, not the run of
+Table V.
 
 Reports, per dataset and stratum:
-  * clean reputation distribution (mean, sd, quartiles);
-  * distance-to-threshold before attack (R_clean - 0.5);
-  * single-edge (B=1) and B=5 flip rate as a function of clean margin band;
-  * flip rate under alternative gate thresholds {0.4, 0.5, 0.6};
-  * Spearman(clean in-degree, |dR|) to separate margin from degree effects.
+  * the clean reputation distribution (mean, sd, quartiles);
+  * the distance to the threshold before the attack (R_clean - 0.5);
+  * the single-edge (B=1) and B=5 flip rate by clean margin band;
+  * the flip rate at the thresholds {0.4, 0.5, 0.6} (key `by_threshold`), among the targets
+    above each threshold;
+  * Spearman(number of raters, |dR|), to separate the margin from the rater count.
 
-All at the correct processed placement, optimized counterfactual sources.
+All with in-window edges from optimized sources, under the total score.
 
 Run: GRAIL_DATASETS=otc,alpha python code/experiments/run_p3_margin.py
 """
@@ -82,7 +84,7 @@ def run_dataset(ds):
         out["by_threshold"][str(thr)] = {"n_eligible": n, "flip_B1": f1, "flip_B5": f5}
         log(f"  threshold {thr}: eligible n={n}  flip B1={f1:.0%}  flip B5={f5:.0%}")
 
-    # flip rate (gate 0.5) by clean-margin band, to test margin dependence
+    # flip rate (threshold 0.5) by clean-margin band, to test margin dependence
     elig = arr_clean >= 0.5
     margin = arr_clean[elig] - 0.5
     ra1e, ra5e = arr_ra1[elig], arr_ra5[elig]

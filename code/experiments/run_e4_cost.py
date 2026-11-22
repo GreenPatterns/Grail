@@ -1,4 +1,7 @@
-"""E4 (cost-normalized utility): attacker compute cost vs. attack utility.
+"""Legacy runner from an earlier version of this project; it backs no number in the paper. Its
+experiment number is not an experiment ID of the paper (E1-E14, Table III).
+
+E4 (cost-normalized utility): attacker compute cost vs. attack utility.
 
 Shows the gradient/SOTA attacks buy no cost-effective advantage: the only
 effective methods are the model-free Expert (negligible cost) and the exact

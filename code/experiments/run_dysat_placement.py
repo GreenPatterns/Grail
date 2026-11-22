@@ -1,23 +1,25 @@
 """
-Placement test on the official DySAT release (Sankar et al., WSDM 2020;
-https://github.com/aravindsankar28/DySAT, commit 777f290). Runs in a Python 3.7 / TensorFlow
-1.15 environment; the released training script is executed unchanged through runpy, with one
-compatibility shim: the Python-2 code indexes map() results, so its modules get a list-
-returning map.
+DySAT, official release (E11; Table IX, Table S9, Section VI-G): Sankar et al., WSDM 2020;
+https://github.com/aravindsankar28/DySAT, commit 777f290. Runs in the DySAT environment (Python
+3.7, TensorFlow 1.15); the released training script is executed unchanged through runpy. The
+compatibility steps: its Python-2 modules get list-returning map and range, tf.contrib.linalg
+is aliased to tf.linalg, the log_dir flag that newer absl already defines is removed, and the
+flags file that its run script normally writes is written here. The harness also keeps the
+weights of the epoch that the script's selection rule picks (best validation AUC), which
+reproduce that epoch's embeddings.
 
 Bitcoin-OTC / Alpha are split into ten equal-time-span snapshots as in the paper (unsigned,
 undirected graphs: DySAT never reads ratings). DySAT is trained with its default flags on
 time_steps = 8; its script replaces the last input graph by the previous snapshot's edges and
 evaluates the embeddings at step 6, so snapshots s0..s6 are processed and s7 is not.
-Reputation of v is the mean predicted trust over v's directed raters in s0..s6, from a
-class-balanced logistic-regression trust head on Hadamard features (DySAT's own evaluation
-classifier type) fitted to the window's rating signs. A distrust edge is injected into s0..s6 or into s7, the
+Reputation of v is the mean predicted trust over v's raters in s0..s6, from a class-balanced
+logistic-regression trust head on Hadamard features (DySAT's own evaluation classifier type)
+fitted to the window's rating signs. A distrust edge is inserted into s0..s6 or into s7, the
 embeddings are recomputed by feeding the trained model the modified adjacency, and we report
-the target's embedding change and the reputation shift (total effect and propagation-only).
+the target's embedding change and the shift under the total and the propagation-only score.
 
-Run (dysat env, CPU):
-  DYSAT_DIR=<clone> GRAIL_DATASETS=otc,alpha <dysat-env>/bin/python \
-      code/experiments/run_dysat_placement.py
+Run (DySAT environment, CPU):
+  DYSAT_DIR=<clone> GRAIL_DATASETS=otc,alpha <dysat-env>/bin/python       code/experiments/run_dysat_placement.py
 """
 import builtins, json, os, runpy, sys
 

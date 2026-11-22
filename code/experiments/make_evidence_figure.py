@@ -1,24 +1,26 @@
 """
-Figure 2 of the paper (figure*, three panels), drawn only from saved JSONs:
+Panel functions of three figures, drawn only from saved JSONs. make_dsn_figures.py draws each
+panel as its own figure, with the paper's terms; run on its own, this script writes an older
+combined three-panel version with the older labels (figures/fig_evidence.pdf, not in the paper):
 
-  a  placement signature : label-Delta of one distrust edge vs the snapshot it is injected
-                           into (s0..s6) or appended past the window, for GDTE on four
-                           datasets, two in-house temporal encoders and the official
-                           TrustGuard release on the Bitcoin graphs (p0b_main.json,
+  a  placement (Fig. 2; E1, E11) : label sensitivity Lambda of one distrust edge vs the snapshot
+                           that holds it (s0..s6) or out-of-window (appended past the window),
+                           for GDTE on four datasets, the two further models of our own and the
+                           official TrustGuard release on the Bitcoin graphs (p0b_main.json,
                            p0b_edgfull.json, p2_arch_signature.json, p0b_trustguard_{otc,alpha}.json)
-  b  selection and placement : each strategy's mean shift at B = 5 as a share of the exact
-                           counterfactual's in-window shift, in-window and appended, as an
-                           annotated diverging heatmap
+  b  source selection (Fig. S2; E10) : each strategy's mean total shift at B = 5 as a share of
+                           the optimized strategy's in-window shift, in-window and out-of-window,
+                           as an annotated diverging heatmap
                            (p1_sota.json, p1_sota_edgfull.json, p1_sota_epn.json)
-  c  reputation functions : single-edge flip rate of every reputation function on the common
-                           target set (targets eligible under all functions; same injected
-                           edges), worst case over three attackers, exact 95% intervals; hollow
-                           markers restrict the set to targets with more than ten raters
+  c  reputation functions (Fig. S1; E7) : single-edge flip rate of every reputation function on
+                           the common set (targets eligible under all functions; same attack
+                           edges), strongest of three attackers per target, exact 95% intervals;
+                           hollow markers restrict the set to targets with more than ten raters
                            (common_set_summary.json from code/analyze_common_set.py)
 
 Colour and marker both encode the dataset. Slots follow the dataviz skill's reference
 palette: the three temporal graphs take slots 1-3 (blue, orange, aqua), which validate
-all-pairs; the undated SNAP Epinions takes slot 4 (yellow) and appears only in the line
+all-pairs; the undated Epinions-S takes slot 4 (yellow) and appears only in the line
 panel, where adjacent-pair validation and redundant markers apply. The heatmap uses the
 skill's blue <-> red diverging pair with the gray midpoint #f0efec, symmetric about 0.
 TrueType fonts only (no Type 3 fonts).
@@ -83,7 +85,7 @@ def _title(ax, letter, text, x=0.0):
 
 # ── a: placement signature ──────────────────────────────────────────────────
 def panel_placement(ax, axb):
-    sweeps = []   # (dataset, encoder, {pos: label-delta})
+    sweeps = []   # (dataset, encoder, {pos: label sensitivity Lambda})
     main = _load('p0b_main.json') or {}
     edt = _load('p0b_edgfull.json') or {}
     for ds, src in (('otc', main), ('alpha', main), ('edg60000', edt), ('epn30000', main)):
@@ -100,8 +102,8 @@ def panel_placement(ax, axb):
                                               for k, v in tg[ds]['sweep_label_delta'].items()}))
     ls = {'GDTE': '-', 'SignedSnapshotGNN': (0, (3, 1.2)), 'EvolveGCN': (0, (1, 1)),
           'TrustGuard': (0, (4, 1, 1, 1))}
-    # Broken y-axis: the upper axis zooms on the processed snapshots s0..s6 (label-Delta 0.04 to 0.5),
-    # the lower axis shows the appended edges (about 1e-8), and dotted connectors cross the break.
+    # Broken y-axis: the upper axis zooms on the processed snapshots s0..s6 (Lambda 0.04 to 0.5),
+    # the lower axis shows the out-of-window edges (about 1e-8), and dotted connectors cross the break.
     x_app = 8.0
     for a in (ax, axb):
         a.axvspan(6.6, 8.6, color=SHADE, lw=0, zorder=0)
@@ -170,7 +172,7 @@ def _p1_results():
 
 
 def share_matrix(res, cols=COLS_B):
-    """Rows x (dataset, placement) shares (%) of the counterfactual's in-window shift."""
+    """Rows x (dataset, placement) shares (%) of the optimized strategy's in-window shift."""
     mat = np.full((len(ROWS_B), 2 * len(cols)), np.nan)
     for j, ds in enumerate(cols):
         if ds not in res:

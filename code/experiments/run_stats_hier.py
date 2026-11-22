@@ -1,24 +1,24 @@
 """
-Hierarchical / seed-clustered re-analysis of the headline contrasts.
+Paired contrasts over runs (E2; Section VI-A, Table S6), clustered by run.
 
-The node-level Wilcoxon test treats targets as independent, but targets share a
-graph and a trained model, so the effective sample size is closer to the number
-of seeds. This script recomputes each headline contrast across five seeds and
-reports, per contrast:
-  - median and Cliff's delta (rank dominance effect size on the paired diffs),
-  - a seed-CLUSTERED bootstrap 95% CI on the median (the seed is the cluster),
-  - per-seed medians (direction consistency) and a seed-level sign-test p
-    (unit = seed, n=5), which is deliberately conservative.
+The targets of one run share a graph and a trained model, so the run, not the target, is the
+unit of replication. This script recomputes each contrast in every run of GRAIL_SEEDS (default
+42,1,2,3,4; the paper uses ten runs, 42 and 1 to 9, in stats_hier_s10.json), each run on its own
+three strata (25 targets each) with one optimized source per target (B = 1), and reports per
+contrast:
+  - median and Cliff's delta (rank dominance effect size on the paired differences),
+  - a run-clustered bootstrap 95% interval of the median (whole runs resampled),
+  - per-run medians (direction consistency) and a two-sided sign test over runs (ten runs give
+    p = 0.002 when all agree).
 
-Contrasts (B=1, pooled strata):
-  appended_vs_inwindow = dr_full_dis - dr_appended
-  naive_vs_prop        = dr_full_dis - dr_legit_dis
-  distrust_vs_trust    = dr_full_dis - dr_full_tru
-  prop_vs_zero         = dr_legit_dis
-  appended_vs_zero     = dr_appended
+Contrasts (JSON keys; first-named minus second, as in Table S6):
+  appended_vs_inwindow = dr_full_dis - dr_appended   in-window vs out-of-window (total shift)
+  naive_vs_prop        = dr_full_dis - dr_legit_dis  total vs propagation-only shift
+  distrust_vs_trust    = dr_full_dis - dr_full_tru   distrust vs trust label
+  prop_vs_zero         = dr_legit_dis                propagation-only shift vs 0
+  appended_vs_zero     = dr_appended                 out-of-window shift vs 0 (null control)
 
-Run: GRAIL_DATASETS=otc,alpha CUDA_VISIBLE_DEVICES=0 \
-     python code/experiments/run_stats_hier.py
+Run: GRAIL_DATASETS=otc,alpha CUDA_VISIBLE_DEVICES=0      python code/experiments/run_stats_hier.py
 """
 import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'common'))

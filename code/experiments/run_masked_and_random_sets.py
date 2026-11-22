@@ -1,18 +1,19 @@
 """
-Three analyses on a fixed set of low-stratum targets.
+Three analyses on a fixed set of targets from the seed-42 run (the 25 targets of its low
+stratum, plus 40 moderate ones for block A), re-scored in every run of GRAIL_SEEDS.
 
-Block A: FIXED target cohort reused across seeds, larger n, exact Clopper-Pearson intervals +
-  seed-clustered bootstrap CI. Separates training variance from target-sampling variance (same
-  node IDs every seed).
-Block B: STRICT query-edge-masked encoding. When scoring P(trust|u,v*) for a pre-existing rater
-  u, the edge (u,v*) is removed from the graph used to compute embeddings. This removes
-  same-edge conditioning for pre-existing edges too, the strongest form of the leakage control.
-  Reports flip_masked vs flip_preexist.
-Block C: random-source distribution. 50 random source sets per target; optimizer regret =
-  percentile of the optimized dR within the random dR distribution.
+Block A: the FIXED target set across runs, exact Clopper-Pearson intervals and a run-clustered
+  bootstrap interval. Superseded: the shipped block `A_fixed_cohort` of random_source_sets.json
+  comes from an older run whose seeds did not produce independent models, and the paper cites
+  neither it nor block B of that file.
+Block B: query-edge-masked control (E6; Section VI-C, Table S7). When scoring P(trust|u,v*) for a
+  pre-existing rater u, the edge (u,v*) is removed from the graph used to compute embeddings, so
+  no pre-existing rater's prediction is conditioned on its own edge. Reports flip_masked against
+  flip_preexist (the propagation-only flip). The paper's run is masked_control_s10.json.
+Block C: random source sets (Section VI-F, Supplement F), seed-42 model only. 50 random source
+  sets per target; the percentile of the optimized set's shift within the random distribution.
 
-Run: GRAIL_DATASETS=otc,alpha CUDA_VISIBLE_DEVICES=0 \
-     python code/experiments/run_masked_and_random_sets.py
+Run: GRAIL_DATASETS=otc,alpha CUDA_VISIBLE_DEVICES=0      python code/experiments/run_masked_and_random_sets.py
      (GRAIL_SEEDS=42,1,... sets the seeds, GRAIL_BLOCKS=B runs only the masked control,
       GRAIL_OUT names the output file)
 """
@@ -92,7 +93,7 @@ def _pool(oracle, edges, target, C, rng):
 
 
 def _build_attacked(oracle, edges, labels, target, srcs):
-    """Splice B distrust edges into the last trained snapshot (processed placement)."""
+    """Splice B distrust edges into the last processed snapshot (in-window placement)."""
     B = len(srcs)
     T = oracle.model.args.train_time_slots
     split = oracle.model.index_list[T - 1] + 1
@@ -107,7 +108,7 @@ def _build_attacked(oracle, edges, labels, target, srcs):
 
 
 def _variants(oracle, edges, labels, target, srcs):
-    """(R0, R_full, R_preexist) at processed placement, distrust — cheap (2 encodes)."""
+    """(R0, R_full, R_preexist) at the in-window placement, distrust — cheap (2 encodes)."""
     ae, al, aidx, split, inj = _build_attacked(oracle, edges, labels, target, srcs)
     dst = (ae[1] == target).nonzero(as_tuple=True)[0]
     pre = torch.tensor([c for c in dst.tolist() if c not in inj], dtype=torch.long, device=oracle.device)
@@ -218,7 +219,7 @@ def block_B(ds, cohort, models):
                 R0 = _p_trust(oracle, z0, t, edges, cdst).mean().item()
             if R0 != R0 or R0 < 0.5 or len(pre) == 0:
                 continue
-            # leakage-free (preexist, unmasked encoder) for reference
+            # propagation-only (preexist, unmasked encoder) for reference
             z1 = _encode(oracle, ae, al, aidx)
             with torch.no_grad():
                 Rp = _p_trust(oracle, z1, t, ae, pre).mean().item()

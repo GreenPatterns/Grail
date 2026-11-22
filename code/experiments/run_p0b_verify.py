@@ -1,27 +1,27 @@
 """
-Phase 0b — VERIFY the placement finding before building on it.
+Per-snapshot sweep and sign control (E1; Fig. 2 and Section VI-A): one distrust edge from a
+random source, inserted into each processed snapshot s0..s6 in turn or out-of-window (appended
+after the processed window), for 12 strata targets (8 moderate, 4 low). JSON keys keep the code's
+names: `appended` is out-of-window, and `sweep_label_delta` holds the label sensitivity Lambda.
 
-Phase 0 showed a single distrust edge does ~0 damage when APPENDED (the appended
-placement, scored against frozen historical embeddings) but ~-0.16 when the edge
-enters the model's embedding window (re-embedding / sliding-window retrain). Code
-inspection confirms two distinct, legitimate threat models:
+The two placements correspond to two deployment regimes (Section II):
 
-  TM-A (frozen embeddings): train_edges_final = snapshots 0..T-1; the model embeds
-       once and scores new links via the regression head on endpoint embeddings
-       (gcn3.test_model). New edge never re-embedded -> label irrelevant. WEAK.
-  TM-B (re-embedding): attack edge spliced INTO a processed snapshot, model
-       re-embeds. Label matters. STRONG.
+  frozen embeddings (TM-A in the code): train_edges_final = snapshots 0..W-1; the model embeds
+       once and scores a new link with the head on the endpoint embeddings (gcn3.test_model).
+       A new edge is never re-embedded, so its label is irrelevant.
+  re-embedding (TM-B in the code): the attack edge is spliced INTO a processed snapshot and the
+       model re-embeds, so its label matters.
 
-This script stress-tests the finding so we don't build on an artifact:
+The script checks:
 
-  V1 Structural facts: |train_edges_final|, len(index_list), where "appended" lands.
-  V2 Placement sweep: inject the SAME distrust edge into snapshot s=0..T-1 and
-     "appended"; record ΔR + label-Δ. If snapshots 0..T-1 are all strong and only
-     appended is ~0, the effect is "processed vs not" (not cherry-picked snap 6).
-  V3 Sign test @ last trained snapshot: trust edge should RAISE reputation, neutral
-     ~0, distrust LOWER it. Confirms genuine label semantics, not a splice artifact.
-  V4 In-degree confound: correlate |ΔR| with target in-degree; report label-Δ
-     (averaging-independent) separately.
+  V1 Structural facts: |train_edges_final|, len(index_list), where an out-of-window edge lands.
+  V2 Placement sweep: insert the SAME distrust edge into snapshot s = 0..W-1 and out-of-window;
+     record the shift and Lambda. If every processed snapshot responds and only the
+     out-of-window position is ~0, the effect is processed vs not, not a chosen snapshot.
+  V3 Sign control at the last processed snapshot (Check 4): a trust edge should RAISE the score,
+     a distrust edge LOWER it, and a neutral edge fall in between.
+  V4 Rater-count confound: correlate |shift| with the target's number of raters; report Lambda
+     (independent of averaging) separately.
 
 Run: GRAIL_DATASETS=otc,alpha python code/experiments/run_p0b_verify.py
 """

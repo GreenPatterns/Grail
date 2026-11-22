@@ -2,19 +2,21 @@
 """
 Silent-No-Op Diagnostic — minimal, self-contained demo.
 =================================================================
-Demonstrates the paper's central, directly-checkable claim: an attack edge
-APPENDED past the processed snapshot window is a *silent no-op* (its label never
-reaches the encoder, so trust and distrust give identical reputation shifts),
-whereas the SAME edge placed inside the processed window is label-sensitive and
-damaging.
+Demonstrates Artifact 1 of the paper (Proposition 1): an attack edge appended after the
+processed window (out-of-window) is a *silent no-op*: its label never reaches the encoder, so
+trust and distrust give identical reputation shifts. The same edge inside the processed window
+(in-window, at the end of the last processed snapshot s6) is label-sensitive and damaging.
 
-It prints, for a handful of low-reputation targets:
-  * appended placement : mean ΔR  and  label-Δ = |ΔR_distrust − ΔR_trust|  (≈ 0)
-  * processed placement: mean ΔR  and  label-Δ  (clearly > 0)
+It trains GDTE (seed 42) and prints, for eight strata targets (the moderate stratum first):
+  * out-of-window: mean total shift ΔR and label sensitivity Λ = mean |ΔR_distrust − ΔR_trust| (≈ 0)
+  * in-window    : mean total shift ΔR and Λ (clearly > 0)
+The code keeps its older names for the two placements: 'appended' (out-of-window) and
+'processed' (in-window).
 
 A reader needs only a trained model and a few forward passes — no attack
-optimization. Runs in a couple of minutes on a single GPU (≈ a minute on CPU
-for BTC-OTC).
+optimization. On Bitcoin-OTC it runs in about a minute on one GPU and in about
+nine minutes on CPU (CUDA_VISIBLE_DEVICES="", eight threads), almost all of it
+training.
 
 Usage:
     GRAIL_DATASETS=otc python code/silent_noop_demo.py
@@ -31,16 +33,17 @@ from experiment_common import train_model, get_targets
 from mycode.trust_influence import ReputationAttackOracle
 
 DIS, TRU = [0.0, 1.0], [1.0, 0.0]
+PLACEMENT = {"appended": "out-of-window", "processed": "in-window"}   # code name -> paper term
 
 
 def shift(oracle, edges, labels, target, src, where, label_vec):
-    """ΔR of one injected edge, placed either 'processed' (last trained snapshot)
-    or 'appended' (past the processed window)."""
+    """Total shift ΔR of one attack edge, placed in-window ('processed': end of the last
+    processed snapshot) or out-of-window ('appended': after the processed window)."""
     idx = list(oracle.model.index_list)
     T = oracle.model.args.train_time_slots
     if where == "appended":
         split, bump_from = edges.shape[1], len(idx) - 1
-    else:                                   # processed: into last trained snapshot
+    else:                                   # in-window: end of the last processed snapshot
         split, bump_from = idx[T - 1] + 1, T - 1
     ne = torch.tensor([[src], [target]], dtype=torch.long, device=oracle.device)
     nl = torch.tensor([label_vec], dtype=torch.float, device=oracle.device)
@@ -83,14 +86,14 @@ def main():
     for where in ("appended", "processed"):
         dr = float(np.mean(res[where]["dr"]))
         ld = float(np.mean(res[where]["ld"]))
-        print(f"  {where:>9}: mean ΔR = {dr:+.4f}   label-Δ = {ld:.6f}")
+        print(f"  {PLACEMENT[where]:>13}: mean ΔR = {dr:+.4f}   Λ = {ld:.6f}")
     appended_silent = abs(np.mean(res["appended"]["dr"])) < 0.03 \
         and np.mean(res["appended"]["ld"]) < 1e-3
     processed_live = np.mean(res["processed"]["dr"]) < -0.03 \
         and np.mean(res["processed"]["ld"]) > 0.02
-    print(f"\n  appended placement is a SILENT, LABEL-INDEPENDENT no-op: {appended_silent}")
-    print(f"  processed placement is LABEL-SENSITIVE and damaging:       {processed_live}")
-    print("\n  => The 'robust' verdict in the appended evaluation is a placement artifact.")
+    print(f"\n  out-of-window edge is a silent, label-independent no-op: {appended_silent}")
+    print(f"  in-window edge is label-sensitive and damaging:          {processed_live}")
+    print("\n  => A 'robust' verdict from an out-of-window test is a silent no-op (Artifact 1).")
 
 
 if __name__ == "__main__":

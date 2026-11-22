@@ -1,22 +1,22 @@
 """
-Placement signature on an official trust-GNN release: TrustGuard (Wang et al., IEEE TDSC
-2024; https://github.com/Jieerbobo/TrustGuard). The released code is used unchanged, in its
+TrustGuard, official release (E11; Fig. 2, Table IX, Table S8, Section VI-G): Wang et al., IEEE
+TDSC 2024; https://github.com/Jieerbobo/TrustGuard. The released code is used unchanged, in its
 default configuration (robust aggregation off), trained with its own trainer on its own
-Bitcoin-OTC / Bitcoin-Alpha files at T_train = 7 of K = 10 snapshots.
+Bitcoin-OTC / Bitcoin-Alpha files with W = 7 of K = 10 snapshots processed.
 
 TrustGuard's forward pass reads snapshot i as edges[index_list[i-1]:index_list[i]] for
-i < T only, the prefix-snapshot pattern of Proposition 1. We repeat the paper's placement
-sweep (run_p0b_verify.py): one random non-neighbor source per target, a distrust and a
-trust edge spliced into each processed snapshot s0..s6 or appended past the window, and
-report the mean reputation shift and label-Delta = |dR_distrust - dR_trust|. Reputation is
-Eq. 1 of the paper: mean softmax(W [z_u || z_v])_0 over the target's incoming raters.
-A single-edge flip test follows on low-reputation targets (clean R in [0.5, 0.6)): the most
-damaging of C = 50 non-neighbor candidates by exact counterfactual at s6, naive and
-propagation-only.
+i < W only, the data flow of Proposition 1. We repeat the per-snapshot sweep of
+run_p0b_verify.py: one random source per target that does not rate it, a distrust and a trust
+edge spliced into each processed snapshot s0..s6 or appended after the window
+(out-of-window, key `appended`), and report the mean total shift and the label sensitivity
+Lambda = |dR_distrust - dR_trust| (key `sweep_label_delta`). Reputation is Eq. 1 of the paper:
+mean softmax(W [z_u || z_v])_0 over the target's raters. A single-edge flip test follows on
+low-reputation targets (clean R in [0.5, 0.6)): the most damaging of C = 50 candidates that do
+not rate the target, by exact in-window shift at s6, under the total and the propagation-only
+score.
 
-Run (GPU, ps env):
-  TRUSTGUARD_DIR=<clone>/code GRAIL_DATASETS=otc,alpha \
-      python code/experiments/run_trustguard_placement.py
+Run (GPU, main environment):
+  TRUSTGUARD_DIR=<clone>/code GRAIL_DATASETS=otc,alpha       python code/experiments/run_trustguard_placement.py
 """
 import sys, os, json, gc
 
@@ -121,7 +121,7 @@ def run_dataset(ds):
              'sweep_label_delta': {k: float(np.mean(v)) for k, v in ld.items()},
              'targets': targets}
 
-    # single-edge flip test on low-reputation targets (exact counterfactual at s6)
+    # single-edge flip test on low-reputation targets (exact in-window shift at s6)
     low = [int(t) for t in rng.permutation([t for t, r in rep0.items() if 0.5 <= r < 0.6])[:N_FLIP]]
     flips_total, flips_prop, drs = [], [], []
     for t in low:

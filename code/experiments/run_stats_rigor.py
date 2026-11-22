@@ -1,18 +1,22 @@
 """
-Inferential-statistics pass over the trained models (no retraining).
-
-Emits, from per-target arrays at the optimized in-window placement:
-  (A) paired significance + effect size for the headline contrasts, Holm-corrected:
-       appended vs in-window ; naive vs leakage-free ; distrust vs trust ;
-       leakage-free vs 0 (effect is real) ; appended vs 0 (null control).
-  (B) three-way additive decomposition of the naive drop into
-       mechanical (dilution) + self-edge conditioning + propagation, with shares.
-  (C) distribution of leakage-free dR by stratum: median, IQR, worst case.
-  (D) decision cost: mean rank shift and fraction ejected from the top-10% trusted set.
-  (E) dose-response OLS of leakage-free dR on budget, clean margin, in-degree.
-Also writes two figures: a forest plot of the leakage-free single-edge flip across
-seeds and datasets (from multiseed_flip.json), and a violin of leakage-free dR by
-stratum.
+Statistics on one run (seed 42): the decomposition (E5; Table VI), and the rank shift and the
+regression on the margin (Supplement F). From per-target arrays at the optimized in-window
+placement, for the three strata (25 targets each) and B in {1, 3, 5}, it emits (JSON keys in
+parentheses):
+  (A) paired tests with Holm correction (`paired_tests`; superseded by the run-clustered
+      statistics of run_stats_hier.py and not cited in the paper): out-of-window vs in-window,
+      total vs propagation-only, distrust vs trust, propagation-only vs 0, out-of-window vs 0.
+  (B) the three-way split of the total shift (Eq. 5) into dilution (`mechanical`),
+      self-conditioning (`self_edge`) and propagation, with median per-target shares
+      (`decomp_B1`, `decomp_B5`; Table VI).
+  (C) the distribution of the propagation-only shift by stratum: median, IQR, worst case.
+  (D) the rank shift and the fraction ejected from the top-10% trusted set (`decision_cost`;
+      Supplement F).
+  (E) OLS of the propagation-only shift on budget, clean margin and number of raters
+      (`dose_response`; Supplement F).
+It also writes two figures that are not in the paper to results/unified/figures/: a forest plot
+of the propagation-only single-edge flip across seeds (it needs multiseed_flip.json, which is not
+shipped, so it is skipped) and a violin plot of the propagation-only shift by stratum.
 
 Run: GRAIL_DATASETS=otc,alpha python code/experiments/run_stats_rigor.py
 """
@@ -93,7 +97,7 @@ def _enc(orc, edges, labels, idx):
 
 
 def _legit(orc, edges, labels, target, srcs, sign):
-    """R0, R_full, R_legit, R_avg(mechanical baseline) at in-window placement."""
+    """R0, total R, propagation-only R (R_legit) and R_avg (dilution baseline) at the in-window placement."""
     m = orc.model; T = m.args.train_time_slots
     split = m.index_list[T - 1] + 1
     oi = list(m.index_list)
@@ -155,7 +159,7 @@ def collect(ds):
                 rec[f'dr_full_tru_B{B}'] = Rf_t - R0t
                 rec[f'mech_B{B}'] = Ravg - R0
                 if B == 1:
-                    # appended (silent) with same source
+                    # out-of-window (appended, a silent no-op) with the same source
                     dr_app = orc.score_edge_set(edges, labels, srcs, t, 'distrust')
                     rec['dr_appended_B1'] = float(dr_app)
                     rec['margin'] = R0 - 0.5
@@ -183,7 +187,7 @@ def analyze(rows):
     for k in tests:
         tests[k]['p_holm'] = holm[k]
     out['paired_tests'] = tests
-    # (B) 3-way decomposition (B=1 and B=5), shares of total naive drop
+    # (B) 3-way decomposition (B=1 and B=5), shares of the total drop
     for B in [1, 5]:
         tot = np.array(col(f'dr_full_dis_B{B}'))
         mech = np.array(col(f'mech_B{B}'))
@@ -199,7 +203,7 @@ def analyze(rows):
             'self_share_pct': float(np.nanmedian(self_e / denom) * 100),
             'mech_share_pct': float(np.nanmedian(mech / denom) * 100),
         }
-    # (C) distribution of leakage-free dR (B=1) by stratum
+    # (C) distribution of the propagation-only dR (B=1) by stratum
     dist = {}
     for stratum in ('high', 'moderate', 'low'):
         vals = [r['dr_legit_dis_B1'] for r in rows

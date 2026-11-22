@@ -1,20 +1,26 @@
 """
-Poisoning control matrix + periodic-retraining causal regime
+Poisoning controls (E9; Section VI-E, Table S10) and the retraining regime of E8 (Section VI-E,
+Table S11). JSON keys and variables keep the code's names: `victim` is the target.
 
-Controls: the single distrust-minus-trust control is extended to a full placebo
-matrix, retrained across seeds {42,1,2} so the attack effect is read against the
-distribution of ordinary retraining variation. Controls per seed:
-  none          : clean retrain (no injected edge)      -> retraining-variance ref
-  dis_victim    : B distrust edges (src->victim) in s6   -> the attack
-  tru_victim    : same B edges labelled TRUST            -> label control
-  dis_unrelated : B distrust edges to an UNRELATED node  -> placebo (cross-talk)
-  dis_randsnap  : B distrust edges to victim, placed in a RANDOM processed snapshot
-                  -> tests timestamp/snapshot sensitivity
+Poisoning controls (part 'matrix'): GDTE is retrained with B = 5 random-source distrust edges per
+target spliced into s6, under every seed of GRAIL_SEEDS (default 42,1,2; the paper uses
+42,1,2,3,4), so the attack effect is read against ordinary retraining variation. The targets are
+the first GRAIL_NVICTIMS strata targets of a clean seed-42 run, moderate stratum first (the paper
+uses 24, all from the moderate stratum).
+Each attacked retraining is compared with the clean retraining of the same seed. Controls:
+  none          : clean retraining (no attack edge)          -> reference of each seed
+  dis_victim    : B distrust edges on every target, in s6    -> the attack
+  tru_victim    : the same edges labeled trust               -> label control
+  dis_unrelated : B distrust edges on one target only, the first (victims[0]) -> placebo.
+                  Every target is measured, so the stored mean shift and flip rate cover all
+                  GRAIL_NVICTIMS targets, the poisoned one included.
+  dis_randsnap  : B distrust edges on every target, in a random processed snapshot (s0..s5)
+                  -> sensitivity to the snapshot
 
-Retraining regime: PERIODIC RETRAINING through the next snapshot. A fresh model is
-trained with train_time_slots=8 (the backbone rebuilt to length 8) on s0..s7,
-clean vs with the attack edge baked into the NEW snapshot s7. This is the
-deployment-faithful "retrain through s7" regime (no retroactive rewrite).
+Retraining regime (part 'causal'): a fresh model is trained on s0..s7 (train_time_slots = 8, the
+temporal layer rebuilt for eight snapshots), clean and with B distrust edges per target in the
+new snapshot s7, for GRAIL_NVICTIMS low-stratum targets (the paper uses 24). No processed
+snapshot is rewritten. Only the total score is computed.
 
 Run: GRAIL_DATASETS=otc,alpha python code/experiments/run_poison_matrix.py
 """
@@ -88,7 +94,7 @@ def retrain(ds, injections, seed, T_train=7, snap_for_inject=None, epochs=EPOCHS
 
 def poison_matrix(ds):
     log(f"\n{'='*62}\n  POISON MATRIX — {ds}\n{'='*62}")
-    # fix victims + sources from a clean seed-42 model
+    # fix the targets (victims) and their sources from a clean seed-42 model
     o0, e0, l0 = retrain(ds, [], 42)
     strata = o0.select_stratified_targets(e0, l0, per_stratum=max(8, N_VICTIMS))
     victims = (strata.get('moderate', []) + strata.get('low', []))[:N_VICTIMS]
@@ -102,7 +108,7 @@ def poison_matrix(ds):
     del o0; gc.collect(); torch.cuda.empty_cache()
 
     controls = ['none', 'dis_victim', 'tru_victim', 'dis_unrelated', 'dis_randsnap']
-    # per control: {seed: reputation} per victim, so a failed retrain cannot shift later seeds
+    # per control: {seed: reputation} per target, so a failed retrain cannot shift later seeds
     data = {c: {int(v): {} for v in victims} for c in controls}
     for seed in SEEDS:
         for c in controls:
@@ -115,7 +121,7 @@ def poison_matrix(ds):
             elif c == 'dis_unrelated':
                 inj = [(s, unrelated_target, DIS) for s in plan[victims[0]]]
             elif c == 'dis_randsnap':
-                # place victim distrust edges in a random processed snapshot (0..5)
+                # place the targets' distrust edges in a random processed snapshot (0..5)
                 rs = np.random.RandomState(seed).randint(0, 6)
                 inj = [(s, int(v), DIS) for v in victims for s in plan[v]]
             snap = rs if c == 'dis_randsnap' else None
@@ -126,7 +132,7 @@ def poison_matrix(ds):
                 del orc, e, l; gc.collect(); torch.cuda.empty_cache()
             except Exception as ex:
                 log(f"  [warn] {c} seed{seed} failed: {ex}")
-    # aggregate: mean victim R per control (over seeds+victims); dR vs 'none'
+    # aggregate: mean target R per control (over seeds and targets); dR vs 'none'
     def meanR(c):
         vals = [x for v in victims for x in data[c][int(v)].values()]
         return float(np.mean(vals)) if vals else float('nan')
@@ -144,7 +150,7 @@ def poison_matrix(ds):
         return (round(float(np.mean(drs)), 4) if drs else None,
                 round(100 * np.mean(flips), 1) if flips else None,
                 _cp_ci(sum(flips), len(flips)))
-    # retraining variance: std of clean victim R across seeds
+    # retraining variance: std of each target's clean R across seeds, averaged over targets
     clean_var = float(np.mean([np.std(list(data['none'][int(v)].values())) for v in victims
                                if len(data['none'][int(v)]) > 1] or [0.0]))
     res = {'B': B, 'seeds': SEEDS, 'n_victims': len(victims),
@@ -159,9 +165,9 @@ def poison_matrix(ds):
 
 
 def causal_retrain(ds):
-    """#1 regime B: retrain through the next snapshot s7 (T=8), clean vs attack in s7.
-    Victims and sources are fixed from a clean seed-42 model; every seed in SEEDS then
-    retrains clean and attacked models, and each victim's flip is read against its own
+    """Retraining regime of E8: retrain through the next snapshot s7 (W = 8), clean vs attack in s7.
+    Targets and sources are fixed from a clean seed-42 model; every seed in SEEDS then
+    retrains clean and attacked models, and each target's flip is read against its own
     seed's clean retrain (GPU training is not bit-deterministic, so one seed is one draw)."""
     log(f"\n  CAUSAL RETRAIN (T=8, attack in new snapshot s7) — {ds}")
     o0, e0, l0 = retrain(ds, [], 42, T_train=8)

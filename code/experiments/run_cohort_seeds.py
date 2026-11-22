@@ -1,16 +1,15 @@
 """
-Complete-cohort, multi-seed single-edge attack: propagation-
-only and total-effect flip rates for random and optimized sources, on EVERY eligible target
-(in-degree >= 2, clean reputation >= 0.5) of each genuinely seeded model, reported by the
-target's distance to the 0.5 gate.
+Complete cohort (E3; Table IV, Fig. 3, Table S1): flip rates of one distrust edge from a random
+or an optimized source, under the propagation-only and the total score, on EVERY eligible target
+(at least two raters, clean reputation >= 0.5) of each run, reported by the target's distance to
+the threshold 0.5. A run is one training of GDTE under one seed.
 
-Per target t, one candidate pool of C = 50 non-neighbor sources is drawn with a target-
+Per target t, one candidate pool of C = 50 sources that do not rate t is drawn with a target-
 specific RNG (RandomState(POOL_SEED + t)), so the pool, and therefore the random source
-(pool[0]), is the same for every training seed. The optimized source is the candidate whose
-single distrust edge lowers the total-effect reputation most, by the exact processed-placement
-counterfactual (the paper's optimized source). Every edge is spliced at the end of the last
-processed snapshot and scored by mycode/fast_s6.S6Scorer, which reproduces the full forward
-pass (tests/test_fast_s6.py).
+(pool[0]), is the same in every run. The optimized source is the candidate whose single
+distrust edge lowers the total score most, by exact in-window scoring. Every edge is spliced at
+the end of the last processed snapshot s6 and scored by mycode/fast_s6.S6Scorer, which
+reproduces the full forward pass (tests/test_fast_s6.py).
 
 Seeds are genuine since the seed-bug fix (tests/test_seed_propagation.py): each seed retrains
 GDTE from its own initialization and node features.

@@ -1,9 +1,12 @@
-"""E10: attack-utility scaling curve on subsampled Epinions.
+"""
+Legacy experiment from an earlier version of this project: an attack-utility scaling curve on
+subsampled SNAP Epinions. Its "E10" is not experiment E10 of the paper (source selection,
+run_p1_efficient.py), and its curve backs no number in the paper. The paper uses only its
+make_epn_subsample function, which built epn30000, the Epinions-S graph (data/README.md).
 
 Full-graph Epinions (131k nodes) OOMs at ~45 GiB on a 48 GiB A6000, so we
 subsample induced top-degree subgraphs at N in {1k,5k,10k,30k}, train GDTE on
-each, and measure best-method delta-R vs graph size. This directly answers the
-"does the (null) result scale?" critique.
+each, and measure best-method delta-R vs graph size.
 
 Subsamples are regenerated from epinions.csv (the single source of truth) into
 data/cyberdata/epn{N}.csv + epn{N}-rating.txt, kept row-aligned by construction.

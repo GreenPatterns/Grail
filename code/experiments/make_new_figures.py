@@ -1,4 +1,8 @@
-"""Generate the figures for the placement-hazard paper.
+"""Legacy figure script from an earlier version of this project: its figures are not in the
+paper, and it writes figures/fig_placement.pdf over the paper's Fig. 2. Run
+experiments/make_dsn_figures.py afterwards to restore the paper's figures.
+
+Generate the figures for the placement-hazard paper.
 
 fig_placement : single-edge ΔR, appended (silent no-op) vs processed, 3 datasets.
 fig_flip_budget : threshold-flip rate vs budget by stratum (OTC), optimized sources.

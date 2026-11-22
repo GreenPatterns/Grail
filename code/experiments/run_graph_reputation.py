@@ -1,19 +1,22 @@
 """
+Earlier runner, merged into run_reputation_baselines.py (Supplement D); it backs no number in
+the paper. Table VII of the paper comes from run_common_set.py (E7).
+
 Non-GNN reputation baseline: is the single-edge exposure specific to GNN reputation?
 
 Same targets (low and moderate GDTE strata, <= 25 each), same C=50 candidate pools and
 the same in-window distrust injections, scored by
-  GDTE      : mean predicted trust, total effect and propagation-only (Eq. 3)
+  GDTE      : mean predicted trust, total and propagation-only score (Eq. 4)
   FG        : Fairness-Goodness goodness (Kumar et al. 2016), mycode/reputation_systems.py,
-              on the SAME +1/-1 labels GDTE sees; reputation (g + 1) / 2, gate 0.5
-  fraction, beta, wilson : the label-space aggregators of the paper's Table 7
+              on the SAME +1/-1 labels GDTE sees; reputation (g + 1) / 2, threshold 0.5
+  fraction, beta, wilson : the label-count functions (Eq. 6 and the Wilson bound)
 for three attackers:
   random   : B random candidates
-  gnn_opt  : top-B by GDTE's processed single-edge counterfactual (transferred to FG)
-  fg_opt   : top-B by FG's own single-edge counterfactual (adaptive against FG)
+  gnn_opt  : top-B by GDTE's exact single-edge in-window shift (transferred to FG)
+  fg_opt   : top-B by FG's own single-edge shift (adaptive against FG)
 Per (stratum, attacker, B, function): eligible targets (clean reputation >= 0.5 under that
 function), flip rate with Clopper-Pearson interval, mean shift, and, for FG and GDTE-free
-comparison, the mean rank shift of the target among all users (gate-free).
+comparison, the mean rank shift of the target among all users (threshold-free).
 
 Run: GRAIL_DATASETS=otc,alpha python code/experiments/run_graph_reputation.py
 """

@@ -1,11 +1,16 @@
 """Print the LaTeX rows of the paper's tables from the result JSONs, so every number in them
 can be regenerated.
 
-  cohort   : complete-cohort single-edge flip rates over ten models (cohort_summary.json)
-  official : placement test on official releases (TrustGuard, EvolveGCN-O/H, DySAT, SignedGCN)
-  common   : reputation functions on the common target set (common_set_summary.json)
+  cohort              : Table IV, complete-cohort flip rates over ten runs (E3; cohort_summary.json)
+  cohort_per_model    : Table S1, the complete cohort per run (cohort/*.json)
+  official_compact    : the numbers of Table IX, official releases (E11)
+  official_supplement : Table S9, the label-blind releases (EvolveGCN-O/H, DySAT)
+  official            : every official-release diagnostic in one list (no single table)
+  common              : summary lines behind Table VII and Table S2, the common set (E7;
+                        common_set_summary.json)
 
-Run: python3 code/make_tables.py [cohort|official|common ...]      (default: all)
+Run: python3 code/make_tables.py [cohort|cohort_per_model|official|official_compact|
+     official_supplement|common ...]      (default: cohort, cohort_per_model, official, common)
 """
 import json
 import os
@@ -13,7 +18,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 RDIR = os.path.join(HERE, '..', 'results', 'unified')
-NAME = {'otc': 'OTC', 'alpha': 'Alpha', 'edg60000': 'Epn-d'}
+NAME = {'otc': 'OTC', 'alpha': 'Alpha', 'edg60000': 'Epinions-D'}
 
 
 def _load(name):
@@ -27,7 +32,7 @@ def _pm(c):
 
 def cohort():
     S = _load('cohort_summary.json')
-    print('% --- Table: complete cohort (mean +- std over models, one edge)')
+    print('% --- Table IV: complete cohort (mean +- std over runs, one edge)')
     for ds in [d for d in ('otc', 'alpha', 'edg60000') if d in S]:
         r = S[ds]
         ng = r['near_gate']
@@ -36,15 +41,15 @@ def cohort():
             first = f"\\multirow{{2}}{{*}}{{{NAME[ds]}}}" if src == 'random' else ''
             print(f" {first} & {label} & " + ' & '.join(_pm(c) for c in cells) + '\\\\')
         n_all = sum(r['n_eligible'].values())
-        print(f"% {ds}: models {r['n_seeds']}, low-reputation pairs {ng['n_pooled']}, all pairs {n_all}, "
+        print(f"% {ds}: runs {r['n_seeds']}, low-reputation pairs {ng['n_pooled']}, all pairs {n_all}, "
               f"sign tests total>prop {ng['total_above_prop_opt']}, opt>random {ng['opt_above_random_prop']}")
         print(f"% {ds}: seed-bootstrap CIs (low, opt prop) {ng['opt_prop']['ci']}, (low, random prop) {ng['random_prop']['ci']}")
 
 
 def cohort_per_model():
-    """Supplement table: one row per (dataset, model)."""
+    """Table S1: one row per (dataset, run)."""
     import glob
-    print('% --- Table S: complete cohort per model: seed, AUC, eligible, low-rep n, low-rep flips (opt prop, opt naive, rand prop, rand naive), all-eligible opt prop')
+    print('% --- Table S1: complete cohort per run: seed, AUC, eligible, low-rep n, low-rep flips (opt prop, opt total, rand prop, rand total), all-eligible opt prop')
     for ds in ('otc', 'alpha', 'edg60000'):
         paths = sorted(glob.glob(os.path.join(RDIR, 'cohort', f'cohort_{ds}_s*.json')),
                        key=lambda p: int(p.rsplit('_s', 1)[1].split('.')[0]))
@@ -78,8 +83,10 @@ def _range_emb(cells):
 
 
 def _official_rows():
-    """One row per (release, dataset): release, DS, held-out score, unprocessed-edge diagnostic,
-    processed-edge diagnostic, processed-edge propagation-only shift, flips (optimized, random)."""
+    """One row per (release, dataset): release, DS, held-out score, diagnostic for an edge outside
+    the encoder's input (out), diagnostic and propagation-only shift for an edge inside it (in),
+    flips (optimized, random). The diagnostic is Lambda or, for label-blind releases, the
+    embedding change."""
     rows = []
     for ds in ('otc', 'alpha'):
         d = _load(f'p0b_trustguard_{ds}.json')
@@ -88,15 +95,15 @@ def _official_rows():
             lab = [v for k, v in d['sweep_label_delta'].items() if k != 'appended']
             f = d['flip_low_B1']
             rows.append(('TrustGuard', NAME[ds], f"AUC {d['clean_perf_last_epoch']['AUC']:.2f}",
-                         'label-$\\Delta$ ' + _fmt_small(d['sweep_label_delta']['appended']),
-                         f"label-$\\Delta$ ${min(lab):.2f}$--${max(lab):.2f}$", '--',
+                         '$\\Lambda$ ' + _fmt_small(d['sweep_label_delta']['appended']),
+                         f"$\\Lambda$ ${min(lab):.2f}$--${max(lab):.2f}$", '--',
                          f"{f['k_prop']}/{f['n_eligible']}", '--'))
     sg = _load('official_signedgcn.json')
     for ds in ('otc', 'alpha'):
         if sg:
             d = sg[ds]['seed42']
-            rows.append(('SignedGCN', NAME[ds], f"AUC {d['auc']:.2f}", 'label-$\\Delta$ ' + _fmt_small(d['label_delta_notenc']),
-                         f"label-$\\Delta$ ${d['label_delta_inenc']:.2f}$", '--',
+            rows.append(('SignedGCN', NAME[ds], f"AUC {d['auc']:.2f}", '$\\Lambda$ ' + _fmt_small(d['label_delta_notenc']),
+                         f"$\\Lambda$ ${d['label_delta_inenc']:.2f}$", '--',
                          f"{round(d['flip_prop_pct'] * d['n_eligible'] / 100)}/{d['n_eligible']}", '--'))
     for model, label in (('egcn_o', 'EvolveGCN-O'), ('egcn_h', 'EvolveGCN-H')):
         for ds in ('otc', 'alpha'):
@@ -126,8 +133,11 @@ def _official_rows():
 
 
 def official_compact():
-    """Main-paper table: Release | DS | Held-out | Unprocessed | Processed | Flip (optimized, random)."""
-    print('% --- main-paper official-release table rows')
+    """Table IX numbers: Release | DS | Held-out | Out | In | Flips (optimized; random in parentheses).
+    The paper's table also names the diagnostic and omits the random flips. For TrustGuard and
+    DySAT, In prints the range over all processed positions; Table IX gives the last position
+    (the s6 column of Table S8 and the `last` column of Table S9)."""
+    print('% --- Table IX: official releases')
     groups = {}
     for r in _official_rows():
         groups.setdefault(r[0], []).append(r)
@@ -144,9 +154,10 @@ def official_compact():
 
 
 def official_supplement():
-    """Supplement table for the label-blind releases: selected epoch, test score, unprocessed edge,
-    earlier window steps, last processed placement, flips (optimized / random, prop.-only / naive)."""
-    print('% --- supplement: label-blind official releases')
+    """Table S9, the label-blind releases: selected epoch, test score, embedding change for an edge
+    outside the encoder's input, at the earlier window steps and at the last processed position,
+    and flips (optimized / random, each prop.-only / total)."""
+    print('% --- Table S9: label-blind official releases')
     out = []
     for model, label in (('egcn_o', 'EvolveGCN-O'), ('egcn_h', 'EvolveGCN-H')):
         for ds in ('otc', 'alpha'):
@@ -177,14 +188,14 @@ def official_supplement():
 
 
 def official():
-    print('% --- Table: official releases: release, DS, held-out, unprocessed diag, processed diag, processed prop.-only dR (most negative), flips opt, flips rand')
+    print('% --- official releases, all diagnostics: release, DS, held-out, out diag, in diag, in prop.-only dR, flips opt, flips rand')
     for r in _official_rows():
         print(' & '.join(r) + ' \\\\')
 
 
 def common():
     S = _load('common_set_summary.json')
-    print('% --- Table: common target set (worst attacker), flip % at B=1 / B=5')
+    print('% --- Tables VII and S2: common set (strongest attacker per target), flip % at B=1 / B=5')
     funcs = ['gdte_mean_total', 'gdte_mean_prop', 'gdte_median_prop', 'fg', 'wilson', 'beta', 'fraction']
     for ds, r in S.items():
         print(f"% {ds}: all {r['n_all']} targets, common set {r['n_common']}")
