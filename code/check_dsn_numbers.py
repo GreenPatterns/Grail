@@ -256,7 +256,7 @@ def defense_checks() -> list:
     tpr5 = [load('detector_calib.json')[d]['detector']['test_disjoint']['tpr_at_5pct_fpr'] for d in ('otc', 'alpha')]
     return [
         (f"(${min(tpr5):.2f}$ to ${max(tpr5):.2f}$ at $5\\%$)", 'detector at 5% false positives'),
-        (f"One distrust edge flips {of('otc', 'low_random_B1', 'mean')} targets on OTC and {of('alpha', 'low_random_B1', 'mean')} on Alpha whether its source", 'E13 one edge'),
+        (f"one distrust edge flips {of('otc', 'low_random_B1', 'mean')} targets on OTC and {of('alpha', 'low_random_B1', 'mean')} on Alpha whether its source", 'E13 one edge'),
         (f"flips ${kn('otc', 'low_low_history_B1', 'mean')[0]}$ and ${kn('alpha', 'low_low_history_B1', 'mean')[0]}$. We therefore weight", 'E13 low-history accounts'),
         (f"falls from ${pc('otc', lh, 'mean')}\\%$ (${frac('otc', lh, 'mean')}$) to ${pc('otc', lh, 'rater_weighted')}\\%$ (${frac('otc', lh, 'rater_weighted')}$) on OTC and from ${pc('alpha', lh, 'mean')}\\%$ (${frac('alpha', lh, 'mean')}$) to ${pc('alpha', lh, 'rater_weighted')}\\%$ (${frac('alpha', lh, 'rater_weighted')}$) on Alpha", 'E13 weighting'),
         (f"its shift stays at about ${D['otc']['low_high_history_B5']['rater_weighted']['dr']:.2f}$ (OTC) and ${D['alpha']['low_high_history_B5']['rater_weighted']['dr']:.2f}$ (Alpha), and it flips {of('otc', 'low_high_history_B5', 'rater_weighted')} and {of('alpha', 'low_high_history_B5', 'rater_weighted')} eligible targets, against {of('otc', 'low_high_history_B5', 'mean')} and {of('alpha', 'low_high_history_B5', 'mean')} without the defense", 'E13 adaptive attacker'),

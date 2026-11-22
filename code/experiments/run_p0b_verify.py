@@ -1,5 +1,5 @@
 """
-Per-snapshot sweep and sign control (E1; Fig. 2 and Section VI-A): one distrust edge from a
+Per-snapshot sweep and sign control (E1; Fig. 3 and Section VI-A): one distrust edge from a
 random source, inserted into each processed snapshot s0..s6 in turn or out-of-window (appended
 after the processed window), for 12 strata targets (8 moderate, 4 low). JSON keys keep the code's
 names: `appended` is out-of-window, and `sweep_label_delta` holds the label sensitivity Lambda.

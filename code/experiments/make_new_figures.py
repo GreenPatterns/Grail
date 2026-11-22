@@ -1,5 +1,5 @@
 """Legacy figure script from an earlier version of this project: its figures are not in the
-paper, and it writes figures/fig_placement.pdf over the paper's Fig. 2. Run
+paper, and it writes figures/fig_placement.pdf over the paper's Fig. 3. Run
 experiments/make_dsn_figures.py afterwards to restore the paper's figures.
 
 Generate the figures for the placement-hazard paper.

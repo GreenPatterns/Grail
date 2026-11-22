@@ -1,5 +1,5 @@
 """
-TrustGuard, official release (E11; Fig. 2, Table IX, Table S8, Section VI-G): Wang et al., IEEE
+TrustGuard, official release (E11; Fig. 3, Table IX, Table S8, Section VI-G): Wang et al., IEEE
 TDSC 2024; https://github.com/Jieerbobo/TrustGuard. The released code is used unchanged, in its
 default configuration (robust aggregation off), trained with its own trainer on its own
 Bitcoin-OTC / Bitcoin-Alpha files with W = 7 of K = 10 snapshots processed.

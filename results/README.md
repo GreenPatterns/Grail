@@ -12,22 +12,22 @@ paper.
 
 | File(s) | Experiment | Paper item | Written by |
 |---|---|---|---|
-| `cohort/cohort_{otc,alpha,edg60000}_s{42,1..9}.json` | E3 | Table IV, Fig. 3, Table S1 (one file per dataset and run); the AUC range of Section IX | `run_cohort_seeds.py` |
-| `cohort_summary.json` | E3 | Table IV, Fig. 3; the cohort rates of the abstract and Sections I, V, VI-B, VI-F and X | `analyze_cohort.py` |
+| `cohort/cohort_{otc,alpha,edg60000}_s{42,1..9}.json` | E3 | Table IV, Fig. 4, Table S1 (one file per dataset and run); the AUC range of Section IX | `run_cohort_seeds.py` |
+| `cohort_summary.json` | E3 | Table IV, Fig. 4; the cohort rates of the abstract and Sections I, V, VI-B, VI-F and X | `analyze_cohort.py` |
 | `loo_flip_table.json` | E4 | Table V, Bitcoin rows; Section V, single-run example | `run_loo_flip_table.py` |
 | `loo_flip_edgfull_low.json` | E4 | Table V, Epinions-D row | `run_loo_flip_table.py` |
 | `loo_flip_edgfull_modhigh.json` | E4 | Section VI-B and Supplement D: no Epinions-D target of the moderate or high stratum flips | `run_loo_flip_table.py` |
 | `causal_regimes.json` | E8 | Table VIII (out, in and sliding rows); Section VI-E, sliding window | `run_causal_regimes.py` |
 | `causal_retrain_s5.json` | E8 | Section VI-E, retraining; Table S11 | `run_poison_matrix.py` (part `causal`) |
 | `stats_rigor.json` | E5 | Table VI (`decomp_B1`, `decomp_B5`); Supplement F, rank shift (`decision_cost`) and regression on the margin (`dose_response`) | `run_stats_rigor.py` |
-| `p0b_trustguard_otc.json` | E11 | Table IX, Fig. 2, Table S8 (TrustGuard, OTC) | `run_trustguard_placement.py` |
-| `p0b_trustguard_alpha.json` | E11 | Table IX, Fig. 2, Table S8 (TrustGuard, Alpha) | `run_trustguard_placement.py` |
+| `p0b_trustguard_otc.json` | E11 | Table IX, Fig. 3, Table S8 (TrustGuard, OTC) | `run_trustguard_placement.py` |
+| `p0b_trustguard_alpha.json` | E11 | Table IX, Fig. 3, Table S8 (TrustGuard, Alpha) | `run_trustguard_placement.py` |
 | `official_signedgcn.json` | E11 | Table IX (SignedGCN) | `run_official_signedgcn.py` |
 | `evolvegcn_placement_egcn_{o,h}_{otc,alpha}.json` | E11 | Table IX, Table S9 (EvolveGCN-O and -H) | `run_evolvegcn_placement.py` |
 | `dysat_placement_{otc,alpha}.json` | E11 | Table IX, Table S9 (DySAT) | `run_dysat_placement.py` |
-| `p0b_main.json` | E1 | Fig. 2 (OTC, Alpha, Epinions-S); Section VI-A, sweep and sign control; Table II, Train column (`n_edges`) | `run_p0b_verify.py` |
-| `p0b_edgfull.json` | E1 | Fig. 2 (Epinions-D) | `run_p0b_verify.py` |
-| `p2_arch_signature.json` | E11 | Fig. 2 and Section VI-G (the two further models of our own) | `run_p2_arch_signature.py` |
+| `p0b_main.json` | E1 | Fig. 3 (OTC, Alpha, Epinions-S); Section VI-A, sweep and sign control; Table II, Train column (`n_edges`) | `run_p0b_verify.py` |
+| `p0b_edgfull.json` | E1 | Fig. 3 (Epinions-D) | `run_p0b_verify.py` |
+| `p2_arch_signature.json` | E11 | Fig. 3 and Section VI-G (the two further models of our own) | `run_p2_arch_signature.py` |
 | `p1_sota.json` | E10 | Section VI-F, Fig. S2, Table S5 (OTC, Alpha); Section VII example | `run_p1_efficient.py` |
 | `p1_sota_epn.json` | E10 | Section VI-F, Fig. S2, Table S5 (Epinions-S) | `run_p1_efficient.py` |
 | `p1_sota_edgfull.json` | E10 | Section VI-F, Fig. S2, Table S5 (Epinions-D) | `run_p1_efficient.py` |

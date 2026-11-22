@@ -1,5 +1,5 @@
 """
-Two further models of our own (E11; Fig. 2, Section VI-G, Supplement H): the silent-no-op
+Two further models of our own (E11; Fig. 3, Section VI-G, Supplement H): the silent-no-op
 signature and the in-window response on two architectures that differ from GDTE:
   * SignedSnapshotGNN  — SGCN/SDGNN-style signed mean pools + GRU temporal head (the paper's
                          signed snapshot GNN);

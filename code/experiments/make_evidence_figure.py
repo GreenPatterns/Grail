@@ -3,7 +3,7 @@ Panel functions of three figures, drawn only from saved JSONs. make_dsn_figures.
 panel as its own figure, with the paper's terms; run on its own, this script writes an older
 combined three-panel version with the older labels (figures/fig_evidence.pdf, not in the paper):
 
-  a  placement (Fig. 2; E1, E11) : label sensitivity Lambda of one distrust edge vs the snapshot
+  a  placement (Fig. 3; E1, E11) : label sensitivity Lambda of one distrust edge vs the snapshot
                            that holds it (s0..s6) or out-of-window (appended past the window),
                            for GDTE on four datasets, the two further models of our own and the
                            official TrustGuard release on the Bitcoin graphs (p0b_main.json,

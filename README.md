@@ -40,9 +40,9 @@ code/
 data/
   README.md               sources, licenses, file formats and how every file was built
   cyberdata/              the processed datasets the code reads, plus raw/ (dated Epinions release)
-figures/                  Fig. 2 and 3 of the paper and Fig. S1 and S2 of the supplement (written by
+figures/                  Fig. 3 and 3 of the paper and Fig. S1 and S2 of the supplement (written by
                           make_dsn_figures.py); fig_problem.pdf, with its TikZ source
-                          fig_problem_src.tex, is Fig. 1 (fig_system.pdf is an earlier version); and
+                          fig_problem_src.tex, is Fig. 1, and fig_system.pdf, from fig_system_src.tex, is Fig. 2; and
                           fig_evidence.pdf is an older combined figure that is not in the paper
 results/
   README.md               maps every result file to the paper item and experiment it backs
@@ -51,7 +51,7 @@ results/
 ```
 
 The paper numbers its sections and tables with Roman numerals (Section VI-B, Table IV), its
-figures and equations with Arabic numerals (Fig. 3, Eq. 1), and its experiments E1 to E14 (its
+figures and equations with Arabic numerals (Fig. 4, Eq. 1), and its experiments E1 to E14 (its
 Table III). The supplement has appendices A to I (Supplement C), Tables S1 to S12 and Fig. S1
 and S2. This README uses the same numbering.
 
@@ -128,7 +128,7 @@ python code/make_tables.py official_compact official_supplement   # the numbers 
 python code/make_trivial_table.py                # Table S5; its shares are in Section VI-F and Fig. S2
 python code/make_reputation_table.py             # Tables S3 and S4
 python code/make_stats_paragraph.py              # the Section VI-A paired statistics (E2) and Table S6
-python code/experiments/make_dsn_figures.py figures   # Fig. 2, 3, S1 and S2 -> figures/fig_{placement,cohort,functions,sources}.pdf
+python code/experiments/make_dsn_figures.py figures   # Fig. 3, 3, S1 and S2 -> figures/fig_{placement,cohort,functions,sources}.pdf
 ```
 
 The summaries and figures are written over the shipped copies in `results/unified/` and
@@ -142,7 +142,7 @@ Table S5 shows 63.
 `make_cohort_figure.py` and relabels them with the paper's terms. Run on their own, those two
 scripts write versions with the older labels: `make_evidence_figure.py` writes a combined
 three-panel figure (`figures/fig_evidence.pdf`, not in the paper), and `make_cohort_figure.py`
-writes over `figures/fig_cohort.pdf`, the paper's Fig. 3. Rerun `make_dsn_figures.py` afterwards.
+writes over `figures/fig_cohort.pdf`, the paper's Fig. 4. Rerun `make_dsn_figures.py` afterwards.
 
 `code/check_dsn_numbers.py` checks 109 numbers in the paper's text against the result files. It
 reads the paper's LaTeX source, which is not part of this artifact:
@@ -203,9 +203,9 @@ the total shift; Section III-B of the paper separates its propagation-only part.
 
 | Paper item | Command (prefix each with `source env.sh`) | Output in `results/unified/` | Logged time |
 |---|---|---|---|
-| Table IV, Fig. 3, Table S1 (complete cohort, E3); the cohort rates of the abstract and Sections I, V, VI-B, VI-F, IX and X | `GRAIL_DATASETS=otc GRAIL_SEEDS=42,1,2,3,4,5,6,7,8,9 python code/experiments/run_cohort_seeds.py`, then the same with `alpha` and `edg60000`; then `python code/analyze_cohort.py`, `python code/make_tables.py cohort cohort_per_model` and `python code/experiments/make_dsn_figures.py figures` | `cohort/cohort_{otc,alpha,edg60000}_s{42,1..9}.json`, `cohort_summary.json` | per run: OTC 0.3 h, Alpha 0.2 h, Epinions-D 0.9 h |
+| Table IV, Fig. 4, Table S1 (complete cohort, E3); the cohort rates of the abstract and Sections I, V, VI-B, VI-F, IX and X | `GRAIL_DATASETS=otc GRAIL_SEEDS=42,1,2,3,4,5,6,7,8,9 python code/experiments/run_cohort_seeds.py`, then the same with `alpha` and `edg60000`; then `python code/analyze_cohort.py`, `python code/make_tables.py cohort cohort_per_model` and `python code/experiments/make_dsn_figures.py figures` | `cohort/cohort_{otc,alpha,edg60000}_s{42,1..9}.json`, `cohort_summary.json` | per run: OTC 0.3 h, Alpha 0.2 h, Epinions-D 0.9 h |
 | Table II, AUC and MCC of OTC and Alpha | the `MCC=..., AUC=...` line that `train_model` prints after training, in every seed-42 log, e.g. `loo_flip_table.log` | (log line) | |
-| Table II, Train column of OTC, Alpha and Epinions-S | the Fig. 2 runs below | `p0b_main.json` (`n_edges`) | |
+| Table II, Train column of OTC, Alpha and Epinions-S | the Fig. 3 runs below | `p0b_main.json` (`n_edges`) | |
 | Table II, AUC and MCC of Epinions-S | one call of `experiment_common.train_model('epn30000')`; no script writes it | `epn_clean.log` (the matching `epn_clean.json` holds null values) | 0.2 h |
 | Table II, Epinions-D row | from the Section VI-A run on `edg60000` below (`clean_perf`, `train_edges`) and `data/cyberdata/edg60000-provenance.json` | `p0_linchpin_edgfull.json` | |
 | Table V (strata and budgets, E4) | `GRAIL_DATASETS=otc,alpha python code/experiments/run_loo_flip_table.py`; `GRAIL_DATASETS=edg60000 GRAIL_STRATA=low GRAIL_OUT=loo_flip_edgfull_low.json python code/experiments/run_loo_flip_table.py`; the same with `GRAIL_STRATA=moderate,high GRAIL_OUT=loo_flip_edgfull_modhigh.json` | `loo_flip_table.json`, `loo_flip_edgfull_low.json`, `loo_flip_edgfull_modhigh.json` | 0.1 h; 0.3 h; 0.5 h |
@@ -213,11 +213,11 @@ the total shift; Section III-B of the paper separates its propagation-only part.
 | Section VI-E, retraining (E8); Table S11 | `GRAIL_DATASETS=otc,alpha GRAIL_SEEDS=42,1,2,3,4 GRAIL_NVICTIMS=24 GRAIL_POISON_PARTS=causal GRAIL_POISON_OUT=causal_retrain_s5.json python code/experiments/run_poison_matrix.py` | `causal_retrain_s5.json` | 0.1 h |
 | Table VI (decomposition, E5); Supplement F, rank shift and regression on the margin | `GRAIL_DATASETS=otc,alpha python code/experiments/run_stats_rigor.py` | `stats_rigor.json` (`decomp_B1`, `decomp_B5`, `decision_cost`, `dose_response`) | 0.1 h |
 | Table IX (official releases, E11) | Section 7 below; then `python code/make_tables.py official_compact` | see Section 7 | |
-| Fig. 2 (label sensitivity by snapshot, E1 and E11); Section VI-A sweep and sign control | `GRAIL_DATASETS=otc,alpha,epn30000 GRAIL_OUT=p0b_main.json python code/experiments/run_p0b_verify.py`; `GRAIL_DATASETS=edg60000 GRAIL_OUT=p0b_edgfull.json python code/experiments/run_p0b_verify.py`; `GRAIL_DATASETS=otc,alpha python code/experiments/run_p2_arch_signature.py`; TrustGuard as in Section 7; then `python code/experiments/make_dsn_figures.py figures` | `p0b_main.json`, `p0b_edgfull.json`, `p2_arch_signature.json`, `p0b_trustguard_{otc,alpha}.json` | edg60000: 0.15 h |
+| Fig. 3 (label sensitivity by snapshot, E1 and E11); Section VI-A sweep and sign control | `GRAIL_DATASETS=otc,alpha,epn30000 GRAIL_OUT=p0b_main.json python code/experiments/run_p0b_verify.py`; `GRAIL_DATASETS=edg60000 GRAIL_OUT=p0b_edgfull.json python code/experiments/run_p0b_verify.py`; `GRAIL_DATASETS=otc,alpha python code/experiments/run_p2_arch_signature.py`; TrustGuard as in Section 7; then `python code/experiments/make_dsn_figures.py figures` | `p0b_main.json`, `p0b_edgfull.json`, `p2_arch_signature.json`, `p0b_trustguard_{otc,alpha}.json` | edg60000: 0.15 h |
 | Section VI-F, Fig. S2, Table S5 (source selection, E10); the Section VII example | `GRAIL_DATASETS=otc,alpha GRAIL_P1_OUT=p1_sota.json python code/experiments/run_p1_efficient.py`; the same with `GRAIL_DATASETS=epn30000 GRAIL_P1_OUT=p1_sota_epn.json` and with `GRAIL_DATASETS=edg60000 GRAIL_P1_OUT=p1_sota_edgfull.json`; then `python code/make_trivial_table.py` | `p1_sota.json`, `p1_sota_epn.json`, `p1_sota_edgfull.json` | 1.1 h; 2.5 h; 0.65 h |
 | Table VII, Fig. S1, Section VI-D, Table S2 (common set, E7) | `GRAIL_DATASETS=otc python code/experiments/run_common_set.py`, then with `alpha`; then `python code/analyze_common_set.py` and `python code/make_tables.py common` | `common_set_{otc,alpha}.json`, `common_set_summary.json` | 0.85 h; 0.5 h |
 | Section VII, time-decayed mean (E12); the plain-mean run also gives Section V's single-run example | `GRAIL_DATASETS=otc,alpha GRAIL_OUT=p0d_otcalpha.json python code/experiments/run_p0d_harden.py`; the same with `GRAIL_REP_MODE=decayed GRAIL_OUT=p0d_decayed.json` | `p0d_otcalpha.json`, `p0d_decayed.json` | |
-| Section VI-A, in-window against out-of-window (E1) | `GRAIL_DATASETS=otc,alpha python code/experiments/run_p0_linchpin.py`; `GRAIL_DATASETS=edg60000 GRAIL_P0_OUT=p0_linchpin_edgfull.json python code/experiments/run_p0_linchpin.py`; Epinions-S from `p0b_main.json` (Fig. 2 row) | `p0_linchpin.json`, `p0_linchpin_edgfull.json` | edg60000: 0.65 h |
+| Section VI-A, in-window against out-of-window (E1) | `GRAIL_DATASETS=otc,alpha python code/experiments/run_p0_linchpin.py`; `GRAIL_DATASETS=edg60000 GRAIL_P0_OUT=p0_linchpin_edgfull.json python code/experiments/run_p0_linchpin.py`; Epinions-S from `p0b_main.json` (Fig. 3 row) | `p0_linchpin.json`, `p0_linchpin_edgfull.json` | edg60000: 0.65 h |
 | Section VI-A, paired contrasts over ten runs (E2); Table S6 | `GRAIL_DATASETS=otc,alpha GRAIL_SEEDS=42,1,2,3,4,5,6,7,8,9 GRAIL_OUT=stats_hier_s10.json python code/experiments/run_stats_hier.py`; then `python code/make_stats_paragraph.py` | `stats_hier_s10.json` | 1.25 h |
 | Supplement F, other thresholds (cited in Section VI-B) | `GRAIL_DATASETS=otc,alpha python code/experiments/run_p3_margin.py` | `p3_margin.json` (`by_threshold`) | |
 | Section VI-C, query-edge-masked control (E6); Table S7 | `GRAIL_DATASETS=otc,alpha GRAIL_SEEDS=42,1,2,3,4,5,6,7,8,9 GRAIL_BLOCKS=B GRAIL_OUT=masked_control_s10.json python code/experiments/run_masked_and_random_sets.py` | `masked_control_s10.json` | 0.8 h |

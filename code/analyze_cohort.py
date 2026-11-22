@@ -1,4 +1,4 @@
-"""Summarize the complete cohort (E3; Table IV, Fig. 3, Table S1): the single-edge runs of
+"""Summarize the complete cohort (E3; Table IV, Fig. 4, Table S1): the single-edge runs of
 experiments/run_cohort_seeds.py, one per training seed (a run of the paper).
 
 For every dataset it reports, per run and pooled over runs:

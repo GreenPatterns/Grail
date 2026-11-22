@@ -1,5 +1,5 @@
 """
-Complete cohort (E3; Table IV, Fig. 3, Table S1): flip rates of one distrust edge from a random
+Complete cohort (E3; Table IV, Fig. 4, Table S1): flip rates of one distrust edge from a random
 or an optimized source, under the propagation-only and the total score, on EVERY eligible target
 (at least two raters, clean reputation >= 0.5) of each run, reported by the target's distance to
 the threshold 0.5. A run is one training of GDTE under one seed.
