@@ -59,7 +59,7 @@ def cohort_checks(C: dict) -> list:
     ef = e['cells']['opt_prop']['by_margin']
     return rows + [
         (f"Under the propagation-only score, one random edge flips ${lo('otc', 'random_prop')}\\%$ of them on OTC and ${lo('alpha', 'random_prop')}\\%$ on Alpha, and one optimized edge flips ${lo('otc', 'opt_prop')}\\%$ and ${lo('alpha', 'opt_prop')}\\%$.", 'cohort low-reputation rates'),
-        (f"one distrust edge from a random account pushes below the decision threshold ${lo('otc', 'random_prop')}\\%$ (Bitcoin-OTC) and ${lo('alpha', 'random_prop')}\\%$ (Bitcoin-Alpha) of the users less than $0.1$ above it (about $2\\%$ of eligible users), and ${cell('otc', 'random_prop')}\\%$ and ${cell('alpha', 'random_prop')}\\%$ of all eligible users.", 'abstract rates'),
+        (f"one fake rating from a random account pushes below the threshold ${lo('otc', 'random_prop')}\\%$ and ${lo('alpha', 'random_prop')}\\%$ of the users just above it (about $2\\%$ of users)", 'abstract rates'),
         (f"For the optimized edges on low-reputation targets it reports ${lo('otc', 'opt_total')}\\%$ and ${lo('alpha', 'opt_total')}\\%$ instead of ${lo('otc', 'opt_prop')}\\%$ and ${lo('alpha', 'opt_prop')}\\%$", 'intro total rates'),
         (f"pushes below the threshold ${lo('otc', 'random_prop')}\\%$ (OTC) and ${lo('alpha', 'random_prop')}\\%$ (Alpha) of the \\emph{{low-reputation}} targets", 'intro random rates'),
         (f"(about $2\\%$ of all eligible targets), and ${cell('otc', 'random_prop')}\\%$ and ${cell('alpha', 'random_prop')}\\%$ of all eligible targets. An \\emph{{optimized}} source", 'intro whole cohort, random'),
@@ -260,7 +260,7 @@ def defense_checks() -> list:
         (f"flips ${kn('otc', 'low_low_history_B1', 'mean')[0]}$ and ${kn('alpha', 'low_low_history_B1', 'mean')[0]}$. We therefore weight", 'E12 low-history accounts'),
         (f"falls from ${pc('otc', lh, 'mean')}\\%$ (${frac('otc', lh, 'mean')}$) to ${pc('otc', lh, 'rater_weighted')}\\%$ (${frac('otc', lh, 'rater_weighted')}$) on OTC and from ${pc('alpha', lh, 'mean')}\\%$ (${frac('alpha', lh, 'mean')}$) to ${pc('alpha', lh, 'rater_weighted')}\\%$ (${frac('alpha', lh, 'rater_weighted')}$) on Alpha", 'E12 weighting'),
         (f"its shift stays at about ${D['otc']['low_high_history_B5']['rater_weighted']['dr']:.2f}$ (OTC) and ${D['alpha']['low_high_history_B5']['rater_weighted']['dr']:.2f}$ (Alpha), and it flips {of('otc', 'low_high_history_B5', 'rater_weighted')} and {of('alpha', 'low_high_history_B5', 'rater_weighted')} eligible targets, against {of('otc', 'low_high_history_B5', 'mean')} and {of('alpha', 'low_high_history_B5', 'mean')} without the defense", 'E12 adaptive attacker'),
-        (f"One edge from a random account flips {of('otc', 'low_random_B1', 'rater_weighted')} eligible targets on OTC and {of('alpha', 'low_random_B1', 'rater_weighted')} on Alpha under the weighting, against {of('otc', 'low_random_B1', 'mean')} and {of('alpha', 'low_random_B1', 'mean')} without it", 'E13 random account under the weighting'),
+        (f"one edge from a random account still flips {of('otc', 'low_random_B1', 'rater_weighted')} eligible targets on OTC and {of('alpha', 'low_random_B1', 'rater_weighted')} on Alpha", 'E13 random account under the weighting'),
     ]
 
 def dense_table_checks(CS: dict) -> list:
@@ -277,16 +277,16 @@ def dense_table_checks(CS: dict) -> list:
         checks.append((f"{name} & " + ' & '.join(cells) + "\\\\", f'non-GNN table, {name}'))
     P1 = {k: load(f)[k] for f, k in (('p1_sota.json', 'otc'), ('p1_sota.json', 'alpha'),
                                        ('p1_sota_edgfull.json', 'edg60000'), ('p1_sota_epn.json', 'epn30000'))}
-    strategies = [('counterfactual', 'Optimized'), ('expert', 'Heuristic'), ('ig', 'Integrated gradient'), ('batch_trust', 'Batch gradient'),
-                  ('greedy', 'Greedy gradient'), ('prbcd', 'PRBCD$^\\dagger$'), ('influence', 'Influence edit$^\\dagger$'),
-                  ('node_injection', 'Node injection$^\\dagger$'), ('random', 'Random')]
-    num = lambda x: '$0$' if f"{x:.0f}" == '-0' else f"${x:.0f}$"
-    for key, name in strategies:
-        cells = []
-        for d in P1:
-            cf = P1[d]['mean_dr']['counterfactual']
-            cells += [num(100 * P1[d]['mean_dr'][key] / cf), num(100 * P1[d]['mean_dr_appended'][key] / cf)]
-        checks.append((f"{name} & " + ' & '.join(cells) + "\\\\", f'source table, {name}'))
+    # The per-strategy table moved to the supplement; the paper states ranges of shares of the optimized in-window shift.
+    share = lambda d, key, col='mean_dr': 100 * P1[d][col][key] / P1[d]['mean_dr']['counterfactual']
+    span = lambda xs: f"${min(xs):.0f}$ to ${max(xs):.0f}\\%$"
+    adapted = [share(d, k) for d in P1 for k in ('prbcd', 'influence', 'node_injection')]
+    checks.append((f"the heuristic reaches {span([share(d, 'expert') for d in P1])} of the optimized shift", 'source shares, heuristic'))
+    checks.append((f"the adapted attacks {span(adapted)}, and random sources {span([share(d, 'random') for d in P1])}", 'source shares, adapted and random'))
+    dilution = [share(d, 'expert', 'mean_dr_appended') for d in ('otc', 'alpha', 'epn30000')]
+    checks.append((f"their dilution term alone reaches {span(dilution)} of the optimized in-window shift", 'source shares, heuristic out-of-window'))
+    all_of_it = share('edg60000', 'expert', 'mean_dr_appended') >= 99.5
+    checks.append(("and all of it on Epinions-D" if all_of_it else "<Epinions-D heuristic dilution share below 100%>", 'source shares, Epinions-D'))
     return checks
 
 

@@ -18,17 +18,17 @@ maps the names used in these files to the terms of the paper.
 | `causal_regimes.json` | Table VIII: out, in and sliding rows | `run_causal_regimes.py` |
 | `causal_retrain_s5.json` | Section VI-E retraining; Table S11 | run_poison_matrix.py (causal part) |
 | `stats_rigor.json` | Table VI (decomp_B1, decomp_B5); Section VI-B rank shift (decision_cost); Supplement F regression (dose_response) | `run_stats_rigor.py` |
-| `p0b_trustguard_otc.json` | Table X, Fig. 2, Table S8 (TrustGuard, OTC) | `run_trustguard_placement.py` |
-| `p0b_trustguard_alpha.json` | Table X, Fig. 2, Table S8 (TrustGuard, Alpha) | `run_trustguard_placement.py` |
-| `official_signedgcn.json` | Table X (SignedGCN) | `run_official_signedgcn.py` |
-| `evolvegcn_placement_egcn_{o,h}_{otc,alpha}.json` | Table X, Table S9 (EvolveGCN-O and -H) | `run_evolvegcn_placement.py` |
-| `dysat_placement_{otc,alpha}.json` | Table X, Table S9 (DySAT) | `run_dysat_placement.py` |
+| `p0b_trustguard_otc.json` | Table IX, Fig. 2, Table S8 (TrustGuard, OTC) | `run_trustguard_placement.py` |
+| `p0b_trustguard_alpha.json` | Table IX, Fig. 2, Table S8 (TrustGuard, Alpha) | `run_trustguard_placement.py` |
+| `official_signedgcn.json` | Table IX (SignedGCN) | `run_official_signedgcn.py` |
+| `evolvegcn_placement_egcn_{o,h}_{otc,alpha}.json` | Table IX, Table S9 (EvolveGCN-O and -H) | `run_evolvegcn_placement.py` |
+| `dysat_placement_{otc,alpha}.json` | Table IX, Table S9 (DySAT) | `run_dysat_placement.py` |
 | `p0b_main.json` | Fig. 2 (OTC, Alpha, Epinions-S); Section VI-A sweep and sign controls | `run_p0b_verify.py` |
 | `p0b_edgfull.json` | Fig. 2 (Epinions-D) | `run_p0b_verify.py` |
 | `p2_arch_signature.json` | Fig. 2 and Section VI-G (the two further encoders of our own) | `run_p2_arch_signature.py` |
-| `p1_sota.json` | Table IX, Fig. S2, Section VI-F, Table S5 (OTC, Alpha) | `run_p1_efficient.py` |
-| `p1_sota_epn.json` | Table IX, Fig. S2, Section VI-F, Table S5 (Epinions-S) | `run_p1_efficient.py` |
-| `p1_sota_edgfull.json` | Table IX, Fig. S2, Section VI-F, Table S5 (Epinions-D) | `run_p1_efficient.py` |
+| `p1_sota.json` | Section VI-F, Fig. S2, Table S5 (OTC, Alpha) | `run_p1_efficient.py` |
+| `p1_sota_epn.json` | Section VI-F, Fig. S2, Table S5 (Epinions-S) | `run_p1_efficient.py` |
+| `p1_sota_edgfull.json` | Section VI-F, Fig. S2, Table S5 (Epinions-D) | `run_p1_efficient.py` |
 | `common_set_{otc,alpha}.json` | Table VII, Fig. S1, Section VI-D, Table S2 (per-target rows) | `run_common_set.py` |
 | `common_set_summary.json` | Table VII, Fig. S1, Section VI-D, Table S2 | `analyze_common_set.py` |
 | `p0d_otcalpha.json` | Section VII, time decay (mean reputation) | `run_p0d_harden.py` |

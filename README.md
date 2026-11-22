@@ -31,7 +31,7 @@ code/
   analyze_*.py, make_*_table.py, make_tables.py, make_stats_paragraph.py
                           summaries and LaTeX table rows computed from the result files
   silent_noop_demo.py     the placement demo of Section 5
-  check_dsn_numbers.py    checks 114 numbers in the paper's LaTeX source against the result files
+  check_dsn_numbers.py    checks 109 numbers in the paper's LaTeX source against the result files
   make_epinions_dated.py  builds the dated Epinions graphs from the raw release
   tests/                  unit tests (pytest)
 data/
@@ -111,7 +111,7 @@ source env.sh
 python code/analyze_cohort.py                    # rewrites cohort_summary.json from the 30 cohort files
 python code/analyze_common_set.py                # rewrites common_set_summary.json
 python code/make_tables.py                    # rows of Table IV, Table S1, the official-release and common-set tables
-python code/make_trivial_table.py                # Table S5; its shares are Table IX and Fig. S2
+python code/make_trivial_table.py                # Table S5; its shares are in Section VI-F and Fig. S2
 python code/make_reputation_table.py             # Tables S3 and S4
 python code/make_stats_paragraph.py              # the Section VI-A paired statistics and Table S6
 python code/experiments/make_dsn_figures.py figures   # Fig. 2, 3, S1 and S2 -> figures/fig_{placement,cohort,functions,sources}.pdf
@@ -126,7 +126,7 @@ of names above), so `naive` in a printed row is the paper's total score.
 `make_cohort_figure.py`, which on their own write a combined three-panel version of Fig. 2, S2
 and S1 (placement, sources, functions) (`figures/fig_evidence.pdf`) with the older labels.
 
-`code/check_dsn_numbers.py` checks 114 numbers in the paper's text against the result files. It
+`code/check_dsn_numbers.py` checks 109 numbers in the paper's text against the result files. It
 reads the paper's LaTeX source, which is not part of this artifact:
 `GRAIL_PAPER_TEX=<paper>.tex python code/check_dsn_numbers.py`.
 
@@ -187,9 +187,9 @@ is the total shift; Section III-B of the paper separates its propagation-only pa
 | Table VIII (deployment regimes, E8): out, in and sliding rows | `GRAIL_DATASETS=otc,alpha python code/experiments/run_causal_regimes.py` | `causal_regimes.json` | 0.05 h |
 | Section VI-E, retraining (E8); Table S11 | `GRAIL_DATASETS=otc,alpha GRAIL_SEEDS=42,1,2,3,4 GRAIL_NVICTIMS=24 GRAIL_POISON_PARTS=causal GRAIL_POISON_OUT=causal_retrain_s5.json python code/experiments/run_poison_matrix.py` | `causal_retrain_s5.json` | 0.1 h |
 | Table VI (decomposition, E5); Section VI-B rank shift | `GRAIL_DATASETS=otc,alpha python code/experiments/run_stats_rigor.py` | `stats_rigor.json` (`decomp_B1`, `decomp_B5`, `decision_cost`) | 0.1 h |
-| Table X (official releases, E11) | Section 7 below; then `python code/make_tables.py official_compact` | see Section 7 | |
+| Table IX (official releases, E11) | Section 7 below; then `python code/make_tables.py official_compact` | see Section 7 | |
 | Fig. 2 (label sensitivity by snapshot, E1); Section VI-A sign controls | `GRAIL_DATASETS=otc,alpha,epn30000 GRAIL_OUT=p0b_main.json python code/experiments/run_p0b_verify.py`; `GRAIL_DATASETS=edg60000 GRAIL_OUT=p0b_edgfull.json python code/experiments/run_p0b_verify.py`; `GRAIL_DATASETS=otc,alpha python code/experiments/run_p2_arch_signature.py`; TrustGuard as in Section 7; then `python code/experiments/make_evidence_figure.py` | `p0b_main.json`, `p0b_edgfull.json`, `p2_arch_signature.json`, `p0b_trustguard_{otc,alpha}.json` | edg60000: 0.15 h |
-| Table IX, Fig. S2, Section VI-F, Table S5 (source selection, E10) | `GRAIL_DATASETS=otc,alpha GRAIL_P1_OUT=p1_sota.json python code/experiments/run_p1_efficient.py`; the same with `GRAIL_DATASETS=epn30000 GRAIL_P1_OUT=p1_sota_epn.json` and with `GRAIL_DATASETS=edg60000 GRAIL_P1_OUT=p1_sota_edgfull.json`; then `python code/make_trivial_table.py` | `p1_sota.json`, `p1_sota_epn.json`, `p1_sota_edgfull.json` | 1.1 h; 2.5 h; 0.65 h |
+| Section VI-F, Fig. S2, Table S5 (source selection, E10) | `GRAIL_DATASETS=otc,alpha GRAIL_P1_OUT=p1_sota.json python code/experiments/run_p1_efficient.py`; the same with `GRAIL_DATASETS=epn30000 GRAIL_P1_OUT=p1_sota_epn.json` and with `GRAIL_DATASETS=edg60000 GRAIL_P1_OUT=p1_sota_edgfull.json`; then `python code/make_trivial_table.py` | `p1_sota.json`, `p1_sota_epn.json`, `p1_sota_edgfull.json` | 1.1 h; 2.5 h; 0.65 h |
 | Table VII, Fig. S1, Section VI-D, Table S2 (common set, E7) | `GRAIL_DATASETS=otc python code/experiments/run_common_set.py`, then with `alpha`; then `python code/analyze_common_set.py` and `python code/make_tables.py common` | `common_set_{otc,alpha}.json`, `common_set_summary.json` | 0.85 h; 0.5 h |
 | Section VII, time-decayed mean | `GRAIL_DATASETS=otc,alpha GRAIL_OUT=p0d_otcalpha.json python code/experiments/run_p0d_harden.py`; the same with `GRAIL_REP_MODE=decayed GRAIL_OUT=p0d_decayed.json` | `p0d_otcalpha.json`, `p0d_decayed.json` | |
 | Section VI-A, in-window against out-of-window (E1) | `GRAIL_DATASETS=otc,alpha python code/experiments/run_p0_linchpin.py`; `GRAIL_DATASETS=edg60000 GRAIL_P0_OUT=p0_linchpin_edgfull.json python code/experiments/run_p0_linchpin.py`; Epinions-S from `p0b_main.json` (Fig. 2 row) | `p0_linchpin.json`, `p0_linchpin_edgfull.json` | edg60000: 0.65 h |
