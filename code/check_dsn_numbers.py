@@ -62,7 +62,7 @@ def cohort_checks(C: dict) -> list:
         (f"one random account's fake rating then pushes below the threshold ${lo('otc', 'random_prop')}\\%$ and ${lo('alpha', 'random_prop')}\\%$ of users just above it, and ${cell('otc', 'random_prop')}\\%$ and ${cell('alpha', 'random_prop')}\\%$ of all eligible users.", 'abstract rates'),
         (f"For the optimized edges on low-reputation targets it reports ${lo('otc', 'opt_total')}\\%$ and ${lo('alpha', 'opt_total')}\\%$ instead of ${lo('otc', 'opt_prop')}\\%$ and ${lo('alpha', 'opt_prop')}\\%$", 'intro total rates'),
         (f"pushes below the threshold ${lo('otc', 'random_prop')}\\%$ (OTC) and ${lo('alpha', 'random_prop')}\\%$ (Alpha) of the \\emph{{low-reputation}} targets", 'intro random rates'),
-        (f"(about $2\\%$ of all eligible targets), and ${cell('otc', 'random_prop')}\\%$ and ${cell('alpha', 'random_prop')}\\%$ of all eligible targets. An \\emph{{optimized}} source", 'intro whole cohort, random'),
+        (f"who make up about $2\\%$ of the eligible targets, and ${cell('otc', 'random_prop')}\\%$ and ${cell('alpha', 'random_prop')}\\%$ of all eligible targets. An \\emph{{optimized}} source", 'intro whole cohort, random'),
         (f"reaches ${lo('otc', 'opt_prop')}\\%$ and ${lo('alpha', 'opt_prop')}\\%$, and ${cell('otc', 'opt_prop')}\\%$ and ${cell('alpha', 'opt_prop')}\\%$ (Section", 'intro optimized'),
         (f"one random edge flips ${cell('otc', 'random_prop')}\\%$ (OTC) and ${cell('alpha', 'random_prop')}\\%$ (Alpha) under the propagation-only score, and one optimized edge ${cell('otc', 'opt_prop')}\\%$ and ${cell('alpha', 'opt_prop')}\\%$.", 'whole cohort'),
         (f"the optimized rate ranges from ${spread['otc'][0]:.0f}\\%$ to ${spread['otc'][1]:.0f}\\%$ on OTC and from ${spread['alpha'][0]:.0f}\\%$ to ${spread['alpha'][1]:.0f}\\%$ on Alpha", 'spread across runs'),
@@ -260,7 +260,7 @@ def defense_checks() -> list:
         (f"flips ${kn('otc', 'low_low_history_B1', 'mean')[0]}$ and ${kn('alpha', 'low_low_history_B1', 'mean')[0]}$. We therefore weight", 'E12 low-history accounts'),
         (f"falls from ${pc('otc', lh, 'mean')}\\%$ (${frac('otc', lh, 'mean')}$) to ${pc('otc', lh, 'rater_weighted')}\\%$ (${frac('otc', lh, 'rater_weighted')}$) on OTC and from ${pc('alpha', lh, 'mean')}\\%$ (${frac('alpha', lh, 'mean')}$) to ${pc('alpha', lh, 'rater_weighted')}\\%$ (${frac('alpha', lh, 'rater_weighted')}$) on Alpha", 'E12 weighting'),
         (f"its shift stays at about ${D['otc']['low_high_history_B5']['rater_weighted']['dr']:.2f}$ (OTC) and ${D['alpha']['low_high_history_B5']['rater_weighted']['dr']:.2f}$ (Alpha), and it flips {of('otc', 'low_high_history_B5', 'rater_weighted')} and {of('alpha', 'low_high_history_B5', 'rater_weighted')} eligible targets, against {of('otc', 'low_high_history_B5', 'mean')} and {of('alpha', 'low_high_history_B5', 'mean')} without the defense", 'E12 adaptive attacker'),
-        (f"one edge from a random account still flips {of('otc', 'low_random_B1', 'rater_weighted')} eligible targets on OTC and {of('alpha', 'low_random_B1', 'rater_weighted')} on Alpha", 'E13 random account under the weighting'),
+        (f"one edge from a random account flips {of('otc', 'low_random_B1', 'rater_weighted')} eligible targets on OTC and {of('alpha', 'low_random_B1', 'rater_weighted')} on Alpha, against {of('otc', 'low_random_B1', 'mean')} and {of('alpha', 'low_random_B1', 'mean')} without the weighting.", 'E13 random account under the weighting'),
     ]
 
 def dense_table_checks(CS: dict) -> list:
