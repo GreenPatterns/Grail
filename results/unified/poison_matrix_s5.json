@@ -1,0 +1,144 @@
+{
+  "otc": {
+    "matrix": {
+      "B": 5,
+      "seeds": [
+        42,
+        1,
+        2,
+        3,
+        4
+      ],
+      "n_victims": 24,
+      "retrain_std_clean": 0.0464,
+      "controls": {
+        "none": {
+          "mean_R": 0.8379,
+          "dR_vs_none": 0.0,
+          "flip_pct": 0.0,
+          "flip_ci": [
+            0.0,
+            0.031
+          ]
+        },
+        "dis_victim": {
+          "mean_R": 0.6008,
+          "dR_vs_none": -0.2371,
+          "flip_pct": 10.2,
+          "flip_ci": [
+            0.054,
+            0.171
+          ]
+        },
+        "tru_victim": {
+          "mean_R": 0.8907,
+          "dR_vs_none": 0.0528,
+          "flip_pct": 0.0,
+          "flip_ci": [
+            0.0,
+            0.031
+          ]
+        },
+        "dis_unrelated": {
+          "mean_R": 0.8256,
+          "dR_vs_none": -0.0124,
+          "flip_pct": 0.8,
+          "flip_ci": [
+            0.0,
+            0.046
+          ]
+        },
+        "dis_randsnap": {
+          "mean_R": 0.6153,
+          "dR_vs_none": -0.2227,
+          "flip_pct": 13.6,
+          "flip_ci": [
+            0.08,
+            0.211
+          ]
+        }
+      }
+    },
+    "causal_retrain": {
+      "mean_dR": -0.1069,
+      "flip_pct": 70.8,
+      "flip_ci": [
+        0.489,
+        0.874
+      ],
+      "n_victims": 24,
+      "n_eligible": 24
+    }
+  },
+  "alpha": {
+    "matrix": {
+      "B": 5,
+      "seeds": [
+        42,
+        1,
+        2,
+        3,
+        4
+      ],
+      "n_victims": 24,
+      "retrain_std_clean": 0.0455,
+      "controls": {
+        "none": {
+          "mean_R": 0.7846,
+          "dR_vs_none": 0.0,
+          "flip_pct": 0.0,
+          "flip_ci": [
+            0.0,
+            0.03
+          ]
+        },
+        "dis_victim": {
+          "mean_R": 0.5968,
+          "dR_vs_none": -0.1878,
+          "flip_pct": 8.3,
+          "flip_ci": [
+            0.041,
+            0.148
+          ]
+        },
+        "tru_victim": {
+          "mean_R": 0.843,
+          "dR_vs_none": 0.0584,
+          "flip_pct": 0.0,
+          "flip_ci": [
+            0.0,
+            0.03
+          ]
+        },
+        "dis_unrelated": {
+          "mean_R": 0.7565,
+          "dR_vs_none": -0.028,
+          "flip_pct": 1.7,
+          "flip_ci": [
+            0.002,
+            0.059
+          ]
+        },
+        "dis_randsnap": {
+          "mean_R": 0.5797,
+          "dR_vs_none": -0.2049,
+          "flip_pct": 20.0,
+          "flip_ci": [
+            0.133,
+            0.283
+          ]
+        }
+      }
+    },
+    "causal_retrain": {
+      "mean_dR": -0.1946,
+      "flip_pct": 91.7,
+      "flip_ci": [
+        0.73,
+        0.99
+      ],
+      "n_victims": 24,
+      "n_eligible": 24
+    }
+  }
+}

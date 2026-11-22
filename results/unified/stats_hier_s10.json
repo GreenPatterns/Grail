@@ -1,0 +1,226 @@
+{
+  "otc": {
+    "appended_vs_inwindow": {
+      "n_pooled": 750,
+      "median": -0.1563,
+      "cliffs_delta": -0.944,
+      "seedcluster_ci_median": [
+        -0.1816,
+        -0.1313
+      ],
+      "per_seed_median": [
+        -0.1651,
+        -0.1871,
+        -0.1649,
+        -0.1427,
+        -0.083,
+        -0.197,
+        -0.1193,
+        -0.1285,
+        -0.2126,
+        -0.1098
+      ],
+      "seed_sign_test_p": 0.002
+    },
+    "naive_vs_prop": {
+      "n_pooled": 750,
+      "median": -0.0202,
+      "cliffs_delta": -0.984,
+      "seedcluster_ci_median": [
+        -0.0221,
+        -0.0181
+      ],
+      "per_seed_median": [
+        -0.0193,
+        -0.0181,
+        -0.0147,
+        -0.0205,
+        -0.0234,
+        -0.0214,
+        -0.0221,
+        -0.0195,
+        -0.0158,
+        -0.0247
+      ],
+      "seed_sign_test_p": 0.002
+    },
+    "distrust_vs_trust": {
+      "n_pooled": 750,
+      "median": -0.2038,
+      "cliffs_delta": -0.984,
+      "seedcluster_ci_median": [
+        -0.2301,
+        -0.181
+      ],
+      "per_seed_median": [
+        -0.2642,
+        -0.2314,
+        -0.238,
+        -0.1665,
+        -0.1875,
+        -0.2374,
+        -0.172,
+        -0.1909,
+        -0.2833,
+        -0.1688
+      ],
+      "seed_sign_test_p": 0.002
+    },
+    "prop_vs_zero": {
+      "n_pooled": 750,
+      "median": -0.1341,
+      "cliffs_delta": -0.875,
+      "seedcluster_ci_median": [
+        -0.162,
+        -0.113
+      ],
+      "per_seed_median": [
+        -0.1391,
+        -0.16,
+        -0.1473,
+        -0.126,
+        -0.0768,
+        -0.1717,
+        -0.0927,
+        -0.1025,
+        -0.2235,
+        -0.086
+      ],
+      "seed_sign_test_p": 0.002
+    },
+    "appended_vs_zero": {
+      "n_pooled": 750,
+      "median": 0.0002,
+      "cliffs_delta": 0.069,
+      "seedcluster_ci_median": [
+        -0.0003,
+        0.0007
+      ],
+      "per_seed_median": [
+        0.0012,
+        0.0011,
+        0.0013,
+        -0.0016,
+        -0.0063,
+        0.0005,
+        0.0001,
+        0.0007,
+        0.0,
+        -0.0002
+      ],
+      "seed_sign_test_p": 0.3438
+    }
+  },
+  "alpha": {
+    "appended_vs_inwindow": {
+      "n_pooled": 750,
+      "median": -0.1416,
+      "cliffs_delta": -0.952,
+      "seedcluster_ci_median": [
+        -0.1633,
+        -0.1267
+      ],
+      "per_seed_median": [
+        -0.1401,
+        -0.1204,
+        -0.1786,
+        -0.2152,
+        -0.1129,
+        -0.198,
+        -0.114,
+        -0.1109,
+        -0.1232,
+        -0.1471
+      ],
+      "seed_sign_test_p": 0.002
+    },
+    "naive_vs_prop": {
+      "n_pooled": 750,
+      "median": -0.0207,
+      "cliffs_delta": -0.979,
+      "seedcluster_ci_median": [
+        -0.0217,
+        -0.0194
+      ],
+      "per_seed_median": [
+        -0.0217,
+        -0.0217,
+        -0.0223,
+        -0.0162,
+        -0.0202,
+        -0.016,
+        -0.0209,
+        -0.0212,
+        -0.0223,
+        -0.0222
+      ],
+      "seed_sign_test_p": 0.002
+    },
+    "distrust_vs_trust": {
+      "n_pooled": 750,
+      "median": -0.1733,
+      "cliffs_delta": -0.971,
+      "seedcluster_ci_median": [
+        -0.2202,
+        -0.1489
+      ],
+      "per_seed_median": [
+        -0.1868,
+        -0.1671,
+        -0.2689,
+        -0.3055,
+        -0.1656,
+        -0.286,
+        -0.1576,
+        -0.1858,
+        -0.1243,
+        -0.1397
+      ],
+      "seed_sign_test_p": 0.002
+    },
+    "prop_vs_zero": {
+      "n_pooled": 750,
+      "median": -0.1178,
+      "cliffs_delta": -0.875,
+      "seedcluster_ci_median": [
+        -0.1423,
+        -0.1002
+      ],
+      "per_seed_median": [
+        -0.1068,
+        -0.1077,
+        -0.1516,
+        -0.1949,
+        -0.0888,
+        -0.1956,
+        -0.0971,
+        -0.0906,
+        -0.099,
+        -0.1384
+      ],
+      "seed_sign_test_p": 0.002
+    },
+    "appended_vs_zero": {
+      "n_pooled": 750,
+      "median": 0.0,
+      "cliffs_delta": 0.005,
+      "seedcluster_ci_median": [
+        -0.0001,
+        0.0002
+      ],
+      "per_seed_median": [
+        0.0005,
+        0.0003,
+        -0.0009,
+        -0.0001,
+        -0.0005,
+        -0.0005,
+        0.0001,
+        0.0,
+        0.0001,
+        0.0001
+      ],
+      "seed_sign_test_p": 0.7539
+    }
+  }
+}

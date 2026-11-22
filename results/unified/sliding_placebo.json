@@ -1,0 +1,14 @@
+{
+  "otc": {
+    "n": 50,
+    "placebo_mean": -0.0142,
+    "placebo_median": 0.0235,
+    "placebo_absmax": 0.566
+  },
+  "alpha": {
+    "n": 50,
+    "placebo_mean": -0.0416,
+    "placebo_median": -0.0096,
+    "placebo_absmax": 0.512
+  }
+}

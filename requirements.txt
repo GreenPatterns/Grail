@@ -1,0 +1,19 @@
+# Main environment (Python 3.10.14, CUDA 12.4). Versions are the ones every result was produced with.
+# Install PyTorch and the PyG extensions first, from their wheel indexes (see README, "Setup"):
+#   pip install torch==2.4.0 --index-url https://download.pytorch.org/whl/cu124
+#   pip install torch_scatter==2.1.2 torch_sparse==0.6.18 pyg_lib==0.4.0 -f https://data.pyg.org/whl/torch-2.4.0+cu124.html
+torch==2.4.0
+torch-geometric==2.6.1
+numpy==1.26.4
+scipy==1.15.3
+pandas==2.3.3
+scikit-learn==1.6.1
+matplotlib==3.10.0
+networkx==3.4.2
+einops==0.8.1
+easydict==1.13
+texttable==1.7.0
+tqdm==4.67.1
+PyYAML==6.0.2
+pynvml==12.0.0
+pytest==9.0.2

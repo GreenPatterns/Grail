@@ -1,0 +1,100 @@
+{
+  "otc": {
+    "causal_retrain": {
+      "seeds": [
+        42,
+        1,
+        2,
+        3,
+        4
+      ],
+      "n_victims": 24,
+      "per_seed": {
+        "42": {
+          "n_eligible": 24,
+          "k_flip": 15,
+          "mean_dR": -0.07684837530056636
+        },
+        "1": {
+          "n_eligible": 23,
+          "k_flip": 12,
+          "mean_dR": -0.1769277031222979
+        },
+        "2": {
+          "n_eligible": 21,
+          "k_flip": 12,
+          "mean_dR": -0.20048637005190054
+        },
+        "3": {
+          "n_eligible": 24,
+          "k_flip": 19,
+          "mean_dR": -0.31089292901257676
+        },
+        "4": {
+          "n_eligible": 22,
+          "k_flip": 22,
+          "mean_dR": -0.2891501442839702
+        }
+      },
+      "mean_dR": -0.2109,
+      "flip_pct": 70.2,
+      "flip_ci": [
+        0.609,
+        0.784
+      ],
+      "flip_pct_per_seed_mean": 70.2,
+      "flip_pct_per_seed_std": 19.5,
+      "n_eligible": 114,
+      "k_flip": 80
+    }
+  },
+  "alpha": {
+    "causal_retrain": {
+      "seeds": [
+        42,
+        1,
+        2,
+        3,
+        4
+      ],
+      "n_victims": 24,
+      "per_seed": {
+        "42": {
+          "n_eligible": 24,
+          "k_flip": 24,
+          "mean_dR": -0.3011353104375303
+        },
+        "1": {
+          "n_eligible": 20,
+          "k_flip": 19,
+          "mean_dR": -0.2405021203060945
+        },
+        "2": {
+          "n_eligible": 23,
+          "k_flip": 22,
+          "mean_dR": -0.30722744142015773
+        },
+        "3": {
+          "n_eligible": 24,
+          "k_flip": 22,
+          "mean_dR": -0.24523437395691872
+        },
+        "4": {
+          "n_eligible": 23,
+          "k_flip": 23,
+          "mean_dR": -0.34160769668718177
+        }
+      },
+      "mean_dR": -0.2871,
+      "flip_pct": 96.5,
+      "flip_ci": [
+        0.913,
+        0.99
+      ],
+      "flip_pct_per_seed_mean": 96.5,
+      "flip_pct_per_seed_std": 3.6,
+      "n_eligible": 114,
+      "k_flip": 110
+    }
+  }
+}

@@ -1,0 +1,427 @@
+Total 35592 interactions from 2010-11-08 12:45:12 to 2016-01-24 19:12:04
+Total 1903 days
+In snapshot 0 Time:2011-05-17 21:35:53 #Edges=2384
+In snapshot 1 Time:2011-11-24 04:26:34 #Edges=5027
+In snapshot 2 Time:2012-06-01 13:17:15 #Edges=3131
+In snapshot 3 Time:2012-12-08 20:07:56 #Edges=6076
+In snapshot 4 Time:2013-06-17 04:58:37 #Edges=7267
+In snapshot 5 Time:2013-12-24 11:49:18 #Edges=6287
+In snapshot 6 Time:2014-07-02 20:39:59 #Edges=2818
+In snapshot 7 Time:2015-01-09 03:30:40 #Edges=1579
+In snapshot 8 Time:2015-07-18 12:21:21 #Edges=696
+In snapshot 9 Time:2016-01-24 19:12:04 #Edges=326
+--------------- Getting training and testing snapshots starts ---------------
+Snapshot index [2384, 7411, 10542, 16618, 23885, 30172, 32990, 34569, 35265, 35591] 32990
+1579 edges at snapshot t+1
+Trust and distrust distribution: 871 175
+Observed single-timeslot test edges: 1046
+--------------- Getting training and testing snapshots ends ---------------
+
+Training started.
+
+
+Loss:   0%|          | 0/50 [00:00<?, ?it/s]
+TrustGuard (Loss=0.7199):   0%|          | 0/50 [00:00<?, ?it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3852 0.7513 0.6935 0.5300 0.8279 0.6926
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3852 0.7513 0.6935 0.5300 0.8279 0.6926
+
+TrustGuard (Loss=0.7199):   2%|▏         | 1/50 [00:00<00:31,  1.53it/s]
+TrustGuard (Loss=0.6287):   2%|▏         | 1/50 [00:00<00:31,  1.53it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4161 0.7387 0.6970 0.5171 0.8451 0.7071
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4161 0.7387 0.6970 0.5171 0.8451 0.7071
+
+TrustGuard (Loss=0.6287):   4%|▍         | 2/50 [00:00<00:20,  2.36it/s]
+TrustGuard (Loss=0.5651):   4%|▍         | 2/50 [00:00<00:20,  2.36it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4058 0.7453 0.6878 0.5209 0.8451 0.7012
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4058 0.7453 0.6878 0.5209 0.8451 0.7012
+
+TrustGuard (Loss=0.5651):   6%|▌         | 3/50 [00:01<00:16,  2.88it/s]
+TrustGuard (Loss=0.503):   6%|▌         | 3/50 [00:01<00:16,  2.88it/s] mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4064 0.7593 0.7129 0.5315 0.8260 0.7025
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4064 0.7593 0.7129 0.5315 0.8260 0.7025
+
+TrustGuard (Loss=0.503):   8%|▊         | 4/50 [00:01<00:15,  3.03it/s]
+TrustGuard (Loss=0.4524):   8%|▊         | 4/50 [00:01<00:15,  3.03it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3909 0.7569 0.6291 0.4923 0.8614 0.6624
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3909 0.7569 0.6291 0.4923 0.8614 0.6624
+
+TrustGuard (Loss=0.4524):  10%|█         | 5/50 [00:01<00:14,  3.19it/s]
+TrustGuard (Loss=0.462):  10%|█         | 5/50 [00:01<00:14,  3.19it/s] mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.2542 0.7887 0.6662 0.5412 0.5201 0.4948
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.2542 0.7887 0.6662 0.5412 0.5201 0.4948
+
+TrustGuard (Loss=0.462):  12%|█▏        | 6/50 [00:02<00:13,  3.18it/s]
+TrustGuard (Loss=0.5133):  12%|█▏        | 6/50 [00:02<00:13,  3.18it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3624 0.7659 0.6985 0.5165 0.8021 0.6782
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3624 0.7659 0.6985 0.5165 0.8021 0.6782
+
+TrustGuard (Loss=0.5133):  14%|█▍        | 7/50 [00:02<00:12,  3.31it/s]
+TrustGuard (Loss=0.3872):  14%|█▍        | 7/50 [00:02<00:12,  3.31it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4052 0.7383 0.6610 0.4880 0.8576 0.6900
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4052 0.7383 0.6610 0.4880 0.8576 0.6900
+
+TrustGuard (Loss=0.3872):  16%|█▌        | 8/50 [00:02<00:12,  3.47it/s]
+TrustGuard (Loss=0.4285):  16%|█▌        | 8/50 [00:02<00:12,  3.47it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3852 0.7350 0.6644 0.4931 0.8480 0.6863
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3852 0.7350 0.6644 0.4931 0.8480 0.6863
+
+TrustGuard (Loss=0.4285):  18%|█▊        | 9/50 [00:02<00:11,  3.47it/s]
+TrustGuard (Loss=0.4061):  18%|█▊        | 9/50 [00:02<00:11,  3.47it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3441 0.7448 0.6860 0.5079 0.8002 0.6700
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3441 0.7448 0.6860 0.5079 0.8002 0.6700
+
+TrustGuard (Loss=0.4061):  20%|██        | 10/50 [00:03<00:11,  3.58it/s]
+TrustGuard (Loss=0.3631):  20%|██        | 10/50 [00:03<00:11,  3.58it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3062 0.7573 0.6942 0.5199 0.7151 0.6235
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3062 0.7573 0.6942 0.5199 0.7151 0.6235
+
+TrustGuard (Loss=0.3631):  22%|██▏       | 11/50 [00:03<00:10,  3.82it/s]
+TrustGuard (Loss=0.3682):  22%|██▏       | 11/50 [00:03<00:10,  3.82it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3061 0.7610 0.6993 0.5282 0.6893 0.6103
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3061 0.7610 0.6993 0.5282 0.6893 0.6103
+
+TrustGuard (Loss=0.3682):  24%|██▍       | 12/50 [00:03<00:09,  3.88it/s]
+TrustGuard (Loss=0.3707):  24%|██▍       | 12/50 [00:03<00:09,  3.88it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3198 0.7586 0.6949 0.5340 0.7467 0.6423
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3198 0.7586 0.6949 0.5340 0.7467 0.6423
+
+TrustGuard (Loss=0.3707):  26%|██▌       | 13/50 [00:03<00:09,  4.09it/s]
+TrustGuard (Loss=0.3434):  26%|██▌       | 13/50 [00:03<00:09,  4.09it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3724 0.7532 0.6883 0.5377 0.8231 0.6862
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3724 0.7532 0.6883 0.5377 0.8231 0.6862
+
+TrustGuard (Loss=0.3434):  28%|██▊       | 14/50 [00:03<00:07,  4.68it/s]
+TrustGuard (Loss=0.3246):  28%|██▊       | 14/50 [00:04<00:07,  4.68it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4327 0.7505 0.6867 0.5380 0.8585 0.7104
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4327 0.7505 0.6867 0.5380 0.8585 0.7104
+
+TrustGuard (Loss=0.3246):  30%|███       | 15/50 [00:04<00:07,  4.84it/s]
+TrustGuard (Loss=0.3269):  30%|███       | 15/50 [00:04<00:07,  4.84it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4384 0.7530 0.6765 0.5424 0.8642 0.7072
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4384 0.7530 0.6765 0.5424 0.8642 0.7072
+
+TrustGuard (Loss=0.3269):  32%|███▏      | 16/50 [00:04<00:07,  4.85it/s]
+TrustGuard (Loss=0.3245):  32%|███▏      | 16/50 [00:04<00:07,  4.85it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4356 0.7612 0.6873 0.5503 0.8595 0.7116
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4356 0.7612 0.6873 0.5503 0.8595 0.7116
+
+TrustGuard (Loss=0.3245):  34%|███▍      | 17/50 [00:04<00:07,  4.24it/s]
+TrustGuard (Loss=0.3069):  34%|███▍      | 17/50 [00:04<00:07,  4.24it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4182 0.7711 0.6958 0.5569 0.8470 0.7078
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4182 0.7711 0.6958 0.5569 0.8470 0.7078
+
+TrustGuard (Loss=0.3069):  36%|███▌      | 18/50 [00:04<00:07,  4.18it/s]
+TrustGuard (Loss=0.2949):  36%|███▌      | 18/50 [00:05<00:07,  4.18it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3896 0.7787 0.7020 0.5634 0.8231 0.6943
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3896 0.7787 0.7020 0.5634 0.8231 0.6943
+
+TrustGuard (Loss=0.2949):  38%|███▊      | 19/50 [00:05<00:07,  3.94it/s]
+TrustGuard (Loss=0.2976):  38%|███▊      | 19/50 [00:05<00:07,  3.94it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3924 0.7805 0.7043 0.5642 0.8231 0.6956
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3924 0.7805 0.7043 0.5642 0.8231 0.6956
+
+TrustGuard (Loss=0.2976):  40%|████      | 20/50 [00:05<00:07,  4.04it/s]
+TrustGuard (Loss=0.2931):  40%|████      | 20/50 [00:05<00:07,  4.04it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4055 0.7762 0.6975 0.5622 0.8384 0.7025
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4055 0.7762 0.6975 0.5622 0.8384 0.7025
+
+TrustGuard (Loss=0.2931):  42%|████▏     | 21/50 [00:05<00:07,  4.04it/s]
+TrustGuard (Loss=0.2786):  42%|████▏     | 21/50 [00:05<00:07,  4.04it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4179 0.7698 0.6765 0.5571 0.8566 0.7015
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4179 0.7698 0.6765 0.5571 0.8566 0.7015
+
+TrustGuard (Loss=0.2786):  44%|████▍     | 22/50 [00:05<00:06,  4.02it/s]
+TrustGuard (Loss=0.2753):  44%|████▍     | 22/50 [00:06<00:06,  4.02it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4299 0.7689 0.6730 0.5560 0.8623 0.7031
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4299 0.7689 0.6730 0.5560 0.8623 0.7031
+
+TrustGuard (Loss=0.2753):  46%|████▌     | 23/50 [00:06<00:06,  3.93it/s]
+TrustGuard (Loss=0.2749):  46%|████▌     | 23/50 [00:06<00:06,  3.93it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4069 0.7767 0.6724 0.5640 0.8537 0.6964
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4069 0.7767 0.6724 0.5640 0.8537 0.6964
+
+TrustGuard (Loss=0.2749):  48%|████▊     | 24/50 [00:06<00:06,  3.80it/s]
+TrustGuard (Loss=0.2634):  48%|████▊     | 24/50 [00:06<00:06,  3.80it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4092 0.7898 0.7032 0.5750 0.8365 0.7046
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4092 0.7898 0.7032 0.5750 0.8365 0.7046
+
+TrustGuard (Loss=0.2634):  50%|█████     | 25/50 [00:06<00:05,  4.24it/s]
+TrustGuard (Loss=0.2553):  50%|█████     | 25/50 [00:06<00:05,  4.24it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3962 0.8014 0.7083 0.5859 0.8222 0.6972
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.3962 0.8014 0.7083 0.5859 0.8222 0.6972
+
+TrustGuard (Loss=0.2553):  52%|█████▏    | 26/50 [00:06<00:05,  4.74it/s]
+TrustGuard (Loss=0.2552):  52%|█████▏    | 26/50 [00:06<00:05,  4.74it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4294 0.8086 0.7181 0.5963 0.8384 0.7146
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4294 0.8086 0.7181 0.5963 0.8384 0.7146
+
+TrustGuard (Loss=0.2552):  54%|█████▍    | 27/50 [00:07<00:04,  4.94it/s]
+TrustGuard (Loss=0.2462):  54%|█████▍    | 27/50 [00:07<00:04,  4.94it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4600 0.8129 0.7033 0.6059 0.8633 0.7256
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4600 0.8129 0.7033 0.6059 0.8633 0.7256
+
+TrustGuard (Loss=0.2462):  56%|█████▌    | 28/50 [00:07<00:04,  4.95it/s]
+TrustGuard (Loss=0.2372):  56%|█████▌    | 28/50 [00:07<00:04,  4.95it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4727 0.8186 0.6862 0.6163 0.8728 0.7216
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4727 0.8186 0.6862 0.6163 0.8728 0.7216
+
+TrustGuard (Loss=0.2372):  58%|█████▊    | 29/50 [00:07<00:05,  4.16it/s]
+TrustGuard (Loss=0.237):  58%|█████▊    | 29/50 [00:07<00:05,  4.16it/s] mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4980 0.8287 0.7005 0.6325 0.8776 0.7361
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4980 0.8287 0.7005 0.6325 0.8776 0.7361
+
+TrustGuard (Loss=0.237):  60%|██████    | 30/50 [00:07<00:05,  3.96it/s]
+TrustGuard (Loss=0.2293):  60%|██████    | 30/50 [00:07<00:05,  3.96it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5161 0.8380 0.7296 0.6462 0.8767 0.7538
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5161 0.8380 0.7296 0.6462 0.8767 0.7538
+
+TrustGuard (Loss=0.2293):  62%|██████▏   | 31/50 [00:08<00:04,  4.02it/s]
+TrustGuard (Loss=0.2236):  62%|██████▏   | 31/50 [00:08<00:04,  4.02it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5028 0.8437 0.7307 0.6560 0.8709 0.7490
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5028 0.8437 0.7307 0.6560 0.8709 0.7490
+
+TrustGuard (Loss=0.2236):  64%|██████▍   | 32/50 [00:08<00:04,  4.07it/s]
+TrustGuard (Loss=0.223):  64%|██████▍   | 32/50 [00:08<00:04,  4.07it/s] mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5289 0.8453 0.7199 0.6609 0.8834 0.7544
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5289 0.8453 0.7199 0.6609 0.8834 0.7544
+
+TrustGuard (Loss=0.223):  66%|██████▌   | 33/50 [00:08<00:03,  4.79it/s]
+TrustGuard (Loss=0.215):  66%|██████▌   | 33/50 [00:08<00:03,  4.79it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5190 0.8467 0.7017 0.6633 0.8834 0.7422
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5190 0.8467 0.7017 0.6633 0.8834 0.7422
+
+TrustGuard (Loss=0.215):  68%|██████▊   | 34/50 [00:08<00:03,  4.71it/s]
+TrustGuard (Loss=0.2159):  68%|██████▊   | 34/50 [00:08<00:03,  4.71it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5273 0.8503 0.7114 0.6678 0.8843 0.7498
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5273 0.8503 0.7114 0.6678 0.8843 0.7498
+
+TrustGuard (Loss=0.2159):  70%|███████   | 35/50 [00:08<00:02,  5.07it/s]
+TrustGuard (Loss=0.2103):  70%|███████   | 35/50 [00:08<00:02,  5.07it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5235 0.8519 0.7290 0.6706 0.8795 0.7562
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5235 0.8519 0.7290 0.6706 0.8795 0.7562
+
+TrustGuard (Loss=0.2103):  72%|███████▏  | 36/50 [00:09<00:02,  5.07it/s]
+TrustGuard (Loss=0.2113):  72%|███████▏  | 36/50 [00:09<00:02,  5.07it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5314 0.8507 0.7285 0.6711 0.8824 0.7587
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5314 0.8507 0.7285 0.6711 0.8824 0.7587
+
+TrustGuard (Loss=0.2113):  74%|███████▍  | 37/50 [00:09<00:02,  5.22it/s]
+TrustGuard (Loss=0.2073):  74%|███████▍  | 37/50 [00:09<00:02,  5.22it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5358 0.8488 0.7148 0.6697 0.8862 0.7539
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5358 0.8488 0.7148 0.6697 0.8862 0.7539
+
+TrustGuard (Loss=0.2073):  76%|███████▌  | 38/50 [00:09<00:02,  5.44it/s]
+TrustGuard (Loss=0.2073):  76%|███████▌  | 38/50 [00:09<00:02,  5.44it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5358 0.8490 0.7211 0.6709 0.8853 0.7570
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5358 0.8490 0.7211 0.6709 0.8853 0.7570
+
+TrustGuard (Loss=0.2073):  78%|███████▊  | 39/50 [00:09<00:02,  5.45it/s]
+TrustGuard (Loss=0.2033):  78%|███████▊  | 39/50 [00:09<00:02,  5.45it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5286 0.8497 0.7359 0.6717 0.8795 0.7601
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5286 0.8497 0.7359 0.6717 0.8795 0.7601
+
+TrustGuard (Loss=0.2033):  80%|████████  | 40/50 [00:09<00:01,  5.51it/s]
+TrustGuard (Loss=0.2024):  80%|████████  | 40/50 [00:09<00:01,  5.51it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5298 0.8487 0.7262 0.6697 0.8824 0.7573
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5298 0.8487 0.7262 0.6697 0.8824 0.7573
+
+TrustGuard (Loss=0.2024):  82%|████████▏ | 41/50 [00:09<00:01,  5.58it/s]
+TrustGuard (Loss=0.1973):  82%|████████▏ | 41/50 [00:09<00:01,  5.58it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5418 0.8482 0.7199 0.6677 0.8872 0.7582
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5418 0.8482 0.7199 0.6677 0.8872 0.7582
+
+TrustGuard (Loss=0.1973):  84%|████████▍ | 42/50 [00:10<00:01,  5.31it/s]
+TrustGuard (Loss=0.1972):  84%|████████▍ | 42/50 [00:10<00:01,  5.31it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5426 0.8488 0.7325 0.6663 0.8853 0.7639
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5426 0.8488 0.7325 0.6663 0.8853 0.7639
+
+TrustGuard (Loss=0.1972):  86%|████████▌ | 43/50 [00:10<00:01,  4.72it/s]
+TrustGuard (Loss=0.1923):  86%|████████▌ | 43/50 [00:10<00:01,  4.72it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5112 0.8489 0.7324 0.6655 0.8738 0.7527
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5112 0.8489 0.7324 0.6655 0.8738 0.7527
+
+TrustGuard (Loss=0.1923):  88%|████████▊ | 44/50 [00:10<00:01,  4.52it/s]
+TrustGuard (Loss=0.1916):  88%|████████▊ | 44/50 [00:10<00:01,  4.52it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5284 0.8478 0.7239 0.6629 0.8824 0.7559
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5284 0.8478 0.7239 0.6629 0.8824 0.7559
+
+TrustGuard (Loss=0.1916):  90%|█████████ | 45/50 [00:10<00:01,  4.10it/s]
+TrustGuard (Loss=0.1881):  90%|█████████ | 45/50 [00:10<00:01,  4.10it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5298 0.8464 0.7262 0.6601 0.8824 0.7573
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5298 0.8464 0.7262 0.6601 0.8824 0.7573
+
+TrustGuard (Loss=0.1881):  92%|█████████▏| 46/50 [00:11<00:00,  4.33it/s]
+TrustGuard (Loss=0.1865):  92%|█████████▏| 46/50 [00:11<00:00,  4.33it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4873 0.8450 0.7256 0.6580 0.8662 0.7417
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4873 0.8450 0.7256 0.6580 0.8662 0.7417
+
+TrustGuard (Loss=0.1865):  94%|█████████▍| 47/50 [00:11<00:00,  4.62it/s]
+TrustGuard (Loss=0.1846):  94%|█████████▍| 47/50 [00:11<00:00,  4.62it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5008 0.8439 0.7284 0.6547 0.8709 0.7477
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5008 0.8439 0.7284 0.6547 0.8709 0.7477
+
+TrustGuard (Loss=0.1846):  96%|█████████▌| 48/50 [00:11<00:00,  4.83it/s]
+TrustGuard (Loss=0.1819):  96%|█████████▌| 48/50 [00:11<00:00,  4.83it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5174 0.8433 0.7279 0.6520 0.8776 0.7537
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.5174 0.8433 0.7279 0.6520 0.8776 0.7537
+
+TrustGuard (Loss=0.1819):  98%|█████████▊| 49/50 [00:11<00:00,  5.02it/s]
+TrustGuard (Loss=0.1811):  98%|█████████▊| 49/50 [00:11<00:00,  5.02it/s]mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4933 0.8436 0.7250 0.6504 0.8690 0.7440
+mcc, auc, acc_balanced, precision, f1_micro, f1_macro 
+
+0.4933 0.8436 0.7250 0.6504 0.8690 0.7440
+
+TrustGuard (Loss=0.1811): 100%|██████████| 50/50 [00:11<00:00,  4.98it/s]
+TrustGuard (Loss=0.1811): 100%|██████████| 50/50 [00:11<00:00,  4.22it/s]
+otc label-delta {'0': '2.39e-01', '1': '2.28e-01', '2': '2.69e-01', '3': '1.95e-01', '4': '2.99e-01', '5': '2.34e-01', '6': '3.14e-01', 'appended': '1.99e-08'}
+otc flip {'n_eligible': 25, 'flip_total_pct': 76.0, 'flip_prop_pct': 72.0, 'k_total': 19, 'k_prop': 18, 'mean_dR_total': -0.2816901919990778}
+saved paper/results/unified/p0b_trustguard_otc.json

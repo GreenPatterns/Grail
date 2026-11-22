@@ -1,0 +1,1149 @@
+WARNING:tensorflow:From <clones>/DySAT_alpha/train.py:20: The name tf.set_random_seed is deprecated. Please use tf.compat.v1.set_random_seed instead.
+
+Updated flags dict_items([('logtostderr', False), ('alsologtostderr', False), ('v', -1), ('verbosity', -1), ('logger_levels', {}), ('stderrthreshold', 'fatal'), ('showprefixforinfo', True), ('run_with_pdb', False), ('pdb_post_mortem', False), ('pdb', False), ('run_with_profiling', False), ('profile_file', None), ('use_cprofile_for_profiling', True), ('only_check_args', False), ('op_conversion_fallback_to_while_loop', False), ('test_srcdir', ''), ('test_tmpdir', '/tmp/absl_testing'), ('test_random_seed', 301), ('test_randomize_ordering_seed', ''), ('xml_output_file', ''), ('base_model', 'DySAT'), ('model', 'grail_alpha'), ('dataset', 'grail_alpha'), ('time_steps', 8), ('GPU_ID', 0), ('epochs', 200), ('batch_size', 512), ('featureless', True), ('max_gradient_norm', 1.0), ('test_freq', 1), ('val_freq', 1), ('neg_sample_size', 10), ('walk_len', 20), ('neg_weight', 1.0), ('learning_rate', 0.001), ('spatial_drop', 0.1), ('temporal_drop', 0.5), ('weight_decay', 0.0005), ('use_residual', False), ('structural_head_config', '16,8,8'), ('structural_layer_config', '128'), ('temporal_head_config', '16'), ('temporal_layer_config', '128'), ('position_ffn', True), ('optimizer', 'adam'), ('seed', 7), ('save_dir', 'output'), ('log_dir', 'log'), ('csv_dir', 'csv'), ('model_dir', 'model'), ('window', -1)])
+Loaded 10 graphs 
+Loaded context pairs from pkl file directly
+Loaded eval data
+# train: 172, # val: 170, # test: 512
+Initializing session
+WARNING:tensorflow:From <clones>/DySAT_alpha/train.py:173: The name tf.ConfigProto is deprecated. Please use tf.compat.v1.ConfigProto instead.
+
+WARNING:tensorflow:From <clones>/DySAT_alpha/train.py:175: The name tf.Session is deprecated. Please use tf.compat.v1.Session instead.
+
+2026-09-25 16:13:00.560291: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2026-09-25 16:13:00.581077: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2600025000 Hz
+2026-09-25 16:13:00.584186: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x3c9d810 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2026-09-25 16:13:00.584248: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:From <clones>/DySAT_alpha/train.py:156: The name tf.placeholder is deprecated. Please use tf.compat.v1.placeholder instead.
+
+WARNING:tensorflow:From <clones>/DySAT_alpha/train.py:161: The name tf.sparse_placeholder is deprecated. Please use tf.compat.v1.sparse_placeholder instead.
+
+# train nodes 3783
+# training batches per epoch 8
+WARNING:tensorflow:
+The TensorFlow contrib module will not be included in TensorFlow 2.0.
+For more information, please see:
+  * https://github.com/tensorflow/community/blob/master/rfcs/20180907-contrib-sunset.md
+  * https://github.com/tensorflow/addons
+  * https://github.com/tensorflow/io (for I/O related ops)
+If you depend on functionality not listed there, please file an issue.
+
+WARNING:tensorflow:From <clones>/DySAT_alpha/models/DySAT/layers.py:83: The name tf.variable_scope is deprecated. Please use tf.compat.v1.variable_scope instead.
+
+WARNING:tensorflow:From <clones>/DySAT_alpha/models/DySAT/layers.py:85: The name tf.get_variable is deprecated. Please use tf.compat.v1.get_variable instead.
+
+WARNING:tensorflow:From <clones>/DySAT_alpha/models/DySAT/layers.py:220: The name tf.sparse_tensor_dense_matmul is deprecated. Please use tf.sparse.sparse_dense_matmul instead.
+
+WARNING:tensorflow:From <clones>/DySAT_alpha/models/DySAT/layers.py:226: conv1d (from tensorflow.python.layers.convolutional) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.keras.layers.Conv1D` instead.
+WARNING:tensorflow:From <dysat-env>/lib/python3.7/site-packages/tensorflow_core/python/layers/convolutional.py:218: Layer.apply (from tensorflow.python.keras.engine.base_layer) is deprecated and will be removed in a future version.
+Instructions for updating:
+Please use `layer.__call__` method instead.
+WARNING:tensorflow:From <clones>/DySAT_alpha/models/DySAT/layers.py:236: The name tf.sparse_softmax is deprecated. Please use tf.sparse.softmax instead.
+
+WARNING:tensorflow:From <clones>/DySAT_alpha/models/DySAT/layers.py:240: calling dropout (from tensorflow.python.ops.nn_ops) with keep_prob is deprecated and will be removed in a future version.
+Instructions for updating:
+Please use `rate` instead of `keep_prob`. Rate should be set to `rate = 1 - keep_prob`.
+WARNING:tensorflow:From <clones>/DySAT_alpha/models/DySAT/layers.py:129: where (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.where in 2.0, which has the same broadcast rule as np.where
+WARNING:tensorflow:From <clones>/DySAT_alpha/models/DySAT/layers.py:134: dropout (from tensorflow.python.layers.core) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.dropout instead.
+WARNING:tensorflow:From <clones>/DySAT_alpha/models/DySAT/models.py:198: The name tf.trainable_variables is deprecated. Please use tf.compat.v1.trainable_variables instead.
+
+<dysat-env>/lib/python3.7/site-packages/tensorflow_core/python/framework/indexed_slices.py:424: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+<dysat-env>/lib/python3.7/site-packages/tensorflow_core/python/framework/indexed_slices.py:424: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+<dysat-env>/lib/python3.7/site-packages/tensorflow_core/python/framework/indexed_slices.py:424: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+<dysat-env>/lib/python3.7/site-packages/tensorflow_core/python/framework/indexed_slices.py:424: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+<dysat-env>/lib/python3.7/site-packages/tensorflow_core/python/framework/indexed_slices.py:424: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+<dysat-env>/lib/python3.7/site-packages/tensorflow_core/python/framework/indexed_slices.py:424: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+WARNING:tensorflow:From <clones>/DySAT_alpha/models/DySAT/models.py:210: The name tf.train.AdamOptimizer is deprecated. Please use tf.compat.v1.train.AdamOptimizer instead.
+
+WARNING:tensorflow:From <clones>/DySAT_alpha/train.py:185: The name tf.global_variables_initializer is deprecated. Please use tf.compat.v1.global_variables_initializer instead.
+
+Epoch: 0001
+Time for epoch  16.881807804107666
+WARNING:tensorflow:From code/experiments/run_dysat_placement.py:137: The name tf.global_variables is deprecated. Please use tf.compat.v1.global_variables instead.
+
+Epoch 0, Val AUC 0.5118685121107266
+Epoch 0, Test AUC 0.5290489196777344
+Mean Loss at epoch 0 : 11.329185485839844
+Epoch: 0002
+Time for epoch  2.5028200149536133
+Epoch 1, Val AUC 0.6085813148788928
+Epoch 1, Test AUC 0.6140518188476562
+Mean Loss at epoch 1 : 9.815083503723145
+Epoch: 0003
+Time for epoch  2.7233190536499023
+Epoch 2, Val AUC 0.59719723183391
+Epoch 2, Test AUC 0.6121177673339844
+Mean Loss at epoch 2 : 9.744766116142273
+Epoch: 0004
+Time for epoch  2.4290027618408203
+Epoch 3, Val AUC 0.6073356401384082
+Epoch 3, Test AUC 0.6210403442382812
+Mean Loss at epoch 3 : 9.750121235847473
+Epoch: 0005
+Time for epoch  2.757425308227539
+Epoch 4, Val AUC 0.5871626297577854
+Epoch 4, Test AUC 0.5820960998535156
+Mean Loss at epoch 4 : 9.712172269821167
+Epoch: 0006
+Time for epoch  2.6420326232910156
+Epoch 5, Val AUC 0.59439446366782
+Epoch 5, Test AUC 0.5717620849609375
+Mean Loss at epoch 5 : 9.703534007072449
+Epoch: 0007
+Time for epoch  2.65022873878479
+Epoch 6, Val AUC 0.5819031141868511
+Epoch 6, Test AUC 0.5725440979003906
+Mean Loss at epoch 6 : 9.682119250297546
+Epoch: 0008
+Time for epoch  2.357379198074341
+Epoch 7, Val AUC 0.7017993079584776
+Epoch 7, Test AUC 0.7069625854492188
+Mean Loss at epoch 7 : 9.659143328666687
+Epoch: 0009
+Time for epoch  2.477412700653076
+Epoch 8, Val AUC 0.6262629757785467
+Epoch 8, Test AUC 0.5972366333007812
+Mean Loss at epoch 8 : 9.578625321388245
+Epoch: 0010
+Time for epoch  2.8080949783325195
+Epoch 9, Val AUC 0.6949134948096886
+Epoch 9, Test AUC 0.6918907165527344
+Mean Loss at epoch 9 : 9.559715747833252
+Epoch: 0011
+Time for epoch  2.607649564743042
+Epoch 10, Val AUC 0.7326297577854671
+Epoch 10, Test AUC 0.7377281188964844
+Mean Loss at epoch 10 : 9.560544610023499
+Epoch: 0012
+Time for epoch  2.8106961250305176
+Epoch 11, Val AUC 0.7253979238754326
+Epoch 11, Test AUC 0.7222099304199219
+Mean Loss at epoch 11 : 9.46601676940918
+Epoch: 0013
+Time for epoch  2.2301013469696045
+Epoch 12, Val AUC 0.7015570934256057
+Epoch 12, Test AUC 0.6841278076171875
+Mean Loss at epoch 12 : 9.480713725090027
+Epoch: 0014
+Time for epoch  2.349226474761963
+Epoch 13, Val AUC 0.7016608996539792
+Epoch 13, Test AUC 0.6951675415039062
+Mean Loss at epoch 13 : 9.426388502120972
+Epoch: 0015
+Time for epoch  2.2762789726257324
+Epoch 14, Val AUC 0.7432871972318338
+Epoch 14, Test AUC 0.73443603515625
+Mean Loss at epoch 14 : 9.413666248321533
+Epoch: 0016
+Time for epoch  2.4048800468444824
+Epoch 15, Val AUC 0.7572664359861592
+Epoch 15, Test AUC 0.746307373046875
+Mean Loss at epoch 15 : 9.411864399909973
+Epoch: 0017
+Time for epoch  2.6451826095581055
+Epoch 16, Val AUC 0.7443598615916954
+Epoch 16, Test AUC 0.7228813171386719
+Mean Loss at epoch 16 : 9.328250050544739
+Epoch: 0018
+Time for epoch  2.418365240097046
+Epoch 17, Val AUC 0.744636678200692
+Epoch 17, Test AUC 0.7097892761230469
+Mean Loss at epoch 17 : 9.3139888048172
+Epoch: 0019
+Time for epoch  2.425375461578369
+Epoch 18, Val AUC 0.7576124567474048
+Epoch 18, Test AUC 0.7337150573730469
+Mean Loss at epoch 18 : 9.250845193862915
+Epoch: 0020
+Time for epoch  2.463212251663208
+Epoch 19, Val AUC 0.735121107266436
+Epoch 19, Test AUC 0.7022132873535156
+Mean Loss at epoch 19 : 9.315795540809631
+Epoch: 0021
+Time for epoch  2.2844390869140625
+Epoch 20, Val AUC 0.7120415224913496
+Epoch 20, Test AUC 0.6799163818359375
+Mean Loss at epoch 20 : 9.2434241771698
+Epoch: 0022
+Time for epoch  2.7056655883789062
+Epoch 21, Val AUC 0.7533217993079585
+Epoch 21, Test AUC 0.7068328857421875
+Mean Loss at epoch 21 : 9.245196461677551
+Epoch: 0023
+Time for epoch  2.293306350708008
+Epoch 22, Val AUC 0.7486851211072664
+Epoch 22, Test AUC 0.7040290832519531
+Mean Loss at epoch 22 : 9.195438027381897
+Epoch: 0024
+Time for epoch  2.353990316390991
+Epoch 23, Val AUC 0.7348096885813149
+Epoch 23, Test AUC 0.6956138610839844
+Mean Loss at epoch 23 : 9.175130605697632
+Epoch: 0025
+Time for epoch  2.303323268890381
+Epoch 24, Val AUC 0.7451557093425605
+Epoch 24, Test AUC 0.711181640625
+Mean Loss at epoch 24 : 9.176706671714783
+Epoch: 0026
+Time for epoch  2.2917394638061523
+Epoch 25, Val AUC 0.7364705882352941
+Epoch 25, Test AUC 0.70489501953125
+Mean Loss at epoch 25 : 9.126060485839844
+Epoch: 0027
+Time for epoch  2.344186782836914
+Epoch 26, Val AUC 0.7249134948096886
+Epoch 26, Test AUC 0.6970291137695312
+Mean Loss at epoch 26 : 9.189707279205322
+Epoch: 0028
+Time for epoch  2.4287004470825195
+Epoch 27, Val AUC 0.7007612456747405
+Epoch 27, Test AUC 0.6754570007324219
+Mean Loss at epoch 27 : 9.161413669586182
+Epoch: 0029
+Time for epoch  2.832411766052246
+Epoch 28, Val AUC 0.7321107266435986
+Epoch 28, Test AUC 0.7086067199707031
+Mean Loss at epoch 28 : 9.135105848312378
+Epoch: 0030
+Time for epoch  2.2895078659057617
+Epoch 29, Val AUC 0.7207958477508651
+Epoch 29, Test AUC 0.7030105590820312
+Mean Loss at epoch 29 : 9.13843846321106
+Epoch: 0031
+Time for epoch  2.396101236343384
+Epoch 30, Val AUC 0.7384429065743945
+Epoch 30, Test AUC 0.7231178283691406
+Mean Loss at epoch 30 : 9.110200047492981
+Epoch: 0032
+Time for epoch  2.5376460552215576
+Epoch 31, Val AUC 0.7375086505190311
+Epoch 31, Test AUC 0.7227783203125
+Mean Loss at epoch 31 : 9.086661338806152
+Epoch: 0033
+Time for epoch  2.4490363597869873
+Epoch 32, Val AUC 0.7071972318339099
+Epoch 32, Test AUC 0.697052001953125
+Mean Loss at epoch 32 : 9.088205099105835
+Epoch: 0034
+Time for epoch  2.42858624458313
+Epoch 33, Val AUC 0.7106574394463668
+Epoch 33, Test AUC 0.6987190246582031
+Mean Loss at epoch 33 : 9.062109351158142
+Epoch: 0035
+Time for epoch  2.3435792922973633
+Epoch 34, Val AUC 0.7127335640138408
+Epoch 34, Test AUC 0.7000160217285156
+Mean Loss at epoch 34 : 9.09787106513977
+Epoch: 0036
+Time for epoch  2.3547441959381104
+Epoch 35, Val AUC 0.7055709342560554
+Epoch 35, Test AUC 0.6890945434570312
+Mean Loss at epoch 35 : 9.07908821105957
+Epoch: 0037
+Time for epoch  2.4209253787994385
+Epoch 36, Val AUC 0.7362283737024221
+Epoch 36, Test AUC 0.7292823791503906
+Mean Loss at epoch 36 : 9.059008002281189
+Epoch: 0038
+Time for epoch  2.3683393001556396
+Epoch 37, Val AUC 0.70719723183391
+Epoch 37, Test AUC 0.6924781799316406
+Mean Loss at epoch 37 : 9.042969822883606
+Epoch: 0039
+Time for epoch  2.3174893856048584
+Epoch 38, Val AUC 0.7239792387543252
+Epoch 38, Test AUC 0.7086372375488281
+Mean Loss at epoch 38 : 9.029106497764587
+Epoch: 0040
+Time for epoch  2.329606533050537
+Epoch 39, Val AUC 0.737128027681661
+Epoch 39, Test AUC 0.7288398742675781
+Mean Loss at epoch 39 : 9.059115290641785
+Epoch: 0041
+Time for epoch  2.309863567352295
+Epoch 40, Val AUC 0.7130795847750866
+Epoch 40, Test AUC 0.71722412109375
+Mean Loss at epoch 40 : 9.037804961204529
+Epoch: 0042
+Time for epoch  2.4286229610443115
+Epoch 41, Val AUC 0.7170934256055363
+Epoch 41, Test AUC 0.727508544921875
+Mean Loss at epoch 41 : 8.997775316238403
+Epoch: 0043
+Time for epoch  2.434150218963623
+Epoch 42, Val AUC 0.7020415224913497
+Epoch 42, Test AUC 0.7074546813964844
+Mean Loss at epoch 42 : 8.986908674240112
+Epoch: 0044
+Time for epoch  2.682520627975464
+Epoch 43, Val AUC 0.6922491349480969
+Epoch 43, Test AUC 0.6935462951660156
+Mean Loss at epoch 43 : 9.028469920158386
+Epoch: 0045
+Time for epoch  2.4394752979278564
+Epoch 44, Val AUC 0.6905536332179931
+Epoch 44, Test AUC 0.6878089904785156
+Mean Loss at epoch 44 : 8.963543176651001
+Epoch: 0046
+Time for epoch  2.5303096771240234
+Epoch 45, Val AUC 0.7306920415224913
+Epoch 45, Test AUC 0.7267646789550781
+Mean Loss at epoch 45 : 8.970656991004944
+Epoch: 0047
+Time for epoch  2.8299636840820312
+Epoch 46, Val AUC 0.7156401384083045
+Epoch 46, Test AUC 0.7178249359130859
+Mean Loss at epoch 46 : 9.033540964126587
+Epoch: 0048
+Time for epoch  2.6712052822113037
+Epoch 47, Val AUC 0.7061937716262976
+Epoch 47, Test AUC 0.7014369964599609
+Mean Loss at epoch 47 : 9.001808643341064
+Epoch: 0049
+Time for epoch  2.6056439876556396
+Epoch 48, Val AUC 0.7245328719723183
+Epoch 48, Test AUC 0.7216701507568359
+Mean Loss at epoch 48 : 9.01306140422821
+Epoch: 0050
+Time for epoch  2.5648300647735596
+Epoch 49, Val AUC 0.6775778546712803
+Epoch 49, Test AUC 0.6774997711181641
+Mean Loss at epoch 49 : 8.982238531112671
+Epoch: 0051
+Time for epoch  2.422370195388794
+Epoch 50, Val AUC 0.711522491349481
+Epoch 50, Test AUC 0.7090816497802734
+Mean Loss at epoch 50 : 8.991154789924622
+Epoch: 0052
+Time for epoch  2.5629446506500244
+Epoch 51, Val AUC 0.760484429065744
+Epoch 51, Test AUC 0.7606563568115234
+Mean Loss at epoch 51 : 8.983017683029175
+Epoch: 0053
+Time for epoch  2.5474021434783936
+Epoch 52, Val AUC 0.6911072664359862
+Epoch 52, Test AUC 0.6936168670654297
+Mean Loss at epoch 52 : 8.988387107849121
+Epoch: 0054
+Time for epoch  2.455911874771118
+Epoch 53, Val AUC 0.7021799307958478
+Epoch 53, Test AUC 0.7006702423095703
+Mean Loss at epoch 53 : 8.957316517829895
+Epoch: 0055
+Time for epoch  2.213697671890259
+Epoch 54, Val AUC 0.7241868512110725
+Epoch 54, Test AUC 0.7170085906982422
+Mean Loss at epoch 54 : 8.99268388748169
+Epoch: 0056
+Time for epoch  2.548997640609741
+Epoch 55, Val AUC 0.6827335640138408
+Epoch 55, Test AUC 0.6657657623291016
+Mean Loss at epoch 55 : 8.944884538650513
+Epoch: 0057
+Time for epoch  2.5015921592712402
+Epoch 56, Val AUC 0.7050519031141869
+Epoch 56, Test AUC 0.6947116851806641
+Mean Loss at epoch 56 : 8.966142892837524
+Epoch: 0058
+Time for epoch  2.373354434967041
+Epoch 57, Val AUC 0.7447750865051903
+Epoch 57, Test AUC 0.7407169342041016
+Mean Loss at epoch 57 : 8.981537461280823
+Epoch: 0059
+Time for epoch  2.45866322517395
+Epoch 58, Val AUC 0.6961245674740484
+Epoch 58, Test AUC 0.6847438812255859
+Mean Loss at epoch 58 : 8.98077404499054
+Epoch: 0060
+Time for epoch  2.3438305854797363
+Epoch 59, Val AUC 0.7014532871972319
+Epoch 59, Test AUC 0.6891231536865234
+Mean Loss at epoch 59 : 8.94920539855957
+Epoch: 0061
+Time for epoch  2.52144455909729
+Epoch 60, Val AUC 0.71
+Epoch 60, Test AUC 0.7059497833251953
+Mean Loss at epoch 60 : 9.00117576122284
+Epoch: 0062
+Time for epoch  2.369950294494629
+Epoch 61, Val AUC 0.693356401384083
+Epoch 61, Test AUC 0.6820201873779297
+Mean Loss at epoch 61 : 8.925228595733643
+Epoch: 0063
+Time for epoch  2.341132640838623
+Epoch 62, Val AUC 0.6988927335640138
+Epoch 62, Test AUC 0.6969966888427734
+Mean Loss at epoch 62 : 8.942009329795837
+Epoch: 0064
+Time for epoch  2.4994680881500244
+Epoch 63, Val AUC 0.7032179930795847
+Epoch 63, Test AUC 0.6996555328369141
+Mean Loss at epoch 63 : 8.939191460609436
+Epoch: 0065
+Time for epoch  2.426051378250122
+Epoch 64, Val AUC 0.6982352941176471
+Epoch 64, Test AUC 0.6822109222412109
+Mean Loss at epoch 64 : 8.921817421913147
+Epoch: 0066
+Time for epoch  2.524895191192627
+Epoch 65, Val AUC 0.7330795847750866
+Epoch 65, Test AUC 0.7123584747314453
+Mean Loss at epoch 65 : 8.90210485458374
+Epoch: 0067
+Time for epoch  2.3938486576080322
+Epoch 66, Val AUC 0.7345674740484429
+Epoch 66, Test AUC 0.7200908660888672
+Mean Loss at epoch 66 : 8.937300682067871
+Epoch: 0068
+Time for epoch  2.245180606842041
+Epoch 67, Val AUC 0.7124221453287197
+Epoch 67, Test AUC 0.6952610015869141
+Mean Loss at epoch 67 : 8.974310755729675
+Epoch: 0069
+Time for epoch  2.4320976734161377
+Epoch 68, Val AUC 0.755916955017301
+Epoch 68, Test AUC 0.7369861602783203
+Mean Loss at epoch 68 : 8.931265473365784
+Epoch: 0070
+Time for epoch  2.3685474395751953
+Epoch 69, Val AUC 0.7317993079584775
+Epoch 69, Test AUC 0.7127361297607422
+Mean Loss at epoch 69 : 8.901623129844666
+Epoch: 0071
+Time for epoch  2.4751813411712646
+Epoch 70, Val AUC 0.740242214532872
+Epoch 70, Test AUC 0.7174625396728516
+Mean Loss at epoch 70 : 8.909218788146973
+Epoch: 0072
+Time for epoch  2.5071561336517334
+Epoch 71, Val AUC 0.733044982698962
+Epoch 71, Test AUC 0.7140560150146484
+Mean Loss at epoch 71 : 8.897093296051025
+Epoch: 0073
+Time for epoch  2.429473638534546
+Epoch 72, Val AUC 0.7147058823529412
+Epoch 72, Test AUC 0.6967144012451172
+Mean Loss at epoch 72 : 8.913342475891113
+Epoch: 0074
+Time for epoch  2.56854248046875
+Epoch 73, Val AUC 0.7268512110726645
+Epoch 73, Test AUC 0.6949939727783203
+Mean Loss at epoch 73 : 8.932962775230408
+Epoch: 0075
+Time for epoch  2.3809094429016113
+Epoch 74, Val AUC 0.7401038062283737
+Epoch 74, Test AUC 0.7180118560791016
+Mean Loss at epoch 74 : 8.893047451972961
+Epoch: 0076
+Time for epoch  2.445211172103882
+Epoch 75, Val AUC 0.7115570934256055
+Epoch 75, Test AUC 0.6906375885009766
+Mean Loss at epoch 75 : 8.899910926818848
+Epoch: 0077
+Time for epoch  2.304356098175049
+Epoch 76, Val AUC 0.7034602076124566
+Epoch 76, Test AUC 0.6830730438232422
+Mean Loss at epoch 76 : 8.92179000377655
+Epoch: 0078
+Time for epoch  2.570235013961792
+Epoch 77, Val AUC 0.7200692041522492
+Epoch 77, Test AUC 0.6988964080810547
+Mean Loss at epoch 77 : 8.85891604423523
+Epoch: 0079
+Time for epoch  2.3118419647216797
+Epoch 78, Val AUC 0.7252595155709343
+Epoch 78, Test AUC 0.6912288665771484
+Mean Loss at epoch 78 : 8.86038589477539
+Epoch: 0080
+Time for epoch  2.4293994903564453
+Epoch 79, Val AUC 0.7392041522491349
+Epoch 79, Test AUC 0.7130451202392578
+Mean Loss at epoch 79 : 8.899550318717957
+Epoch: 0081
+Time for epoch  2.4219069480895996
+Epoch 80, Val AUC 0.7257093425605536
+Epoch 80, Test AUC 0.6997699737548828
+Mean Loss at epoch 80 : 8.890048265457153
+Epoch: 0082
+Time for epoch  2.4212522506713867
+Epoch 81, Val AUC 0.741280276816609
+Epoch 81, Test AUC 0.6960086822509766
+Mean Loss at epoch 81 : 8.87432610988617
+Epoch: 0083
+Time for epoch  2.5015456676483154
+Epoch 82, Val AUC 0.7066089965397924
+Epoch 82, Test AUC 0.6766300201416016
+Mean Loss at epoch 82 : 8.881238222122192
+Epoch: 0084
+Time for epoch  2.5153326988220215
+Epoch 83, Val AUC 0.7196539792387544
+Epoch 83, Test AUC 0.6864604949951172
+Mean Loss at epoch 83 : 8.88086724281311
+Epoch: 0085
+Time for epoch  2.9198148250579834
+Epoch 84, Val AUC 0.7482006920415225
+Epoch 84, Test AUC 0.7106342315673828
+Mean Loss at epoch 84 : 8.882044911384583
+Epoch: 0086
+Time for epoch  2.4695918560028076
+Epoch 85, Val AUC 0.7057439446366782
+Epoch 85, Test AUC 0.6832904815673828
+Mean Loss at epoch 85 : 8.898889183998108
+Epoch: 0087
+Time for epoch  2.6870508193969727
+Epoch 86, Val AUC 0.6942560553633218
+Epoch 86, Test AUC 0.6956157684326172
+Mean Loss at epoch 86 : 8.870749235153198
+Epoch: 0088
+Time for epoch  2.5732290744781494
+Epoch 87, Val AUC 0.7417301038062284
+Epoch 87, Test AUC 0.7463321685791016
+Mean Loss at epoch 87 : 8.884631752967834
+Epoch: 0089
+Time for epoch  2.6344149112701416
+Epoch 88, Val AUC 0.7270242214532873
+Epoch 88, Test AUC 0.7191524505615234
+Mean Loss at epoch 88 : 8.867381691932678
+Epoch: 0090
+Time for epoch  2.364389419555664
+Epoch 89, Val AUC 0.7159861591695502
+Epoch 89, Test AUC 0.7082157135009766
+Mean Loss at epoch 89 : 8.923784375190735
+Epoch: 0091
+Time for epoch  2.3109583854675293
+Epoch 90, Val AUC 0.726401384083045
+Epoch 90, Test AUC 0.7207279205322266
+Mean Loss at epoch 90 : 8.82577395439148
+Epoch: 0092
+Time for epoch  2.302293539047241
+Epoch 91, Val AUC 0.6988581314878892
+Epoch 91, Test AUC 0.6952342987060547
+Mean Loss at epoch 91 : 8.845747828483582
+Epoch: 0093
+Time for epoch  2.502593994140625
+Epoch 92, Val AUC 0.700242214532872
+Epoch 92, Test AUC 0.7023830413818359
+Mean Loss at epoch 92 : 8.864324450492859
+Epoch: 0094
+Time for epoch  2.5385782718658447
+Epoch 93, Val AUC 0.6821799307958478
+Epoch 93, Test AUC 0.6770839691162109
+Mean Loss at epoch 93 : 8.818042874336243
+Epoch: 0095
+Time for epoch  2.2362730503082275
+Epoch 94, Val AUC 0.6897577854671281
+Epoch 94, Test AUC 0.6871471405029297
+Mean Loss at epoch 94 : 8.872316241264343
+Epoch: 0096
+Time for epoch  2.4549691677093506
+Epoch 95, Val AUC 0.7164359861591696
+Epoch 95, Test AUC 0.6949558258056641
+Mean Loss at epoch 95 : 8.863998532295227
+Epoch: 0097
+Time for epoch  2.3608551025390625
+Epoch 96, Val AUC 0.6933217993079586
+Epoch 96, Test AUC 0.6839580535888672
+Mean Loss at epoch 96 : 8.891698241233826
+Epoch: 0098
+Time for epoch  2.387874126434326
+Epoch 97, Val AUC 0.7044290657439446
+Epoch 97, Test AUC 0.7105274200439453
+Mean Loss at epoch 97 : 8.837982654571533
+Epoch: 0099
+Time for epoch  2.502732753753662
+Epoch 98, Val AUC 0.7173010380622837
+Epoch 98, Test AUC 0.7129535675048828
+Mean Loss at epoch 98 : 8.84438157081604
+Epoch: 0100
+Time for epoch  2.409965753555298
+Epoch 99, Val AUC 0.7199653979238754
+Epoch 99, Test AUC 0.7079601287841797
+Mean Loss at epoch 99 : 8.84571385383606
+Epoch: 0101
+Time for epoch  2.296442747116089
+Epoch 100, Val AUC 0.7270588235294118
+Epoch 100, Test AUC 0.7053279876708984
+Mean Loss at epoch 100 : 8.833876848220825
+Epoch: 0102
+Time for epoch  2.5124144554138184
+Epoch 101, Val AUC 0.706401384083045
+Epoch 101, Test AUC 0.6843128204345703
+Mean Loss at epoch 101 : 8.879995107650757
+Epoch: 0103
+Time for epoch  2.4785099029541016
+Epoch 102, Val AUC 0.755363321799308
+Epoch 102, Test AUC 0.7184734344482422
+Mean Loss at epoch 102 : 8.844169735908508
+Epoch: 0104
+Time for epoch  2.4567129611968994
+Epoch 103, Val AUC 0.7400346020761245
+Epoch 103, Test AUC 0.7046298980712891
+Mean Loss at epoch 103 : 8.83057701587677
+Epoch: 0105
+Time for epoch  2.5495121479034424
+Epoch 104, Val AUC 0.7323875432525951
+Epoch 104, Test AUC 0.6962833404541016
+Mean Loss at epoch 104 : 8.848556399345398
+Epoch: 0106
+Time for epoch  2.5095415115356445
+Epoch 105, Val AUC 0.7441868512110726
+Epoch 105, Test AUC 0.6877307891845703
+Mean Loss at epoch 105 : 8.816209554672241
+Epoch: 0107
+Time for epoch  2.3739335536956787
+Epoch 106, Val AUC 0.739757785467128
+Epoch 106, Test AUC 0.6862354278564453
+Mean Loss at epoch 106 : 8.881883978843689
+Epoch: 0108
+Time for epoch  2.2692229747772217
+Epoch 107, Val AUC 0.7207612456747405
+Epoch 107, Test AUC 0.6903820037841797
+Mean Loss at epoch 107 : 8.811095833778381
+Epoch: 0109
+Time for epoch  2.278846025466919
+Epoch 108, Val AUC 0.7649826989619376
+Epoch 108, Test AUC 0.7292385101318359
+Mean Loss at epoch 108 : 8.840293884277344
+Epoch: 0110
+Time for epoch  2.31054425239563
+Epoch 109, Val AUC 0.7515570934256056
+Epoch 109, Test AUC 0.7134685516357422
+Mean Loss at epoch 109 : 8.861621856689453
+Epoch: 0111
+Time for epoch  2.436068058013916
+Epoch 110, Val AUC 0.70280276816609
+Epoch 110, Test AUC 0.6748943328857422
+Mean Loss at epoch 110 : 8.832670331001282
+Epoch: 0112
+Time for epoch  2.463081121444702
+Epoch 111, Val AUC 0.7388927335640139
+Epoch 111, Test AUC 0.7107219696044922
+Mean Loss at epoch 111 : 8.857025265693665
+Epoch: 0113
+Time for epoch  2.4196715354919434
+Epoch 112, Val AUC 0.716955017301038
+Epoch 112, Test AUC 0.6883335113525391
+Mean Loss at epoch 112 : 8.849248766899109
+Epoch: 0114
+Time for epoch  2.5484671592712402
+Epoch 113, Val AUC 0.7128719723183391
+Epoch 113, Test AUC 0.6908626556396484
+Mean Loss at epoch 113 : 8.85702133178711
+Epoch: 0115
+Time for epoch  2.396129846572876
+Epoch 114, Val AUC 0.7146712802768168
+Epoch 114, Test AUC 0.6860332489013672
+Mean Loss at epoch 114 : 8.805140972137451
+Epoch: 0116
+Time for epoch  2.493318796157837
+Epoch 115, Val AUC 0.7279584775086505
+Epoch 115, Test AUC 0.6691722869873047
+Mean Loss at epoch 115 : 8.829813957214355
+Epoch: 0117
+Time for epoch  2.359928607940674
+Epoch 116, Val AUC 0.732006920415225
+Epoch 116, Test AUC 0.6931362152099609
+Mean Loss at epoch 116 : 8.860342264175415
+Epoch: 0118
+Time for epoch  2.489518642425537
+Epoch 117, Val AUC 0.7144290657439445
+Epoch 117, Test AUC 0.6765003204345703
+Mean Loss at epoch 117 : 8.82813310623169
+Epoch: 0119
+Time for epoch  2.284827947616577
+Epoch 118, Val AUC 0.7086505190311418
+Epoch 118, Test AUC 0.6670627593994141
+Mean Loss at epoch 118 : 8.808934569358826
+Epoch: 0120
+Time for epoch  2.4057390689849854
+Epoch 119, Val AUC 0.7156401384083044
+Epoch 119, Test AUC 0.6926250457763672
+Mean Loss at epoch 119 : 8.763575196266174
+Epoch: 0121
+Time for epoch  2.4429738521575928
+Epoch 120, Val AUC 0.7073702422145329
+Epoch 120, Test AUC 0.6922435760498047
+Mean Loss at epoch 120 : 8.780066967010498
+Epoch: 0122
+Time for epoch  2.215602397918701
+Epoch 121, Val AUC 0.7048788927335641
+Epoch 121, Test AUC 0.6826190948486328
+Mean Loss at epoch 121 : 8.786004424095154
+Epoch: 0123
+Time for epoch  2.334725856781006
+Epoch 122, Val AUC 0.7160553633217992
+Epoch 122, Test AUC 0.6953487396240234
+Mean Loss at epoch 122 : 8.782670497894287
+Epoch: 0124
+Time for epoch  2.3844101428985596
+Epoch 123, Val AUC 0.6851557093425606
+Epoch 123, Test AUC 0.6742382049560547
+Mean Loss at epoch 123 : 8.815963983535767
+Epoch: 0125
+Time for epoch  2.613525867462158
+Epoch 124, Val AUC 0.7343598615916955
+Epoch 124, Test AUC 0.7069873809814453
+Mean Loss at epoch 124 : 8.821008801460266
+Epoch: 0126
+Time for epoch  2.267238140106201
+Epoch 125, Val AUC 0.6907612456747405
+Epoch 125, Test AUC 0.6725215911865234
+Mean Loss at epoch 125 : 8.805660486221313
+Epoch: 0127
+Time for epoch  2.5095598697662354
+Epoch 126, Val AUC 0.6955363321799307
+Epoch 126, Test AUC 0.6763286590576172
+Mean Loss at epoch 126 : 8.832026720046997
+Epoch: 0128
+Time for epoch  2.38356614112854
+Epoch 127, Val AUC 0.7264705882352942
+Epoch 127, Test AUC 0.7094631195068359
+Mean Loss at epoch 127 : 8.811365008354187
+Epoch: 0129
+Time for epoch  2.5342905521392822
+Epoch 128, Val AUC 0.6915570934256055
+Epoch 128, Test AUC 0.6839122772216797
+Mean Loss at epoch 128 : 8.794334053993225
+Epoch: 0130
+Time for epoch  2.367893934249878
+Epoch 129, Val AUC 0.6830449826989619
+Epoch 129, Test AUC 0.6663722991943359
+Mean Loss at epoch 129 : 8.800899505615234
+Epoch: 0131
+Time for epoch  2.4126343727111816
+Epoch 130, Val AUC 0.6976124567474049
+Epoch 130, Test AUC 0.6739978790283203
+Mean Loss at epoch 130 : 8.80862295627594
+Epoch: 0132
+Time for epoch  2.247335910797119
+Epoch 131, Val AUC 0.7233217993079584
+Epoch 131, Test AUC 0.6990718841552734
+Mean Loss at epoch 131 : 8.78096628189087
+Epoch: 0133
+Time for epoch  2.6621968746185303
+Epoch 132, Val AUC 0.7475778546712804
+Epoch 132, Test AUC 0.7320423126220703
+Mean Loss at epoch 132 : 8.794854640960693
+Epoch: 0134
+Time for epoch  2.4333720207214355
+Epoch 133, Val AUC 0.7058477508650519
+Epoch 133, Test AUC 0.6934566497802734
+Mean Loss at epoch 133 : 8.768826007843018
+Epoch: 0135
+Time for epoch  2.26949405670166
+Epoch 134, Val AUC 0.6849826989619376
+Epoch 134, Test AUC 0.6756763458251953
+Mean Loss at epoch 134 : 8.801944494247437
+Epoch: 0136
+Time for epoch  2.293881893157959
+Epoch 135, Val AUC 0.6769204152249135
+Epoch 135, Test AUC 0.6762447357177734
+Mean Loss at epoch 135 : 8.792119145393372
+Epoch: 0137
+Time for epoch  2.4052867889404297
+Epoch 136, Val AUC 0.6977854671280277
+Epoch 136, Test AUC 0.6841411590576172
+Mean Loss at epoch 136 : 8.775205731391907
+Epoch: 0138
+Time for epoch  2.5084829330444336
+Epoch 137, Val AUC 0.7115224913494811
+Epoch 137, Test AUC 0.6940937042236328
+Mean Loss at epoch 137 : 8.76052725315094
+Epoch: 0139
+Time for epoch  2.361220598220825
+Epoch 138, Val AUC 0.7136678200692042
+Epoch 138, Test AUC 0.7182292938232422
+Mean Loss at epoch 138 : 8.79333758354187
+Epoch: 0140
+Time for epoch  2.415891170501709
+Epoch 139, Val AUC 0.7246020761245675
+Epoch 139, Test AUC 0.7174510955810547
+Mean Loss at epoch 139 : 8.779637336730957
+Epoch: 0141
+Time for epoch  2.1528005599975586
+Epoch 140, Val AUC 0.7095847750865052
+Epoch 140, Test AUC 0.6879634857177734
+Mean Loss at epoch 140 : 8.82503592967987
+Epoch: 0142
+Time for epoch  2.4854648113250732
+Epoch 141, Val AUC 0.6880276816608997
+Epoch 141, Test AUC 0.6854991912841797
+Mean Loss at epoch 141 : 8.775843620300293
+Epoch: 0143
+Time for epoch  2.549863815307617
+Epoch 142, Val AUC 0.7121453287197231
+Epoch 142, Test AUC 0.6943302154541016
+Mean Loss at epoch 142 : 8.773948192596436
+Epoch: 0144
+Time for epoch  2.484252452850342
+Epoch 143, Val AUC 0.7113148788927335
+Epoch 143, Test AUC 0.7190685272216797
+Mean Loss at epoch 143 : 8.845292806625366
+Epoch: 0145
+Time for epoch  2.2394347190856934
+Epoch 144, Val AUC 0.6940138408304499
+Epoch 144, Test AUC 0.6879405975341797
+Mean Loss at epoch 144 : 8.782769560813904
+Epoch: 0146
+Time for epoch  2.250877857208252
+Epoch 145, Val AUC 0.733771626297578
+Epoch 145, Test AUC 0.7127208709716797
+Mean Loss at epoch 145 : 8.79196834564209
+Epoch: 0147
+Time for epoch  2.3478574752807617
+Epoch 146, Val AUC 0.7161245674740484
+Epoch 146, Test AUC 0.6927242279052734
+Mean Loss at epoch 146 : 8.773370265960693
+Epoch: 0148
+Time for epoch  2.3671815395355225
+Epoch 147, Val AUC 0.7170588235294117
+Epoch 147, Test AUC 0.7033748626708984
+Mean Loss at epoch 147 : 8.787513136863708
+Epoch: 0149
+Time for epoch  2.1791625022888184
+Epoch 148, Val AUC 0.7616262975778547
+Epoch 148, Test AUC 0.7502651214599609
+Mean Loss at epoch 148 : 8.796878933906555
+Epoch: 0150
+Time for epoch  2.370121479034424
+Epoch 149, Val AUC 0.743598615916955
+Epoch 149, Test AUC 0.7255001068115234
+Mean Loss at epoch 149 : 8.742473125457764
+Epoch: 0151
+Time for epoch  2.3455069065093994
+Epoch 150, Val AUC 0.716159169550173
+Epoch 150, Test AUC 0.6912517547607422
+Mean Loss at epoch 150 : 8.76773464679718
+Epoch: 0152
+Time for epoch  2.4316697120666504
+Epoch 151, Val AUC 0.6874048442906575
+Epoch 151, Test AUC 0.6800899505615234
+Mean Loss at epoch 151 : 8.755595684051514
+Epoch: 0153
+Time for epoch  2.389143705368042
+Epoch 152, Val AUC 0.720242214532872
+Epoch 152, Test AUC 0.7069873809814453
+Mean Loss at epoch 152 : 8.789057612419128
+Epoch: 0154
+Time for epoch  2.1843862533569336
+Epoch 153, Val AUC 0.72280276816609
+Epoch 153, Test AUC 0.6955204010009766
+Mean Loss at epoch 153 : 8.736011981964111
+Epoch: 0155
+Time for epoch  2.4728457927703857
+Epoch 154, Val AUC 0.7284775086505191
+Epoch 154, Test AUC 0.6961574554443359
+Mean Loss at epoch 154 : 8.77583646774292
+Epoch: 0156
+Time for epoch  2.455514430999756
+Epoch 155, Val AUC 0.7304498269896194
+Epoch 155, Test AUC 0.7165927886962891
+Mean Loss at epoch 155 : 8.795678853988647
+Epoch: 0157
+Time for epoch  2.630523681640625
+Epoch 156, Val AUC 0.6840138408304499
+Epoch 156, Test AUC 0.6728649139404297
+Mean Loss at epoch 156 : 8.782307505607605
+Epoch: 0158
+Time for epoch  2.3943464756011963
+Epoch 157, Val AUC 0.6906228373702422
+Epoch 157, Test AUC 0.6622982025146484
+Mean Loss at epoch 157 : 8.750282287597656
+Epoch: 0159
+Time for epoch  2.5577938556671143
+Epoch 158, Val AUC 0.72
+Epoch 158, Test AUC 0.7016735076904297
+Mean Loss at epoch 158 : 8.760466814041138
+Epoch: 0160
+Time for epoch  2.1801400184631348
+Epoch 159, Val AUC 0.7392041522491348
+Epoch 159, Test AUC 0.6982212066650391
+Mean Loss at epoch 159 : 8.790719389915466
+Epoch: 0161
+Time for epoch  2.6053993701934814
+Epoch 160, Val AUC 0.7340830449826989
+Epoch 160, Test AUC 0.7062282562255859
+Mean Loss at epoch 160 : 8.796662092208862
+Epoch: 0162
+Time for epoch  2.345550537109375
+Epoch 161, Val AUC 0.7015570934256055
+Epoch 161, Test AUC 0.6778697967529297
+Mean Loss at epoch 161 : 8.756163239479065
+Epoch: 0163
+Time for epoch  2.569817304611206
+Epoch 162, Val AUC 0.6957785467128027
+Epoch 162, Test AUC 0.6633663177490234
+Mean Loss at epoch 162 : 8.750655174255371
+Epoch: 0164
+Time for epoch  2.3202414512634277
+Epoch 163, Val AUC 0.7331833910034602
+Epoch 163, Test AUC 0.6799411773681641
+Mean Loss at epoch 163 : 8.746670842170715
+Epoch: 0165
+Time for epoch  2.506484031677246
+Epoch 164, Val AUC 0.700311418685121
+Epoch 164, Test AUC 0.6782360076904297
+Mean Loss at epoch 164 : 8.780811786651611
+Epoch: 0166
+Time for epoch  2.279744863510132
+Epoch 165, Val AUC 0.7025259515570934
+Epoch 165, Test AUC 0.6840419769287109
+Mean Loss at epoch 165 : 8.74582290649414
+Epoch: 0167
+Time for epoch  2.442586660385132
+Epoch 166, Val AUC 0.7276470588235294
+Epoch 166, Test AUC 0.7052288055419922
+Mean Loss at epoch 166 : 8.782867312431335
+Epoch: 0168
+Time for epoch  2.421990394592285
+Epoch 167, Val AUC 0.7064359861591695
+Epoch 167, Test AUC 0.6994953155517578
+Mean Loss at epoch 167 : 8.76172387599945
+Epoch: 0169
+Time for epoch  2.3840153217315674
+Epoch 168, Val AUC 0.6941868512110727
+Epoch 168, Test AUC 0.6670665740966797
+Mean Loss at epoch 168 : 8.748589396476746
+Epoch: 0170
+Time for epoch  2.217880964279175
+Epoch 169, Val AUC 0.7554325259515571
+Epoch 169, Test AUC 0.7214603424072266
+Mean Loss at epoch 169 : 8.78151023387909
+Epoch: 0171
+Time for epoch  2.3004016876220703
+Epoch 170, Val AUC 0.7251211072664361
+Epoch 170, Test AUC 0.6942005157470703
+Mean Loss at epoch 170 : 8.765383243560791
+Epoch: 0172
+Time for epoch  2.4153783321380615
+Epoch 171, Val AUC 0.7209342560553633
+Epoch 171, Test AUC 0.6906948089599609
+Mean Loss at epoch 171 : 8.756426692008972
+Epoch: 0173
+Time for epoch  2.2683396339416504
+Epoch 172, Val AUC 0.7056055363321799
+Epoch 172, Test AUC 0.6862735748291016
+Mean Loss at epoch 172 : 8.724540829658508
+Epoch: 0174
+Time for epoch  2.5500991344451904
+Epoch 173, Val AUC 0.6953287197231834
+Epoch 173, Test AUC 0.6685771942138672
+Mean Loss at epoch 173 : 8.776922345161438
+Epoch: 0175
+Time for epoch  2.3287057876586914
+Epoch 174, Val AUC 0.693287197231834
+Epoch 174, Test AUC 0.6648807525634766
+Mean Loss at epoch 174 : 8.756501078605652
+Epoch: 0176
+Time for epoch  2.4914729595184326
+Epoch 175, Val AUC 0.7416955017301038
+Epoch 175, Test AUC 0.7111492156982422
+Mean Loss at epoch 175 : 8.751107811927795
+Epoch: 0177
+Time for epoch  2.4032442569732666
+Epoch 176, Val AUC 0.7557439446366782
+Epoch 176, Test AUC 0.7173824310302734
+Mean Loss at epoch 176 : 8.76527488231659
+Epoch: 0178
+Time for epoch  2.3738770484924316
+Epoch 177, Val AUC 0.7322491349480968
+Epoch 177, Test AUC 0.6948032379150391
+Mean Loss at epoch 177 : 8.692951917648315
+Epoch: 0179
+Time for epoch  2.3145735263824463
+Epoch 178, Val AUC 0.7317301038062285
+Epoch 178, Test AUC 0.6985530853271484
+Mean Loss at epoch 178 : 8.73776376247406
+Epoch: 0180
+Time for epoch  2.124882936477661
+Epoch 179, Val AUC 0.7546366782006919
+Epoch 179, Test AUC 0.7083835601806641
+Mean Loss at epoch 179 : 8.712661385536194
+Epoch: 0181
+Time for epoch  2.3863158226013184
+Epoch 180, Val AUC 0.7232525951557094
+Epoch 180, Test AUC 0.6778888702392578
+Mean Loss at epoch 180 : 8.758172512054443
+Epoch: 0182
+Time for epoch  2.329876184463501
+Epoch 181, Val AUC 0.7193771626297578
+Epoch 181, Test AUC 0.6663913726806641
+Mean Loss at epoch 181 : 8.743972897529602
+Epoch: 0183
+Time for epoch  2.2573049068450928
+Epoch 182, Val AUC 0.7313494809688581
+Epoch 182, Test AUC 0.6775836944580078
+Mean Loss at epoch 182 : 8.733671188354492
+Epoch: 0184
+Time for epoch  2.319718360900879
+Epoch 183, Val AUC 0.7511418685121108
+Epoch 183, Test AUC 0.7101383209228516
+Mean Loss at epoch 183 : 8.714893341064453
+Epoch: 0185
+Time for epoch  2.2090516090393066
+Epoch 184, Val AUC 0.7244636678200691
+Epoch 184, Test AUC 0.6873569488525391
+Mean Loss at epoch 184 : 8.725869059562683
+Epoch: 0186
+Time for epoch  2.1602349281311035
+Epoch 185, Val AUC 0.7254671280276817
+Epoch 185, Test AUC 0.6613483428955078
+Mean Loss at epoch 185 : 8.716884016990662
+Epoch: 0187
+Time for epoch  2.2463290691375732
+Epoch 186, Val AUC 0.7309688581314879
+Epoch 186, Test AUC 0.6730022430419922
+Mean Loss at epoch 186 : 8.73559057712555
+Epoch: 0188
+Time for epoch  2.4468600749969482
+Epoch 187, Val AUC 0.7291695501730103
+Epoch 187, Test AUC 0.6748638153076172
+Mean Loss at epoch 187 : 8.744325518608093
+Epoch: 0189
+Time for epoch  2.199556589126587
+Epoch 188, Val AUC 0.723529411764706
+Epoch 188, Test AUC 0.680511474609375
+Mean Loss at epoch 188 : 8.712498188018799
+Epoch: 0190
+Time for epoch  2.569899559020996
+Epoch 189, Val AUC 0.7089273356401384
+Epoch 189, Test AUC 0.680999755859375
+Mean Loss at epoch 189 : 8.715274333953857
+Epoch: 0191
+Time for epoch  2.117871046066284
+Epoch 190, Val AUC 0.6996539792387544
+Epoch 190, Test AUC 0.6832180023193359
+Mean Loss at epoch 190 : 8.73525094985962
+Epoch: 0192
+Time for epoch  2.388767719268799
+Epoch 191, Val AUC 0.7094117647058823
+Epoch 191, Test AUC 0.6972618103027344
+Mean Loss at epoch 191 : 8.73950457572937
+Epoch: 0193
+Time for epoch  2.081139087677002
+Epoch 192, Val AUC 0.730553633217993
+Epoch 192, Test AUC 0.6802577972412109
+Mean Loss at epoch 192 : 8.743445873260498
+Epoch: 0194
+Time for epoch  2.0967814922332764
+Epoch 193, Val AUC 0.7455709342560555
+Epoch 193, Test AUC 0.6998443603515625
+Mean Loss at epoch 193 : 8.730643153190613
+Epoch: 0195
+Time for epoch  2.1779487133026123
+Epoch 194, Val AUC 0.7528027681660897
+Epoch 194, Test AUC 0.7060279846191406
+Mean Loss at epoch 194 : 8.752115964889526
+Epoch: 0196
+Time for epoch  2.175807237625122
+Epoch 195, Val AUC 0.7416262975778547
+Epoch 195, Test AUC 0.7010459899902344
+Mean Loss at epoch 195 : 8.736565470695496
+Epoch: 0197
+Time for epoch  2.2044708728790283
+Epoch 196, Val AUC 0.7293079584775086
+Epoch 196, Test AUC 0.6963882446289062
+Mean Loss at epoch 196 : 8.738730788230896
+Epoch: 0198
+Time for epoch  2.4089252948760986
+Epoch 197, Val AUC 0.7565397923875433
+Epoch 197, Test AUC 0.7225151062011719
+Mean Loss at epoch 197 : 8.73495614528656
+Epoch: 0199
+Time for epoch  2.1819677352905273
+Epoch 198, Val AUC 0.7529065743944636
+Epoch 198, Test AUC 0.7108154296875
+Mean Loss at epoch 198 : 8.76916217803955
+Epoch: 0200
+Time for epoch  2.4884579181671143
+Epoch 199, Val AUC 0.6773356401384083
+Epoch 199, Test AUC 0.6883773803710938
+Mean Loss at epoch 199 : 8.689904570579529
+Best epoch  108
+Best epoch val results defaultdict(<function evaluate_classifier.<locals>.<lambda> at 0x7f9e502cbf80>, {'SIGMOID': [0.7319377162629758, 0.7319377162629758], 'HAD': [0.7649826989619376, 0.7649826989619376]})
+
+Best epoch test results defaultdict(<function evaluate_classifier.<locals>.<lambda> at 0x7f9e502cbef0>, {'SIGMOID': [0.6939907073974609, 0.6939907073974609], 'HAD': [0.7292385101318359, 0.7292385101318359]})
+
+grail_alpha results (val) [0.7319377162629758, 0.7319377162629758]
+grail_alpha results (val) [0.7649826989619376, 0.7649826989619376]
+grail_alpha results (test) [0.6939907073974609, 0.6939907073974609]
+grail_alpha results (test) [0.7292385101318359, 0.7292385101318359]
+WARNING:tensorflow:From code/experiments/run_dysat_placement.py:145: Variable.load (from tensorflow.python.ops.variables) is deprecated and will be removed in a future version.
+Instructions for updating:
+Prefer Variable.assign which has equivalent behavior in 2.X.
+alpha {
+ "time_steps": 8,
+ "processed_snapshots": [
+  0,
+  6
+ ],
+ "n_rep_targets": 2182,
+ "held_out": {
+  "selected_epoch": 108,
+  "val_auc_had": 0.7649826989619376,
+  "test_auc_had": 0.7292385101318359,
+  "max_abs_diff_vs_selected_epoch_embeddings": 0.0
+ },
+ "sweep": {
+  "0": {
+   "dR_total": -0.020575311066182444,
+   "dR_prop": -0.008543773476511094,
+   "emb_change": 0.21268966731925806
+  },
+  "1": {
+   "dR_total": -0.017955357249771164,
+   "dR_prop": -0.0027765136714892704,
+   "emb_change": 0.09793394771016513
+  },
+  "2": {
+   "dR_total": -0.018631723574478343,
+   "dR_prop": -0.00351966115266672,
+   "emb_change": 0.09908469890554746
+  },
+  "3": {
+   "dR_total": -0.018252487059447525,
+   "dR_prop": -0.0029804921923773653,
+   "emb_change": 0.09112125262618065
+  },
+  "4": {
+   "dR_total": -0.017465188048056874,
+   "dR_prop": -0.0015304259080652822,
+   "emb_change": 0.0734128796805938
+  },
+  "5": {
+   "dR_total": -0.017915752436623494,
+   "dR_prop": -0.0028629057412404104,
+   "emb_change": 0.09973437152802944
+  },
+  "6": {
+   "dR_total": -0.02024945226879112,
+   "dR_prop": -0.006941914957490358,
+   "emb_change": 0.17063155894478163
+  },
+  "7": {
+   "dR_total": -0.01717682272138098,
+   "dR_prop": 0.0,
+   "emb_change": 0.0
+  }
+ },
+ "flip_low_B1": {
+  "n": 25,
+  "k_total": 7,
+  "k_prop": 0,
+  "random_k_total": 1,
+  "random_k_prop": 0
+ }
+}
+saved paper/results/unified/dysat_placement_alpha.json

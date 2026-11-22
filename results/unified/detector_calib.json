@@ -1,0 +1,256 @@
+{
+  "otc": {
+    "detector": {
+      "test_disjoint": {
+        "roc_auc": 0.932,
+        "pr_auc": 0.952,
+        "tpr_at_1pct_fpr": 0.216,
+        "tpr_at_5pct_fpr": 0.616,
+        "n_real": 63,
+        "n_attack": 125
+      },
+      "test_adaptive_symmetric": {
+        "roc_auc": 0.515,
+        "pr_auc": 0.739,
+        "tpr_at_1pct_fpr": 0.0,
+        "tpr_at_5pct_fpr": 0.0,
+        "n_real": 63,
+        "n_attack": 250
+      },
+      "feature_importances": {
+        "src_degree": -5.216,
+        "dst_degree": -0.83,
+        "src_reputation": 0.682,
+        "dst_reputation": 1.545,
+        "edge_symmetry": -1.83
+      }
+    },
+    "calibration_oos": {
+      "held_out_snapshots": "s7-s9",
+      "brier": 0.1013,
+      "ece": 0.0638,
+      "auc_oos": 0.833,
+      "base_trust_rate": 0.8317,
+      "n_edges": 1046,
+      "reliability": [
+        {
+          "bin": [
+            0.0,
+            0.1
+          ],
+          "conf": 0.044,
+          "emp_trust": 0.07,
+          "n": 43
+        },
+        {
+          "bin": [
+            0.1,
+            0.2
+          ],
+          "conf": 0.135,
+          "emp_trust": 0.25,
+          "n": 24
+        },
+        {
+          "bin": [
+            0.2,
+            0.3
+          ],
+          "conf": 0.247,
+          "emp_trust": 0.407,
+          "n": 27
+        },
+        {
+          "bin": [
+            0.3,
+            0.4
+          ],
+          "conf": 0.349,
+          "emp_trust": 0.647,
+          "n": 17
+        },
+        {
+          "bin": [
+            0.4,
+            0.5
+          ],
+          "conf": 0.435,
+          "emp_trust": 0.647,
+          "n": 17
+        },
+        {
+          "bin": [
+            0.5,
+            0.6
+          ],
+          "conf": 0.553,
+          "emp_trust": 0.875,
+          "n": 32
+        },
+        {
+          "bin": [
+            0.6,
+            0.7
+          ],
+          "conf": 0.647,
+          "emp_trust": 0.742,
+          "n": 31
+        },
+        {
+          "bin": [
+            0.7,
+            0.8
+          ],
+          "conf": 0.761,
+          "emp_trust": 0.788,
+          "n": 52
+        },
+        {
+          "bin": [
+            0.8,
+            0.9
+          ],
+          "conf": 0.856,
+          "emp_trust": 0.802,
+          "n": 121
+        },
+        {
+          "bin": [
+            0.9,
+            1.0
+          ],
+          "conf": 0.979,
+          "emp_trust": 0.937,
+          "n": 682
+        }
+      ]
+    }
+  },
+  "alpha": {
+    "detector": {
+      "test_disjoint": {
+        "roc_auc": 0.924,
+        "pr_auc": 0.947,
+        "tpr_at_1pct_fpr": 0.064,
+        "tpr_at_5pct_fpr": 0.52,
+        "n_real": 56,
+        "n_attack": 125
+      },
+      "test_adaptive_symmetric": {
+        "roc_auc": 0.633,
+        "pr_auc": 0.807,
+        "tpr_at_1pct_fpr": 0.0,
+        "tpr_at_5pct_fpr": 0.0,
+        "n_real": 56,
+        "n_attack": 250
+      },
+      "feature_importances": {
+        "src_degree": -5.252,
+        "dst_degree": -1.147,
+        "src_reputation": 0.534,
+        "dst_reputation": 1.597,
+        "edge_symmetry": -1.487
+      }
+    },
+    "calibration_oos": {
+      "held_out_snapshots": "s7-s9",
+      "brier": 0.096,
+      "ece": 0.0581,
+      "auc_oos": 0.815,
+      "base_trust_rate": 0.8426,
+      "n_edges": 883,
+      "reliability": [
+        {
+          "bin": [
+            0.0,
+            0.1
+          ],
+          "conf": 0.036,
+          "emp_trust": 0.069,
+          "n": 29
+        },
+        {
+          "bin": [
+            0.1,
+            0.2
+          ],
+          "conf": 0.15,
+          "emp_trust": 0.176,
+          "n": 17
+        },
+        {
+          "bin": [
+            0.2,
+            0.3
+          ],
+          "conf": 0.246,
+          "emp_trust": 0.538,
+          "n": 13
+        },
+        {
+          "bin": [
+            0.3,
+            0.4
+          ],
+          "conf": 0.364,
+          "emp_trust": 0.312,
+          "n": 16
+        },
+        {
+          "bin": [
+            0.4,
+            0.5
+          ],
+          "conf": 0.437,
+          "emp_trust": 0.789,
+          "n": 19
+        },
+        {
+          "bin": [
+            0.5,
+            0.6
+          ],
+          "conf": 0.548,
+          "emp_trust": 0.65,
+          "n": 20
+        },
+        {
+          "bin": [
+            0.6,
+            0.7
+          ],
+          "conf": 0.663,
+          "emp_trust": 0.815,
+          "n": 27
+        },
+        {
+          "bin": [
+            0.7,
+            0.8
+          ],
+          "conf": 0.746,
+          "emp_trust": 0.714,
+          "n": 35
+        },
+        {
+          "bin": [
+            0.8,
+            0.9
+          ],
+          "conf": 0.855,
+          "emp_trust": 0.821,
+          "n": 67
+        },
+        {
+          "bin": [
+            0.9,
+            1.0
+          ],
+          "conf": 0.978,
+          "emp_trust": 0.933,
+          "n": 640
+        }
+      ]
+    }
+  }
+}

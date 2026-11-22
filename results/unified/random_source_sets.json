@@ -1,0 +1,594 @@
+{
+  "otc": {
+    "cohort_low_ids": [
+      165,
+      3958,
+      385,
+      1902,
+      2139,
+      5378,
+      1277,
+      1850,
+      4153,
+      56,
+      2943,
+      4056,
+      1166,
+      319,
+      1918,
+      2512,
+      1311,
+      2535,
+      5269,
+      15,
+      54,
+      1687,
+      1723,
+      2843,
+      3128
+    ],
+    "cohort_moderate_ids": [
+      1519,
+      2273,
+      882,
+      1444,
+      1644,
+      1921,
+      593,
+      2486,
+      4314,
+      16,
+      1306,
+      1876,
+      2214,
+      2876,
+      3032,
+      3372,
+      4775,
+      3566,
+      441,
+      729,
+      1804,
+      2295,
+      2677,
+      2790,
+      3593,
+      321,
+      591,
+      1875,
+      3825,
+      669,
+      884,
+      2602,
+      2699,
+      1326,
+      1360,
+      365,
+      2349,
+      2632,
+      4933,
+      180
+    ],
+    "A_fixed_cohort": {
+      "low_B1": {
+        "per_seed_n": [
+          25,
+          25,
+          24,
+          25,
+          24
+        ],
+        "n_pooled": 123,
+        "flip_total_pct": 70.7,
+        "flip_preexist_pct": 63.4,
+        "flip_total_cp_ci": [
+          0.619,
+          0.786
+        ],
+        "flip_preexist_cp_ci": [
+          0.543,
+          0.719
+        ],
+        "flip_total_seedboot_ci": [
+          69.4,
+          71.8
+        ],
+        "flip_preexist_seedboot_ci": [
+          60.8,
+          66.1
+        ],
+        "flip_total_per_seed_pct": [
+          72.0,
+          72.0,
+          70.8,
+          68.0,
+          70.8
+        ],
+        "flip_preexist_per_seed_pct": [
+          60.0,
+          60.0,
+          66.7,
+          64.0,
+          66.7
+        ],
+        "dR_preexist_mean": -0.1028,
+        "dR_preexist_median": -0.0913
+      },
+      "low_B5": {
+        "per_seed_n": [
+          25,
+          25,
+          24,
+          25,
+          24
+        ],
+        "n_pooled": 123,
+        "flip_total_pct": 100.0,
+        "flip_preexist_pct": 65.9,
+        "flip_total_cp_ci": [
+          0.97,
+          1.0
+        ],
+        "flip_preexist_cp_ci": [
+          0.568,
+          0.742
+        ],
+        "flip_total_seedboot_ci": [
+          100.0,
+          100.0
+        ],
+        "flip_preexist_seedboot_ci": [
+          64.0,
+          68.6
+        ],
+        "flip_total_per_seed_pct": [
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0
+        ],
+        "flip_preexist_per_seed_pct": [
+          64.0,
+          64.0,
+          66.7,
+          64.0,
+          70.8
+        ],
+        "dR_preexist_mean": -0.102,
+        "dR_preexist_median": -0.1049
+      },
+      "moderate_B1": {
+        "per_seed_n": [
+          40,
+          40,
+          40,
+          40,
+          40
+        ],
+        "n_pooled": 200,
+        "flip_total_pct": 25.0,
+        "flip_preexist_pct": 21.5,
+        "flip_total_cp_ci": [
+          0.192,
+          0.316
+        ],
+        "flip_preexist_cp_ci": [
+          0.16,
+          0.278
+        ],
+        "flip_total_seedboot_ci": [
+          23.5,
+          26.5
+        ],
+        "flip_preexist_seedboot_ci": [
+          19.0,
+          23.5
+        ],
+        "flip_total_per_seed_pct": [
+          25.0,
+          25.0,
+          27.5,
+          22.5,
+          25.0
+        ],
+        "flip_preexist_per_seed_pct": [
+          17.5,
+          20.0,
+          25.0,
+          22.5,
+          22.5
+        ],
+        "dR_preexist_mean": -0.2089,
+        "dR_preexist_median": -0.2031
+      },
+      "moderate_B5": {
+        "per_seed_n": [
+          40,
+          40,
+          40,
+          40,
+          40
+        ],
+        "n_pooled": 200,
+        "flip_total_pct": 33.5,
+        "flip_preexist_pct": 19.5,
+        "flip_total_cp_ci": [
+          0.27,
+          0.405
+        ],
+        "flip_preexist_cp_ci": [
+          0.142,
+          0.257
+        ],
+        "flip_total_seedboot_ci": [
+          32.5,
+          35.5
+        ],
+        "flip_preexist_seedboot_ci": [
+          18.5,
+          20.0
+        ],
+        "flip_total_per_seed_pct": [
+          37.5,
+          32.5,
+          32.5,
+          32.5,
+          32.5
+        ],
+        "flip_preexist_per_seed_pct": [
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          17.5
+        ],
+        "dR_preexist_mean": -0.2104,
+        "dR_preexist_median": -0.1927
+      }
+    },
+    "B_query_edge_masked": {
+      "config": "low stratum, B=1, optimized source, distrust; each scored edge removed from encoder",
+      "per_seed_n": [
+        25,
+        25,
+        24,
+        25,
+        24
+      ],
+      "n_pooled": 123,
+      "flip_preexist_pct": 63.4,
+      "flip_masked_pct": 61.8,
+      "flip_masked_cp_ci": [
+        0.526,
+        0.704
+      ],
+      "flip_masked_seedboot_ci": [
+        58.4,
+        64.8
+      ],
+      "flip_masked_per_seed_pct": [
+        64.0,
+        56.0,
+        66.7,
+        60.0,
+        62.5
+      ],
+      "dR_masked_mean": -0.126,
+      "dR_masked_median": -0.1069,
+      "dR_preexist_mean": -0.1045
+    },
+    "C_random_distribution": {
+      "B1": {
+        "n": 25,
+        "opt_dR_mean": -0.1266,
+        "rand_dR_median_mean": -0.099,
+        "rand_frac_ge_optimized_mean_pct": 1.4,
+        "optimized_in_random_top_quartile_pct": 100.0
+      },
+      "B5": {
+        "n": 25,
+        "opt_dR_mean": -0.2031,
+        "rand_dR_median_mean": -0.1916,
+        "rand_frac_ge_optimized_mean_pct": 7.4,
+        "optimized_in_random_top_quartile_pct": 88.0
+      }
+    }
+  },
+  "alpha": {
+    "cohort_low_ids": [
+      184,
+      175,
+      112,
+      331,
+      3703,
+      442,
+      680,
+      957,
+      2335,
+      1327,
+      1175,
+      429,
+      554,
+      1610,
+      3588,
+      3590,
+      3677,
+      3741,
+      123,
+      1567,
+      1645,
+      2353,
+      2394,
+      2396,
+      581
+    ],
+    "cohort_moderate_ids": [
+      171,
+      255,
+      52,
+      148,
+      59,
+      106,
+      210,
+      225,
+      198,
+      189,
+      254,
+      118,
+      160,
+      243,
+      158,
+      257,
+      132,
+      156,
+      213,
+      308,
+      182,
+      327,
+      361,
+      407,
+      3464,
+      203,
+      359,
+      1690,
+      535,
+      124,
+      169,
+      238,
+      241,
+      283,
+      313,
+      128,
+      268,
+      286,
+      352,
+      392
+    ],
+    "A_fixed_cohort": {
+      "low_B1": {
+        "per_seed_n": [
+          25,
+          25,
+          25,
+          25,
+          25
+        ],
+        "n_pooled": 125,
+        "flip_total_pct": 87.2,
+        "flip_preexist_pct": 50.4,
+        "flip_total_cp_ci": [
+          0.8,
+          0.925
+        ],
+        "flip_preexist_cp_ci": [
+          0.413,
+          0.595
+        ],
+        "flip_total_seedboot_ci": [
+          83.2,
+          91.2
+        ],
+        "flip_preexist_seedboot_ci": [
+          47.2,
+          52.0
+        ],
+        "flip_total_per_seed_pct": [
+          88.0,
+          80.0,
+          84.0,
+          92.0,
+          92.0
+        ],
+        "flip_preexist_per_seed_pct": [
+          52.0,
+          52.0,
+          52.0,
+          44.0,
+          52.0
+        ],
+        "dR_preexist_mean": -0.0924,
+        "dR_preexist_median": -0.0608
+      },
+      "low_B5": {
+        "per_seed_n": [
+          25,
+          25,
+          25,
+          25,
+          25
+        ],
+        "n_pooled": 125,
+        "flip_total_pct": 92.0,
+        "flip_preexist_pct": 40.0,
+        "flip_total_cp_ci": [
+          0.858,
+          0.961
+        ],
+        "flip_preexist_cp_ci": [
+          0.313,
+          0.491
+        ],
+        "flip_total_seedboot_ci": [
+          92.0,
+          92.0
+        ],
+        "flip_preexist_seedboot_ci": [
+          40.0,
+          40.0
+        ],
+        "flip_total_per_seed_pct": [
+          92.0,
+          92.0,
+          92.0,
+          92.0,
+          92.0
+        ],
+        "flip_preexist_per_seed_pct": [
+          40.0,
+          40.0,
+          40.0,
+          40.0,
+          40.0
+        ],
+        "dR_preexist_mean": -0.0641,
+        "dR_preexist_median": -0.035
+      },
+      "moderate_B1": {
+        "per_seed_n": [
+          40,
+          40,
+          40,
+          40,
+          40
+        ],
+        "n_pooled": 200,
+        "flip_total_pct": 12.0,
+        "flip_preexist_pct": 10.5,
+        "flip_total_cp_ci": [
+          0.078,
+          0.173
+        ],
+        "flip_preexist_cp_ci": [
+          0.066,
+          0.156
+        ],
+        "flip_total_seedboot_ci": [
+          11.0,
+          12.5
+        ],
+        "flip_preexist_seedboot_ci": [
+          10.0,
+          11.5
+        ],
+        "flip_total_per_seed_pct": [
+          12.5,
+          12.5,
+          12.5,
+          10.0,
+          12.5
+        ],
+        "flip_preexist_per_seed_pct": [
+          12.5,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "dR_preexist_mean": -0.1444,
+        "dR_preexist_median": -0.126
+      },
+      "moderate_B5": {
+        "per_seed_n": [
+          40,
+          40,
+          40,
+          40,
+          40
+        ],
+        "n_pooled": 200,
+        "flip_total_pct": 25.5,
+        "flip_preexist_pct": 11.5,
+        "flip_total_cp_ci": [
+          0.196,
+          0.321
+        ],
+        "flip_preexist_cp_ci": [
+          0.074,
+          0.168
+        ],
+        "flip_total_seedboot_ci": [
+          25.0,
+          26.5
+        ],
+        "flip_preexist_seedboot_ci": [
+          10.5,
+          12.5
+        ],
+        "flip_total_per_seed_pct": [
+          25.0,
+          25.0,
+          25.0,
+          27.5,
+          25.0
+        ],
+        "flip_preexist_per_seed_pct": [
+          10.0,
+          12.5,
+          12.5,
+          12.5,
+          10.0
+        ],
+        "dR_preexist_mean": -0.1403,
+        "dR_preexist_median": -0.1134
+      }
+    },
+    "B_query_edge_masked": {
+      "config": "low stratum, B=1, optimized source, distrust; each scored edge removed from encoder",
+      "per_seed_n": [
+        25,
+        25,
+        25,
+        25,
+        25
+      ],
+      "n_pooled": 125,
+      "flip_preexist_pct": 44.8,
+      "flip_masked_pct": 50.4,
+      "flip_masked_cp_ci": [
+        0.413,
+        0.595
+      ],
+      "flip_masked_seedboot_ci": [
+        48.0,
+        53.6
+      ],
+      "flip_masked_per_seed_pct": [
+        48.0,
+        52.0,
+        48.0,
+        48.0,
+        56.0
+      ],
+      "dR_masked_mean": -0.1134,
+      "dR_masked_median": -0.0922,
+      "dR_preexist_mean": -0.0898
+    },
+    "C_random_distribution": {
+      "B1": {
+        "n": 25,
+        "opt_dR_mean": -0.1368,
+        "rand_dR_median_mean": -0.0488,
+        "rand_frac_ge_optimized_mean_pct": 1.7,
+        "optimized_in_random_top_quartile_pct": 100.0
+      },
+      "B5": {
+        "n": 25,
+        "opt_dR_mean": -0.2025,
+        "rand_dR_median_mean": -0.1574,
+        "rand_frac_ge_optimized_mean_pct": 7.0,
+        "optimized_in_random_top_quartile_pct": 88.0
+      }
+    }
+  }
+}
