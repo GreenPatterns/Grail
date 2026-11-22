@@ -59,7 +59,7 @@ def cohort_checks(C: dict) -> list:
     ef = e['cells']['opt_prop']['by_margin']
     return rows + [
         (f"Under the propagation-only score, one random edge flips ${lo('otc', 'random_prop')}\\%$ of them on OTC and ${lo('alpha', 'random_prop')}\\%$ on Alpha, and one optimized edge flips ${lo('otc', 'opt_prop')}\\%$ and ${lo('alpha', 'opt_prop')}\\%$.", 'cohort low-reputation rates'),
-        (f"one random account's fake rating then pushes below the threshold ${lo('otc', 'random_prop')}\\%$ and ${lo('alpha', 'random_prop')}\\%$ of users just above it, and ${cell('otc', 'random_prop')}\\%$ and ${cell('alpha', 'random_prop')}\\%$ of all eligible users.", 'abstract rates'),
+        (f"one random account's fake rating then pushes ${lo('otc', 'random_prop')}\\%$ and ${lo('alpha', 'random_prop')}\\%$ of users just above the threshold below it, and ${cell('otc', 'random_prop')}\\%$ and ${cell('alpha', 'random_prop')}\\%$ of all eligible users.", 'abstract rates'),
         (f"For the optimized edges on low-reputation targets it reports ${lo('otc', 'opt_total')}\\%$ and ${lo('alpha', 'opt_total')}\\%$ instead of ${lo('otc', 'opt_prop')}\\%$ and ${lo('alpha', 'opt_prop')}\\%$", 'intro total rates'),
         (f"pushes below the threshold ${lo('otc', 'random_prop')}\\%$ (OTC) and ${lo('alpha', 'random_prop')}\\%$ (Alpha) of the \\emph{{low-reputation}} targets", 'intro random rates'),
         (f"who make up about $2\\%$ of the eligible targets, and ${cell('otc', 'random_prop')}\\%$ and ${cell('alpha', 'random_prop')}\\%$ of all eligible targets. An \\emph{{optimized}} source", 'intro whole cohort, random'),
