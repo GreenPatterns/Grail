@@ -1,0 +1,52 @@
+[04:41:41] 
+  E8 RETRAINING with R_prop (W = 8, edges in s7) — otc
+[04:45:09]     seed 42 B5: eligible 24 flip tot 17 prop 8
+[04:45:09]     seed 42 B1: eligible 24 flip tot 3 prop 2
+[04:46:26]     seed 1 B5: eligible 23 flip tot 15 prop 5
+[04:46:26]     seed 1 B1: eligible 23 flip tot 2 prop 0
+[04:47:42]     seed 2 B5: eligible 21 flip tot 14 prop 5
+[04:47:42]     seed 2 B1: eligible 21 flip tot 1 prop 1
+[04:48:58]     seed 3 B5: eligible 24 flip tot 15 prop 7
+[04:48:58]     seed 3 B1: eligible 24 flip tot 0 prop 0
+[04:50:10]     seed 4 B5: eligible 22 flip tot 14 prop 7
+[04:50:10]     seed 4 B1: eligible 22 flip tot 2 prop 2
+[04:50:10]     B5: pooled flip tot 65.8% prop 28.1% (n=114); mean dR tot -0.2099 prop -0.1081
+[04:50:10]     B1: pooled flip tot 7.0% prop 4.4% (n=114); mean dR tot -0.0549 prop -0.0302
+[04:50:10] 
+  E9 POISONING CONTROLS with R_prop (W = 7) — otc
+[04:51:37]     seed 42 done
+[04:52:28]     seed 1 done
+[04:53:16]     seed 2 done
+[04:54:05]     seed 3 done
+[04:54:50]     seed 4 done
+[04:54:50]     dis_victim    : pooled flip tot 10.2% prop 3.4%; mean dR (all 24) tot -0.2368 prop -0.1573
+[04:54:50]     tru_victim    : pooled flip tot 0.0% prop 0.0%; mean dR (all 24) tot 0.0527 prop 0.0477
+[04:54:50]     dis_unrelated : pooled flip tot 0.8% prop 0.8%; mean dR (all 24) tot -0.0114 prop -0.0078
+[04:54:50]     dis_randsnap  : pooled flip tot 10.2% prop 6.8%; mean dR (all 24) tot -0.2198 prop -0.1524
+[04:54:50] Wrote <artifacts>/results/retrain_prop.json
+[04:54:50] 
+  E8 RETRAINING with R_prop (W = 8, edges in s7) — alpha
+[04:55:24]     seed 42 B5: eligible 24 flip tot 24 prop 23
+[04:55:24]     seed 42 B1: eligible 24 flip tot 15 prop 13
+[04:55:51]     seed 1 B5: eligible 20 flip tot 18 prop 7
+[04:55:51]     seed 1 B1: eligible 20 flip tot 1 prop 1
+[04:56:19]     seed 2 B5: eligible 23 flip tot 22 prop 17
+[04:56:19]     seed 2 B1: eligible 23 flip tot 8 prop 4
+[04:56:44]     seed 3 B5: eligible 24 flip tot 23 prop 13
+[04:56:44]     seed 3 B1: eligible 24 flip tot 3 prop 2
+[04:57:06]     seed 4 B5: eligible 23 flip tot 23 prop 18
+[04:57:06]     seed 4 B1: eligible 23 flip tot 5 prop 1
+[04:57:06]     B5: pooled flip tot 96.5% prop 68.4% (n=114); mean dR tot -0.2872 prop -0.1812
+[04:57:06]     B1: pooled flip tot 28.1% prop 18.4% (n=114); mean dR tot -0.0627 prop -0.0249
+[04:57:06] 
+  E9 POISONING CONTROLS with R_prop (W = 7) — alpha
+[04:57:51]     seed 42 done
+[04:58:32]     seed 1 done
+[04:59:09]     seed 2 done
+[04:59:45]     seed 3 done
+[05:00:20]     seed 4 done
+[05:00:20]     dis_victim    : pooled flip tot 8.3% prop 2.5%; mean dR (all 24) tot -0.189 prop -0.0971
+[05:00:20]     tru_victim    : pooled flip tot 0.0% prop 0.0%; mean dR (all 24) tot 0.0557 prop 0.0443
+[05:00:20]     dis_unrelated : pooled flip tot 1.7% prop 0.8%; mean dR (all 24) tot -0.0301 prop -0.0271
+[05:00:20]     dis_randsnap  : pooled flip tot 20.8% prop 7.5%; mean dR (all 24) tot -0.2089 prop -0.1349
+[05:00:20] Wrote <artifacts>/results/retrain_prop.json

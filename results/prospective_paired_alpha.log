@@ -1,0 +1,24 @@
+[04:39:40] alpha: pre-declaration written to <artifacts>/results/prospective_paired_alpha.json
+[04:39:40] [alpha s0] training W=7 model
+[04:40:05] [alpha s0] AUC=0.817 low=28 targets=17 (0.41 min)
+[04:40:05] [alpha s1] training W=7 model
+[04:40:31] [alpha s1] AUC=0.826 low=47 targets=24 (0.44 min)
+[04:40:32] [alpha s2] training W=7 model
+[04:40:57] [alpha s2] AUC=0.827 low=44 targets=19 (0.42 min)
+[04:40:57] [alpha s3] training W=7 model
+[04:41:35] [alpha s3] AUC=0.846 low=49 targets=40 (0.64 min)
+[04:41:35] [alpha s4] training W=7 model
+[04:42:08] [alpha s4] AUC=0.844 low=32 targets=18 (0.56 min)
+[04:42:09] [alpha s5] training W=7 model
+[04:42:56] [alpha s5] AUC=0.837 low=37 targets=25 (0.78 min)
+[04:42:56] [alpha s6] training W=7 model
+[04:43:29] [alpha s6] AUC=0.841 low=33 targets=13 (0.55 min)
+[04:43:29] [alpha s7] training W=7 model
+[04:44:14] [alpha s7] AUC=0.844 low=30 targets=19 (0.75 min)
+[04:44:14] [alpha s8] training W=7 model
+[04:44:59] [alpha s8] AUC=0.829 low=30 targets=19 (0.76 min)
+[04:45:00] [alpha s9] training W=7 model
+[04:45:39] [alpha s9] AUC=0.820 low=30 targets=19 (0.65 min)
+[04:45:39] alpha B=1: in flip tot/prop 56.5438/39.533 | slide 53.4532/32.1349 | diff prop flip -7.3982 CI[-15.4038, 0.4746] | diff prop dR -0.0357 CI[-0.068, -0.0041]
+[04:45:39] alpha B=5: in flip tot/prop 86.2108/40.3954 | slide 89.5972/34.5283 | diff prop flip -5.8671 CI[-10.4387, -0.8922] | diff prop dR -0.0449 CI[-0.0772, -0.0159]
+[04:45:39] alpha: verdict {'B1': {'ci_diff_flip_prop_pp': [-15.4038, 0.4746], 'ci_diff_dR_prop': [-0.068, -0.0041], 'flip_within_margin': False, 'shift_within_margin': False, 'useful_proxy': False}, 'B5': {'ci_diff_flip_prop_pp': [-10.4387, -0.8922], 'ci_diff_dR_prop': [-0.0772, -0.0159], 'flip_within_margin': False, 'shift_within_margin': False, 'useful_proxy': False}, 'dataset_verdict': 'not shown to be a useful proxy (criterion not met)'}

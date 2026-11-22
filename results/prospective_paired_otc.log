@@ -1,0 +1,24 @@
+[04:39:40] otc: pre-declaration written to <artifacts>/results/prospective_paired_otc.json
+[04:39:40] [otc s0] training W=7 model
+[04:40:29] [otc s0] AUC=0.837 low=59 targets=45 (0.81 min)
+[04:40:29] [otc s1] training W=7 model
+[04:41:06] [otc s1] AUC=0.837 low=39 targets=29 (0.61 min)
+[04:41:06] [otc s2] training W=7 model
+[04:42:04] [otc s2] AUC=0.839 low=67 targets=45 (0.97 min)
+[04:42:04] [otc s3] training W=7 model
+[04:43:16] [otc s3] AUC=0.844 low=53 targets=33 (1.19 min)
+[04:43:16] [otc s4] training W=7 model
+[04:44:36] [otc s4] AUC=0.831 low=52 targets=33 (1.33 min)
+[04:44:36] [otc s5] training W=7 model
+[04:45:58] [otc s5] AUC=0.838 low=54 targets=38 (1.36 min)
+[04:45:58] [otc s6] training W=7 model
+[04:47:07] [otc s6] AUC=0.838 low=48 targets=34 (1.15 min)
+[04:47:07] [otc s7] training W=7 model
+[04:48:14] [otc s7] AUC=0.849 low=51 targets=32 (1.12 min)
+[04:48:14] [otc s8] training W=7 model
+[04:49:33] [otc s8] AUC=0.837 low=62 targets=40 (1.31 min)
+[04:49:33] [otc s9] training W=7 model
+[04:50:34] [otc s9] AUC=0.839 low=52 targets=34 (1.02 min)
+[04:50:34] otc B=1: in flip tot/prop 71.7785/60.6424 | slide 77.2083/62.695 | diff prop flip 2.0527 CI[-6.6084, 9.1523] | diff prop dR -0.0284 CI[-0.0456, -0.0111]
+[04:50:34] otc B=5: in flip tot/prop 87.996/60.7011 | slide 91.1325/62.9192 | diff prop flip 2.2181 CI[-5.2647, 8.789] | diff prop dR -0.0299 CI[-0.0478, -0.0125]
+[04:50:34] otc: verdict {'B1': {'ci_diff_flip_prop_pp': [-6.6084, 9.1523], 'ci_diff_dR_prop': [-0.0456, -0.0111], 'flip_within_margin': True, 'shift_within_margin': False, 'useful_proxy': False}, 'B5': {'ci_diff_flip_prop_pp': [-5.2647, 8.789], 'ci_diff_dR_prop': [-0.0478, -0.0125], 'flip_within_margin': True, 'shift_within_margin': False, 'useful_proxy': False}, 'dataset_verdict': 'not shown to be a useful proxy (criterion not met)'}

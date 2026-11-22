@@ -5,21 +5,55 @@ that the formatted sentence fragment occurs in the paper (whitespace is normaliz
 A failure means the prose and the data disagree, or the prose was reworded. In the second case
 update the fragment here; never delete the check.
 
+Checks of tables and sentences that live in the supplement run against supplement.tex next to the
+paper (or GRAIL_SUPP_TEX). The result files of the 2026-11-22 revision are read from results/.
+
 Run: GRAIL_PAPER_TEX=<path>/grail_dsn27.tex python3 code/check_dsn_numbers.py
 """
+import glob
 import json
 import os
 import re
 import sys
 
+import numpy as np
+from scipy import stats
+
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+from mycode.dataset import get_heterogeneous_snapshot_index  # the model's own snapshot cut
+
 RESULTS = os.path.join(HERE, '..', 'results', 'unified')
+REVISION = os.path.join(HERE, '..', 'results')   # result files of the 2026-11-22 revision sit next to unified/
+DATA = os.environ.get('GRAIL_DATA_ROOT', os.path.join(HERE, '..', 'data', 'cyberdata'))
 DATASETS = ('otc', 'alpha', 'edg60000')
+DATA_FILES = {'otc': 'bitcoinotc', 'alpha': 'bitcoinalpha', 'edg60000': 'edg60000'}
+NUMBER_WORDS = {2: 'two', 3: 'three', 4: 'four', 5: 'five', 6: 'six'}
 
 
 def load(name: str) -> dict:
     with open(os.path.join(RESULTS, name)) as handle:
         return json.load(handle)
+
+
+def load_rev(name: str) -> dict:
+    with open(os.path.join(REVISION, name)) as handle:
+        return json.load(handle)
+
+
+def seed_ci(values) -> tuple:
+    """The revision scripts' interval over runs (percentile bootstrap, 10,000 resamples of whole
+    runs, RandomState(12345)), recomputed without their final rounding to four decimals."""
+    v = np.asarray(values, float)
+    means = v[np.random.RandomState(12345).randint(0, len(v), (10000, len(v)))].mean(1)
+    return float(np.percentile(means, 2.5)), float(np.percentile(means, 97.5))
+
+
+def paired_t_interval(on, off) -> tuple:
+    """95% t-interval of the mean per-seed difference on - off (the two lists are paired by seed)."""
+    d = np.asarray(on, float) - np.asarray(off, float)
+    half = stats.t.ppf(0.975, len(d) - 1) * d.std(ddof=1) / np.sqrt(len(d))
+    return float(d.mean() - half), float(d.mean() + half)
 
 
 def norm(text: str) -> str:
@@ -59,11 +93,11 @@ def cohort_checks(C: dict) -> list:
     ef = e['cells']['opt_prop']['by_margin']
     return rows + [
         (f"Under the propagation-only score, one random edge flips ${lo('otc', 'random_prop')}\\%$ of them on OTC and ${lo('alpha', 'random_prop')}\\%$ on Alpha, and one optimized edge flips ${lo('otc', 'opt_prop')}\\%$ and ${lo('alpha', 'opt_prop')}\\%$.", 'cohort low-reputation rates'),
-        (f"One fake rating from a random account pushes ${lo('otc', 'random_prop')}\\%$ and ${lo('alpha', 'random_prop')}\\%$ of users just above the threshold below it, and ${cell('otc', 'random_prop')}\\%$ and ${cell('alpha', 'random_prop')}\\%$ of all eligible users.", 'abstract rates'),
-        (f"For the optimized edges on low-reputation targets it reports ${lo('otc', 'opt_total')}\\%$ and ${lo('alpha', 'opt_total')}\\%$ instead of ${lo('otc', 'opt_prop')}\\%$ and ${lo('alpha', 'opt_prop')}\\%$", 'intro total rates'),
-        (f"pushes below the threshold ${lo('otc', 'random_prop')}\\%$ (OTC) and ${lo('alpha', 'random_prop')}\\%$ (Alpha) of the \\emph{{low-reputation}} targets", 'intro random rates'),
-        (f"who make up about $2\\%$ of the eligible targets, and ${cell('otc', 'random_prop')}\\%$ and ${cell('alpha', 'random_prop')}\\%$ of all eligible targets. An \\emph{{optimized}} source", 'intro whole cohort, random'),
-        (f"reaches ${lo('otc', 'opt_prop')}\\%$ and ${lo('alpha', 'opt_prop')}\\%$, and ${cell('otc', 'opt_prop')}\\%$ and ${cell('alpha', 'opt_prop')}\\%$ (Section", 'intro optimized'),
+        (f"One fake rating from a random account pushes below the threshold ${min((lo(d, 'random_prop') for d in ('otc', 'alpha', 'edg60000')), key=float)}\\%$ to ${max((lo(d, 'random_prop') for d in ('otc', 'alpha', 'edg60000')), key=float)}\\%$ of the users just above it and ${min((cell(d, 'random_prop') for d in ('otc', 'alpha', 'edg60000')), key=float)}\\%$ to ${max((cell(d, 'random_prop') for d in ('otc', 'alpha', 'edg60000')), key=float)}\\%$ of all eligible users.", 'abstract rates'),
+        (f"for these optimized edges it reports ${lo('otc', 'opt_total')}\\%$ and ${lo('alpha', 'opt_total')}\\%$ instead of ${lo('otc', 'opt_prop')}\\%$ and ${lo('alpha', 'opt_prop')}\\%$", 'intro total rates'),
+        (f"pushes below the threshold ${lo('otc', 'random_prop')}\\%$ (OTC), ${lo('alpha', 'random_prop')}\\%$ (Alpha), and ${lo('edg60000', 'random_prop')}\\%$ (Epinions-D) of the \\emph{{low-reputation}} targets", 'intro random rates'),
+        (f"those less than $0.1$ above it (about $2\\%$ of eligible targets on the Bitcoin networks, ${100 * low['edg60000']['n_pooled'] / n_all['edg60000']:.0f}\\%$ on Epinions-D), and ${cell('otc', 'random_prop')}\\%$, ${cell('alpha', 'random_prop')}\\%$, and ${cell('edg60000', 'random_prop')}\\%$ of all eligible targets. An optimized source", 'intro whole cohort, random'),
+        (f"reaches ${lo('otc', 'opt_prop')}\\%$, ${lo('alpha', 'opt_prop')}\\%$, and ${lo('edg60000', 'opt_prop')}\\%$, and ${cell('otc', 'opt_prop')}\\%$, ${cell('alpha', 'opt_prop')}\\%$, and ${cell('edg60000', 'opt_prop')}\\%$ (Section", 'intro optimized'),
         (f"one random edge flips ${cell('otc', 'random_prop')}\\%$ (OTC) and ${cell('alpha', 'random_prop')}\\%$ (Alpha) under the propagation-only score, and one optimized edge ${cell('otc', 'opt_prop')}\\%$ and ${cell('alpha', 'opt_prop')}\\%$.", 'whole cohort'),
         (f"the optimized rate ranges from ${spread['otc'][0]:.0f}\\%$ to ${spread['otc'][1]:.0f}\\%$ on OTC and from ${spread['alpha'][0]:.0f}\\%$ to ${spread['alpha'][1]:.0f}\\%$ on Alpha", 'spread across runs'),
         (f"${low['otc']['n_pooled']}$ of ${thousands(n_all['otc'])}$ target-run pairs on OTC and ${low['alpha']['n_pooled']}$ of ${thousands(n_all['alpha'])}$ on Alpha, about $2\\%$", 'low-reputation share'),
@@ -76,7 +110,37 @@ def cohort_checks(C: dict) -> list:
         (f"about $2\\%$ on each (on Epinions-D, ${thousands(low['edg60000']['n_pooled'])}$ of ${thousands(n_all['edg60000'])}$, about ${100 * low['edg60000']['n_pooled'] / n_all['edg60000']:.0f}\\%$)", 'Epinions-D pair counts'),
         (f"forward-chaining AUC of ${min(min(C[d]['auc'].values()) for d in ('otc', 'alpha')):.2f}$ to ${max(max(C[d]['auc'].values()) for d in ('otc', 'alpha')):.2f}$ across runs", 'AUC range across runs'),
         (f"one optimized edge flips ${lo('edg60000', 'opt_prop')}\\%$ of low-reputation and ${cell('edg60000', 'opt_prop')}\\%$ of all targets under the propagation-only score.", 'Epinions-D cohort'),
-        (f"one in-window distrust edge from a random account flips ${lo('otc', 'random_prop')}\\%$ (OTC) and ${lo('alpha', 'random_prop')}\\%$ (Alpha) of low-reputation targets and ${cell('otc', 'random_prop')}\\%$ and ${cell('alpha', 'random_prop')}\\%$ of all eligible targets.", 'conclusion rates'),
+        (f"one in-window distrust edge from a random account flips ${lo('otc', 'random_prop')}\\%$ (OTC) and ${lo('alpha', 'random_prop')}\\%$ (Alpha) of low-reputation targets and ${cell('otc', 'random_prop')}\\%$ and ${cell('alpha', 'random_prop')}\\%$ of all eligible targets (Epinions-D: ${lo('edg60000', 'random_prop')}\\%$ and ${cell('edg60000', 'random_prop')}\\%$).", 'conclusion rates'),
+    ]
+
+
+def processed_distrust_share(d: str) -> float:
+    """Share of distrust ratings in the processed window s0..s6, cut by the model's own code."""
+    stem = os.path.join(DATA, DATA_FILES[d])
+    end = get_heterogeneous_snapshot_index(10, stem + '.csv')[6] + 1
+    rows = np.loadtxt(stem + '-rating.txt', dtype=np.int64, max_rows=end)
+    assert len(rows) == end, f'{d}: rating file shorter than the processed window'
+    return float(rows[:, 3].mean())
+
+
+def epinions_checks(C: dict) -> list:
+    """Why Epinions-D is less sensitive (Section VI-B): rater counts of the eligible targets (all
+    target-run pairs of the complete cohort), distrust share of the processed ratings, accuracy."""
+    medians = {}
+    for d in DATASETS:
+        raters = []
+        for path in glob.glob(os.path.join(RESULTS, 'cohort', f'cohort_{d}_s*.json')):
+            with open(path) as handle:
+                raters += [row['indeg'] for row in json.load(handle)['rows']]
+        medians[d] = float(np.median(raters))
+    assert len(set(medians.values())) == 1, f"'four raters, as on the Bitcoin graphs' needs equal medians: {medians}"
+    few = lambda d: pct(C[d]['by_indegree']['2-3']['opt_prop']['mean'])
+    dis = {d: pct(100 * processed_distrust_share(d)) for d in DATASETS}
+    auc = {d: C[d]['auc']['42'] for d in DATASETS}   # Table II reports the seed-42 run
+    return [
+        (f"its median eligible target has {NUMBER_WORDS[int(medians['edg60000'])]} raters, as on the Bitcoin graphs, yet one optimized edge flips only ${few('edg60000')}\\%$ of its targets with two or three raters (OTC ${few('otc')}\\%$, Alpha ${few('alpha')}\\%$)", 'Epinions-D, rater counts'),
+        (f"(${dis['edg60000']}\\%$ of the processed ratings, against ${dis['otc']}\\%$ and ${dis['alpha']}\\%$)", 'Epinions-D, distrust share'),
+        (f"(AUC ${auc['edg60000']:.2f}$ against ${auc['otc']:.2f}$ and ${auc['alpha']:.2f}$)", 'Epinions-D, accuracy'),
     ]
 
 
@@ -92,6 +156,9 @@ def every_model_failures(C: dict) -> list:
     return bad
 
 
+PLACEMENT_SUPP = []   # placement checks whose sentences live in the supplement (filled by placement_checks)
+
+
 def placement_checks() -> list:
     lin = {'otc': load('p0_linchpin.json')['otc'], 'alpha': load('p0_linchpin.json')['alpha'],
            'edg60000': load('p0_linchpin_edgfull.json')['edg60000']}
@@ -102,12 +169,15 @@ def placement_checks() -> list:
     lam = [so['sweep_label_delta'][f's{i}'] for i in range(7)]
     drs = [so['sweep_dr'][f's{i}'] for i in range(7)]
     assert max(lam) == lam[6] and min(drs) == drs[6], 'OTC sweep is not largest at s6'
-    return [
-        (f"whereas the same edge inserted in-window shifts it by ${max(inw):.2f}$ to ${min(inw):.2f}$", 'intro in-window range'),
-        (f"Out-of-window, the mean shift is ${lin['otc']['appended_mean_dr']:+.3f}$ on OTC, ${lin['alpha']['appended_mean_dr']:+.3f}$ on Alpha, and ${lin['edg60000']['appended_mean_dr']:+.3f}$ on Epinions-D", 'out-of-window shifts'),
-        (f"In-window, the same edges shift reputation by ${lin['otc']['processed_mean_dr']:.2f}$, ${lin['alpha']['processed_mean_dr']:.2f}$, and ${lin['edg60000']['processed_mean_dr']:.2f}$, with $\\ls={lin['otc']['processed_label_delta']:.2f}$, ${lin['alpha']['processed_label_delta']:.2f}$, and ${lin['edg60000']['processed_label_delta']:.2f}$.", 'in-window shifts'),
+    # The sweep ranges moved to Supplement F with the 2026-11-22 case-study revision (supplement checks).
+    PLACEMENT_SUPP.extend([
         (f"on OTC, $\\ls$ lies between ${min(lam):.2f}$ and ${max(lam):.2f}$ and the shift between ${max(drs):.2f}$ and ${min(drs):.2f}$", 'OTC sweep range'),
         (f"the shift is ${ss['sweep_dr']['s6']:.2f}$ at $s_6$ and ${ss['sweep_dr']['appended']:.3f}$ out-of-window", 'Epinions-S sweep'),
+    ])
+    return [
+        (f"whereas the same edge in-window shifts it by ${max(inw):.2f}$ to ${min(inw):.2f}$", 'intro in-window range'),
+        (f"Out-of-window, the mean shift is ${lin['otc']['appended_mean_dr']:+.3f}$ on OTC, ${lin['alpha']['appended_mean_dr']:+.3f}$ on Alpha, and ${lin['edg60000']['appended_mean_dr']:+.3f}$ on Epinions-D", 'out-of-window shifts'),
+        (f"In-window, the same edges shift reputation by ${lin['otc']['processed_mean_dr']:.2f}$, ${lin['alpha']['processed_mean_dr']:.2f}$, and ${lin['edg60000']['processed_mean_dr']:.2f}$, with $\\ls={lin['otc']['processed_label_delta']:.2f}$, ${lin['alpha']['processed_label_delta']:.2f}$, and ${lin['edg60000']['processed_label_delta']:.2f}$.", 'in-window shifts'),
         (f"a trust edge shifts reputation by ${so['sign_trust']:+.2f}$, a neutral edge by ${so['sign_neutral']:+.2f}$, and a distrust edge by ${so['sign_distrust']:+.2f}$ on OTC; on Alpha the three shifts are ${sa['sign_trust']:+.2f}$, ${sa['sign_neutral']:+.2f}$, and ${sa['sign_distrust']:+.2f}$", 'sign control'),
     ]
 
@@ -117,7 +187,7 @@ def statistics_checks(ST: dict) -> list:
     deltas = [ST[d][k]['cliffs_delta'] for d in ('otc', 'alpha') for k in ('appended_vs_inwindow', 'distrust_vs_trust')]
     return [
         (f"by a median of ${-o['appended_vs_inwindow']['median']:.2f}$ (OTC) and ${-a['appended_vs_inwindow']['median']:.2f}$ (Alpha), and the distrust label shifts reputation further down than the trust label by a median of ${-o['distrust_vs_trust']['median']:.2f}$ and ${-a['distrust_vs_trust']['median']:.2f}$, in every run", 'paired medians'),
-        (f"(Cliff's $\\delta$ between ${min(deltas):.2f}$ and ${max(deltas):.2f}$;", 'Cliff delta range'),
+        (f"where it is higher, between ${min(deltas):.2f}$ and ${max(deltas):.2f}$;", 'Cliff delta range'),
         (f"sign-test $p={o['appended_vs_zero']['seed_sign_test_p']:.2f}$ and ${a['appended_vs_zero']['seed_sign_test_p']:.2f}$", 'out-of-window null p'),
         (f"(${o['appended_vs_inwindow']['n_pooled']}$ target-run pairs per dataset)", 'paired n'),
     ]
@@ -134,12 +204,13 @@ def strata_checks() -> list:
     reps = load('reputation_baselines_otc.json')['otc']
     plain_all, decayed_all = load('p0d_otcalpha.json'), load('p0d_decayed.json')
     plain = plain_all['otc']
+    rerun = load_rev('budget_ablation_otc.json')['e4_reproduction']['B1']['flip_tot_pct']   # rerun of E4, Supplement K
     td = lambda d, cell_key, src: f"{100 * src[d][cell_key]['flip_rate_optimized']:.0f}"
     return checks + [
         (f"Epinions-D & Low & {row(dated, 'low')}\\\\", 'strata table, Epinions-D'),
         (f"one optimized edge flips ${cell(o, 'low', 1, 'preexist')}\\%$ (OTC) and ${cell(a, 'low', 1, 'preexist')}\\%$ (Alpha) of the targets under the propagation-only score", 'low stratum B=1'),
         (f"At $B=5$ the total rate reaches ${cell(o, 'low', 5, 'total')}\\%$ and ${cell(a, 'low', 5, 'total')}\\%$, whereas the propagation-only rate falls to ${cell(o, 'low', 5, 'preexist')}\\%$ and ${cell(a, 'low', 5, 'preexist')}\\%$", 'low stratum B=5'),
-        (f"is ${cell(o, 'low', 1, 'total')}\\%$ in E4 (Table~\\ref{{tab:flip}}), ${reps['low|mean_opt|gdte_mean_total|B1']['flip_pct']:.0f}\\%$ in the low-stratum experiment of the supplement (Table~\\ref{{S-tab:s-repbase}}), and ${100 * plain['low_B1']['flip_rate_optimized']:.0f}\\%$ in E12", 'single-run variation'),
+        (f"is ${cell(o, 'low', 1, 'total')}\\%$ in E4 (Table~\\ref{{tab:flip}}), ${rerun:.0f}\\%$ in its rerun, ${reps['low|mean_opt|gdte_mean_total|B1']['flip_pct']:.0f}\\%$ in the low-stratum experiment of the supplement (Table~\\ref{{S-tab:s-repbase}}), and ${100 * plain['low_B1']['flip_rate_optimized']:.0f}\\%$ in E12", 'single-run variation'),
         (f"the mean propagation-only shift of the low stratum shrinks as well (OTC from ${o['low_B1']['dR_preexist']:.3f}$ to ${o['low_B5']['dR_preexist']:.3f}$, Alpha from ${a['low_B1']['dR_preexist']:.3f}$ to ${a['low_B5']['dR_preexist']:.3f}$)", 'low-stratum shift by budget'),
         (f"raises the total flip rate of one optimized edge on the low stratum from ${td('otc', 'low_B1', plain_all)}\\%$ to ${td('otc', 'low_B1', decayed_all)}\\%$ on OTC and from ${td('alpha', 'low_B1', plain_all)}\\%$ to ${td('alpha', 'low_B1', decayed_all)}\\%$ on Alpha, and that of five edges on the moderate stratum from ${td('otc', 'moderate_B5', plain_all)}\\%$ to ${td('otc', 'moderate_B5', decayed_all)}\\%$ and from ${td('alpha', 'moderate_B5', plain_all)}\\%$ to ${td('alpha', 'moderate_B5', decayed_all)}\\%$", 'time decay'),
     ]
@@ -177,13 +248,15 @@ def mechanism_checks(MK: dict, CS: dict) -> list:
         (f"(Wilson ${co['common_by_raters']['>10']['wilson|B1']['pct']:.1f}\\%$ and ${ca['common_by_raters']['>10']['wilson|B1']['pct']:.1f}\\%$)", 'Wilson, more than ten raters'),
         (f"while GDTE still flips ${big(co, 'gdte_mean_total')}\\%$ and ${big(ca, 'gdte_mean_total')}\\%$ under the total score and ${big(co, 'gdte_mean_prop')}\\%$ and ${big(ca, 'gdte_mean_prop')}\\%$ under the propagation-only score", 'GDTE, more than ten raters'),
         (f"(${pct(fn(co, 'gdte_median_prop', 'B1'))}\\%$ and ${pct(fn(ca, 'gdte_median_prop', 'B1'))}\\%$ under the propagation-only score, against ${pct(fn(co, 'gdte_mean_prop', 'B1'))}\\%$ and ${pct(fn(ca, 'gdte_mean_prop', 'B1'))}\\%$ for the mean)", 'median aggregation'),
-        (f"The Wilson bound then flips ${pct(fn(co, 'wilson', 'B5'))}\\%$ of both common sets, more than GDTE under the total score (${pct(fn(co, 'gdte_mean_total', 'B5'))}\\%$ and ${pct(fn(ca, 'gdte_mean_total', 'B5'))}\\%$); FG, the Beta mean, and the trust fraction flip ${min(others):.0f}$ to ${max(others):.0f}\\%$. Under the propagation-only score GDTE flips ${pct(fn(co, 'gdte_mean_prop', 'B5'))}\\%$ and ${pct(fn(ca, 'gdte_mean_prop', 'B5'))}\\%$", 'common set B=5'),
+        (f"At $B=5$ the Wilson bound flips ${pct(fn(co, 'wilson', 'B5'))}\\%$ of both common sets, more than GDTE under the total score (${pct(fn(co, 'gdte_mean_total', 'B5'))}\\%$ and ${pct(fn(ca, 'gdte_mean_total', 'B5'))}\\%$); FG, the Beta mean, and the trust fraction flip ${min(others):.0f}$ to ${max(others):.0f}\\%$. Under the propagation-only score GDTE flips ${pct(fn(co, 'gdte_mean_prop', 'B5'))}\\%$ and ${pct(fn(ca, 'gdte_mean_prop', 'B5'))}\\%$", 'common set B=5'),
     ]
 
 
-def deployment_checks() -> list:
-    PM, CR, RG = load('poison_matrix_s5.json'), load('causal_retrain_s5.json'), load('causal_regimes.json')
-    ctl = lambda d, k: PM[d]['matrix']['controls'][k]
+def moved_regime_checks() -> list:
+    """The first, single-run placement comparison of E8 (out, in and sliding rows). The paired
+    ten-run test replaced it in the paper; the table and its sentences moved to Supplement J, so
+    these checks run against the supplement."""
+    RG, SP = load('causal_regimes.json'), load('sliding_placebo.json')
 
     def rate(v: dict, key: str) -> str:
         # The JSON stores rates rounded to one decimal. Rounding that value again can be off by
@@ -201,23 +274,212 @@ def deployment_checks() -> list:
         rows.append((f"& out & 1 & ${v['n_eligible']}$ & ${rate(v, 'flip_naive_pct')}$ & ${rate(v, 'flip_legit_pct')}$ &", f'regime table, {d} out'))
     ro, ra = RG['otc'], RG['alpha']
     legit = lambda r, key: rate(r[key], 'flip_legit_pct')
-    assert all(round(PM[d]['matrix']['retrain_std_clean'], 2) == 0.05 for d in ('otc', 'alpha')), 'poisoning spread is not about 0.05'
-
-    def retrain(d: str) -> str:
-        c = CR[d]['causal_retrain']
-        per = [100 * s['k_flip'] / s['n_eligible'] for s in c['per_seed'].values()]
-        return f"(${c['k_flip']}/{c['n_eligible']}$ pooled; ${min(per):.0f}$ to ${max(per):.0f}\\%$ per run; mean shift ${c['mean_dR']:.2f}$)"
-
+    assert max(RG[d][k]['label_delta'] for d in RG for k in ('appended_B1', 'appended_B5')) < 1e-7, "'a silent no-op (Lambda < 10^-7)' not supported"
     return rows + [
         (f"the propagation-only flip rate is ${legit(ro, 'inwindow_s6_B1')}\\%$ in both cases on OTC, and ${legit(ra, 'sliding_s7_B1')}\\%$ against ${legit(ra, 'inwindow_s6_B1')}\\%$ on Alpha; with five edges it is ${legit(ro, 'sliding_s7_B5')}\\%$ against ${legit(ro, 'inwindow_s6_B5')}\\%$, and ${legit(ra, 'sliding_s7_B5')}\\%$ against ${legit(ra, 'inwindow_s6_B5')}\\%$.", 'sliding vs in-window'),
         (f"Within the sampling error of ${min(r[k]['n_eligible'] for r in (ro, ra) for k in r)}$ to ${max(r[k]['n_eligible'] for r in (ro, ra) for k in r)}$ targets", 'sliding eligible n'),
-        (f"flip ${100 * CR['otc']['causal_retrain']['k_flip'] / CR['otc']['causal_retrain']['n_eligible']:.0f}\\%$ of the eligible OTC target-run pairs {retrain('otc')} and ${100 * CR['alpha']['causal_retrain']['k_flip'] / CR['alpha']['causal_retrain']['n_eligible']:.0f}\\%$ on Alpha {retrain('alpha')}", 'retraining'),
+        (f"shifts the clean reputation of these targets by a mean of ${SP['otc']['placebo_mean']:.2f}$ (OTC) and ${SP['alpha']['placebo_mean']:.2f}$ (Alpha)", 'sliding-window placebo'),
+    ]
+
+
+def prospective_checks() -> tuple:
+    """Paired sliding-window test of E8 (Section VI-F, Table VIII) and its table of runs
+    (Supplement J). Returns (paper checks, supplement checks)."""
+    P = {d: load_rev(f'prospective_paired_{d}.json') for d in ('otc', 'alpha')}
+    V = {d: P[d]['verdict'] for d in P}
+    assert not any(V[d][f'B{b}']['useful_proxy'] for d in P for b in (1, 5)), "'Neither graph meets this criterion' no longer holds"
+    assert all(V['otc'][f'B{b}']['flip_within_margin'] and not V['otc'][f'B{b}']['shift_within_margin']
+               and not V['alpha'][f'B{b}']['flip_within_margin'] for b in (1, 5)), "'agree within the margin on OTC but not on Alpha' no longer holds"
+
+    def run(d: str, b: int, key: str) -> tuple:
+        """Mean over runs and interval of a per-run value, as the script stored it per run."""
+        per = [m[key] for m in P[d]['summary'][f'B{b}']['per_seed'].values()]
+        return (float(np.mean(per)),) + seed_ci(per)
+
+    def per_run(rows: list, b: int) -> dict:
+        """Per-run values recomputed from the per-target rows (the supplement table of runs)."""
+        cells = {reg: [r[f'{reg}_B{b}'] for r in rows] for reg in ('inwindow_s6', 'sliding_s7')}
+        flips = {reg: [c['R_prop'] < 0.5 for c in cs] for reg, cs in cells.items()}
+        return {'n': len(rows), 'agree': float(np.mean([a == s for a, s in zip(flips['inwindow_s6'], flips['sliding_s7'])])),
+                'clean_slide': float(np.mean([r['R0_slide'] - r['R0_in'] for r in rows])),
+                **{f'{short}_{k}': v for reg, short in (('inwindow_s6', 'in'), ('sliding_s7', 'slide')) for k, v in (
+                    ('flip', 100 * float(np.mean(flips[reg]))), ('dR', float(np.mean([c['R_prop'] - c['R0'] for c in cells[reg]]))))}}
+
+    for d in P:
+        for b in (1, 5):
+            assert run(d, b, 'slide_dR_prop')[0] < run(d, b, 'in_dR_prop')[0], f'in-window no longer understates the drop: {d} B={b}'
+    table = []
+    for d, name in (('otc', 'OTC'), ('alpha', 'Alpha')):
+        for b in (1, 5):
+            f, s = run(d, b, 'diff_flip_prop'), run(d, b, 'diff_dR_prop')
+            table.append((f"{name if b == 1 else ''} & {b} & ${run(d, b, 'in_flip_prop')[0]:.1f}$ & ${run(d, b, 'slide_flip_prop')[0]:.1f}$ & ${f[0]:+.1f}$ [${f[1]:.1f}$, ${f[2]:.1f}$] & ${s[0]:.3f}$ [${s[1]:.3f}$, ${s[2]:.3f}$]\\\\", f'paired table, {d} B={b}'))
+    margin = P['otc']['prereg']['margins']
+    lam = [P[d]['summary'][f'B{b}']['across_seeds'][k]['mean'] for d in P for b in (1, 5) for k in ('in_Lambda', 'slide_Lambda')]
+    shift = {d: float(np.mean([s['mean_slide_shift_of_clean_R_on_targets'] for s in P[d]['per_seed']])) for d in P}
+    pairs = {d: P[d]['summary']['B1']['n_target_seed_pairs'] for d in P}
+    one = lambda d, k: run(d, 1, k)[0]
+    paper = table + [
+        (f"(${pairs['otc']}$ target-run pairs on OTC, ${pairs['alpha']}$ on Alpha)", 'paired test, pairs'),
+        (f"lie within $\\pm{margin['flip_prop_pp']:.0f}$ percentage points for the propagation-only flip rate and within $\\pm{margin['mean_shift_prop']}$ for the mean propagation-only shift", 'paired test, criterion'),
+        (f"with one edge, ${one('otc', 'in_dR_prop'):.3f}$ against ${one('otc', 'slide_dR_prop'):.3f}$ (OTC) and ${one('alpha', 'in_dR_prop'):.3f}$ against ${one('alpha', 'slide_dR_prop'):.3f}$ (Alpha)", 'paired test, mean shifts'),
+        (f"raises these targets' clean score by ${shift['alpha']:.3f}$ on average (${shift['otc']:.3f}$ on OTC; not declared in advance;", 'paired test, clean score after the slide'),
+    ]
+    supp, runs = [], {d: [per_run(s['rows'], 1) for s in P[d]['per_seed']] for d in P}
+    for d, name in (('otc', 'OTC'), ('alpha', 'Alpha')):
+        for i, (s, m) in enumerate(zip(P[d]['per_seed'], runs[d])):
+            supp.append((f"{name if i == 0 else ''} & {s['seed']} & ${m['n']}$ & ${m['in_flip']:.1f}$ & ${m['slide_flip']:.1f}$ & ${m['in_dR']:+.3f}$ & ${m['slide_dR']:+.3f}$ & ${m['clean_slide']:+.3f}$\\\\", f'paired runs table, {d} seed {s["seed"]}'))
+    span = lambda d: (min(m['clean_slide'] for m in runs[d]), max(m['clean_slide'] for m in runs[d]))
+    agree = {d: 100 * float(np.mean([m['agree'] for m in runs[d]])) for d in P}
+    supp += [
+        (f"by ${shift['otc']:+.3f}$ (OTC) and ${shift['alpha']:+.3f}$ (Alpha) on average over runs (per run ${span('otc')[0]:+.3f}$ to ${span('otc')[1]:+.3f}$ and ${span('alpha')[0]:+.3f}$ to ${span('alpha')[1]:+.3f}$)", 'paired test, clean score after the slide per run'),
+        (f"agree on whether a target flips in ${agree['otc']:.0f}\\%$ (OTC) and ${agree['alpha']:.0f}\\%$ (Alpha) of the pairs", 'paired test, per-target agreement'),
+        # moved from Section VI-F to Supplement J with the 2026-11-22 case-study revision
+        (f"Under the total score one edge flips ${one('otc', 'in_flip_tot'):.1f}\\%$ in-window and ${one('otc', 'slide_flip_tot'):.1f}\\%$ sliding on OTC, and ${one('alpha', 'in_flip_tot'):.1f}\\%$ and ${one('alpha', 'slide_flip_tot'):.1f}\\%$ on Alpha; $\\ls$ is ${min(lam):.2f}$ to ${max(lam):.2f}$ throughout.", 'paired test, total score and label sensitivity'),
+    ]
+    return paper, supp
+
+
+def retraining_checks() -> tuple:
+    """E8 retraining and E9 poisoning controls rerun with both scores (retrain_prop.json), next to
+    their earlier total-only runs. Returns (paper checks, supplement checks)."""
+    R, CR, PM = load_rev('retrain_prop.json'), load('causal_retrain_s5.json'), load('poison_matrix_s5.json')
+
+    def seeds(d: str, b: int) -> dict:
+        """Per seed: eligible pairs, flips under both scores, mean shifts of the eligible pairs."""
+        c, out = R[d]['causal_retrain'], {}
+        for sd, raw in c['raw'].items():
+            clean, att = raw['clean'], raw[f'B{b}']
+            el = [str(v) for v in c['victims'] if clean[str(v)][0] >= 0.5]
+            out[sd] = {'n': len(el), 'kt': sum(att[v][0] < 0.5 for v in el), 'kp': sum(att[v][1] < 0.5 for v in el),
+                       'dt': float(np.mean([att[v][0] - clean[v][0] for v in el])), 'dp': float(np.mean([att[v][1] - clean[v][0] for v in el]))}
+            js = c[f'B{b}']['per_seed'][sd]
+            assert (out[sd]['n'], out[sd]['kt'], out[sd]['kp']) == (js['n_eligible'], js['k_flip_tot'], js['k_flip_prop']), (d, b, sd)
+        return out
+
+    S = {(d, b): seeds(d, b) for d in ('otc', 'alpha') for b in (1, 5)}
+    tot = lambda d, b, k: sum(s[k] for s in S[(d, b)].values())
+    rate = lambda d, b, k: f"{100 * tot(d, b, k) / tot(d, b, 'n'):.0f}"
+    mean = lambda d, b, k: float(np.mean([s[k] for s in S[(d, b)].values()]))
+    ci = lambda d, b: seed_ci([s['dp'] for s in S[(d, b)].values()])
+    n = {tot(d, b, 'n') for d in ('otc', 'alpha') for b in (1, 5)}
+    assert len(n) == 1, f'eligible pairs differ between datasets or budgets: {n}'
+    assert all(ci(d, 5)[1] < 0 for d in ('otc', 'alpha')), "'the model's response survives retraining' (B=5) not supported"
+    assert all(ci(d, 1)[0] < 0 < ci(d, 1)[1] for d in ('otc', 'alpha')), "'indistinguishable from zero' (B=1) not supported"
+    old = {d: CR[d]['causal_retrain'] for d in ('otc', 'alpha')}
+    assert all(old[d]['per_seed'][sd]['n_eligible'] == S[(d, 5)][sd]['n'] for d in old for sd in old[d]['per_seed']), 'the two retraining runs have different eligible pairs'
+
+    def poison(d: str, c: str, score: int) -> float:
+        """Mean shift over all 24 targets and five seeds against the clean retraining of the same seed."""
+        raw = R[d]['poison_matrix']['raw']
+        return float(np.mean([np.mean([raw[c][sd][v][score] - raw['none'][sd][v][0] for v in raw['none'][sd]]) for sd in raw['none']]))
+    conditions = (('dis_victim', 'distrust on every target ($s_6$)'), ('tru_victim', 'trust on every target (label control)'),
+                  ('dis_unrelated', 'distrust on one target (placebo)'), ('dis_randsnap', 'distrust, random processed snapshot'))
+    first = lambda d, c: PM[d]['matrix']['controls'][c]['dR_vs_none']
+    assert max(abs(first(d, c) - poison(d, c, 0)) for d in ('otc', 'alpha') for c, _ in conditions) < 0.005, "'total shifts within 0.005 of the first run' not supported"
+    dis = {d: R[d]['poison_matrix']['controls']['dis_victim'] for d in ('otc', 'alpha')}
+    pflip = lambda d: 100 * sum(s['k_flip_prop'] for s in dis[d]['per_seed'].values()) / dis[d]['pooled_n_eligible']
+    paper = [
+        (f"after retraining, five edges still flip ${rate('otc', 5, 'kp')}\\%$ (OTC) and ${rate('alpha', 5, 'kp')}\\%$ (Alpha) of the targets under the propagation-only score", 'intro, retraining'),
+        (f"(${n.pop()}$ eligible target-run pairs per dataset)", 'retraining, pairs'),
+        (f"Five edges per target flip ${rate('otc', 5, 'kt')}\\%$ (OTC) and ${rate('alpha', 5, 'kt')}\\%$ (Alpha) of the pairs under the total score (mean shift ${mean('otc', 5, 'dt'):.2f}$ and ${mean('alpha', 5, 'dt'):.2f}$) and ${rate('otc', 5, 'kp')}\\%$ and ${rate('alpha', 5, 'kp')}\\%$ under the propagation-only score (${mean('otc', 5, 'dp'):.2f}$ and ${mean('alpha', 5, 'dp'):.2f}$), so the model's response survives retraining", 'retraining, five edges'),
+        (f"One edge flips ${rate('otc', 1, 'kt')}\\%$ and ${rate('alpha', 1, 'kt')}\\%$ (total) and ${rate('otc', 1, 'kp')}\\%$ and ${rate('alpha', 1, 'kp')}\\%$ (propagation-only); its mean propagation-only shift is indistinguishable from zero.", 'retraining, one edge'),
+        (f"A rerun with both scores gives propagation-only shifts of ${poison('otc', 'dis_victim', 1):.2f}$ and ${poison('alpha', 'dis_victim', 1):.2f}$ under distrust, ${poison('otc', 'tru_victim', 1):+.2f}$ and ${poison('alpha', 'tru_victim', 1):+.2f}$ with the edges labeled trust, and ${poison('otc', 'dis_unrelated', 1):.2f}$ and ${poison('alpha', 'dis_unrelated', 1):.2f}$ for the placebo, with ${pflip('otc'):.1f}\\%$ and ${pflip('alpha'):.1f}\\%$ propagation-only flips under distrust.", 'poisoning, propagation-only rerun'),
+    ]
+    supp = []
+    for d, name in (('otc', 'OTC'), ('alpha', 'Alpha')):
+        for i, sd in enumerate(S[(d, 5)]):
+            a, b, o = S[(d, 5)][sd], S[(d, 1)][sd], old[d]['per_seed'][sd]
+            supp.append((f"{name if i == 0 else ''} & {sd} & ${a['n']}$ & ${a['kt']}$ & ${a['kp']}$ & ${a['dt']:.3f}$ & ${a['dp']:.3f}$ & ${b['kt']}$ & ${b['kp']}$ & ${o['k_flip']}$ & ${o['mean_dR']:.3f}$\\\\", f'retraining table, {d} seed {sd}'))
+        supp.append((f" & all & ${tot(d, 5, 'n')}$ & ${tot(d, 5, 'kt')}$ & ${tot(d, 5, 'kp')}$ & ${mean(d, 5, 'dt'):.3f}$ & ${mean(d, 5, 'dp'):.3f}$ & ${tot(d, 1, 'kt')}$ & ${tot(d, 1, 'kp')}$ & ${old[d]['k_flip']}$ & ${float(np.mean([o['mean_dR'] for o in old[d]['per_seed'].values()])):.3f}$\\\\", f'retraining table, {d} all runs'))
+    for c, label in conditions:
+        cells = ' & '.join(f"${first(d, c):+.3f}$ & ${poison(d, c, 0):+.3f}$ & ${poison(d, c, 1):+.3f}$" for d in ('otc', 'alpha'))
+        supp.append((f"{label} & {cells}\\\\", f'poisoning table, {c}'))
+    supp.append((f"propagation-only score flip ${pflip('otc'):.1f}\\%$ (OTC) and ${pflip('alpha'):.1f}\\%$ (Alpha) of the pairs", 'poisoning, propagation-only flips (supplement)'))
+    # moved from Section VI-F to Supplement I with the 2026-11-22 case-study revision
+    supp.append((f"the earlier run, scored with the total score only, agreed with the rerun (${100 * old['otc']['k_flip'] / old['otc']['n_eligible']:.0f}\\%$ and ${100 * old['alpha']['k_flip'] / old['alpha']['n_eligible']:.0f}\\%$ of the pairs flip at $B=5$;", 'retraining, earlier total-only run'))
+    return paper, supp
+
+
+def budget_checks() -> tuple:
+    """Budget ablation of E4 (Sections VI-B and VI-C; Supplement K). The paper states its
+    conclusions without numbers, so the assertions below guard them; the supplement states the
+    numbers. Returns (paper checks, supplement checks)."""
+    BA = {d: load_rev(f'budget_ablation_{d}.json') for d in ('otc', 'alpha')}
+    rules = (('random', 'random (pool order)'), ('topB_tot', 'top $B$ by total shift'), ('topB_prop', 'top $B$ by prop.-only shift'),
+             ('greedy_tot', 'greedy by total score'), ('greedy_prop', 'greedy by prop.-only score'))
+    recs = {d: BA[d]['ablation']['targets'] for d in BA}
+
+    def cell(d: str, rule: str, b: int) -> tuple:
+        """Propagation-only flip rate (%) and mean propagation-only shift of one rule and budget."""
+        x = [r['rules'][rule][b - 1] for r in recs[d]]
+        return 100 * float(np.mean([v['R_prop'] < 0.5 for v in x])), float(np.mean([v['dR_prop'] for v in x]))
+
+    def fit(d: str, own_s6: bool, predict) -> float:
+        """R^2 of a prediction of the B-edge propagation-only shift (B >= 2) from the single-edge shifts."""
+        obs, pred = [], []
+        for r in recs[d]:
+            if (r['s6_in'] > 0) != own_s6:
+                continue
+            for rule, _ in rules:
+                for v in r['rules'][rule][1:]:
+                    obs.append(v['dR_prop'])
+                    pred.append(predict([r['singles'][str(s)]['dR_prop'] for s in v['srcs']]))
+        obs, pred = np.asarray(obs), np.asarray(pred)
+        return float(1 - np.sum((obs - pred) ** 2) / np.sum((obs - obs.mean()) ** 2))
+
+    e4 = lambda d, b, k: BA[d]['e4_reproduction'][f'B{b}'][k]
+    e4_shift = lambda d, b: float(np.mean([r['R_prop'] - r['R0'] for r in BA[d]['e4_reproduction'][f'B{b}']['rows']]))
+    assert e4('alpha', 5, 'flip_prop_pct') < e4('alpha', 1, 'flip_prop_pct') and e4('otc', 5, 'flip_prop_pct') >= e4('otc', 1, 'flip_prop_pct'), "'reproduced on Alpha but not on OTC' no longer holds"
+    assert all(cell(d, 'random', 5)[0] >= cell(d, 'random', 1)[0] for d in BA), "'random sources show no fall' no longer holds"
+    assert all(cell('alpha', r, 5)[0] < cell('alpha', r, 1)[0] for r in ('topB_prop', 'greedy_prop')), "'choosing by propagation-only effect does not remove it' no longer holds"
+    mean_fit = {d: fit(d, False, np.mean) for d in BA}
+    assert len({cell('alpha', r, 1)[0] for r, _ in rules[1:]}) == 1, "'every model-based rule falls from one rate' needs equal B=1 rates"
+    assert min(mean_fit.values()) >= 0.975, f"'close to the mean of their single-edge shifts' not supported: {mean_fit}"
+    terms = {d: [(v['rater_logit_mean'], v['tgt_logit']) for r in recs[d] for rule, _ in rules for v in r['rules'][rule]] for d in BA}
+    share = {d: float(np.sum(np.abs([a for a, _ in terms[d]])) / np.sum(np.abs([t for _, t in terms[d]]))) for d in BA}
+    by_cell = {d: max(abs(np.mean([r['rules'][rule][b]['rater_logit_mean'] for r in recs[d]])) / abs(np.mean([r['rules'][rule][b]['tgt_logit'] for r in recs[d]]))
+                      for rule, _ in rules for b in range(5)) for d in BA}
+    assert max(by_cell.values()) < 0.01, f"'on average less than 1%' not supported: {by_cell}"
+    moved = [float(np.mean([r['rules'][rule][b]['rater_moved_frac'] for r in recs[d]])) for d in BA for rule, _ in rules for b in range(5)]
+    no_s6 = {d: float(np.mean([r['s6_in'] == 0 for r in recs[d]])) for d in BA}
+    supp = []
+    for d, name in (('otc', 'OTC'), ('alpha', 'Alpha')):
+        supp.append((f"{name} & E4 rerun, total & ${e4(d, 1, 'flip_tot_pct'):.0f}$ & & ${e4(d, 3, 'flip_tot_pct'):.0f}$ & & ${e4(d, 5, 'flip_tot_pct'):.0f}$ & & \\\\", f'budget table, {d} E4 rerun total'))
+        supp.append((f" & E4 rerun, prop.-only & ${e4(d, 1, 'flip_prop_pct'):.0f}$ & & ${e4(d, 3, 'flip_prop_pct'):.0f}$ & & ${e4(d, 5, 'flip_prop_pct'):.0f}$ & ${e4_shift(d, 1):+.3f}$ & ${e4_shift(d, 5):+.3f}$\\\\", f'budget table, {d} E4 rerun prop'))
+        for rule, label in rules:
+            flips = ' & '.join(f"${cell(d, rule, b)[0]:.0f}$" for b in range(1, 6))
+            supp.append((f" & {label} & {flips} & ${cell(d, rule, 1)[1]:+.3f}$ & ${cell(d, rule, 5)[1]:+.3f}$\\\\", f'budget table, {d} {rule}'))
+    supp += [
+        (f"reproduces the fall on Alpha (${e4('alpha', 1, 'flip_prop_pct'):.0f}$, ${e4('alpha', 3, 'flip_prop_pct'):.0f}$, and ${e4('alpha', 5, 'flip_prop_pct'):.0f}\\%$ at $B=1$, $3$, and $5$) but not on OTC (${e4('otc', 1, 'flip_prop_pct'):.0f}$, ${e4('otc', 3, 'flip_prop_pct'):.0f}$, and ${e4('otc', 5, 'flip_prop_pct'):.0f}\\%$)", 'budget, E4 rerun'),
+        (f"On Alpha every model-based rule falls from ${min(cell('alpha', r, 1)[0] for r, _ in rules[1:]):.0f}\\%$ at $B=1$ to ${min(cell('alpha', r, 5)[0] for r, _ in rules[1:]):.0f}$ to ${max(cell('alpha', r, 5)[0] for r, _ in rules[1:]):.0f}\\%$ at $B=5$", 'budget, Alpha selection'),
+        (f"on OTC none falls by more than ${max(cell('otc', r, 1)[0] - cell('otc', r, 5)[0] for r, _ in rules[1:]):.0f}$ points", 'budget, OTC selection'),
+        (f"Random sources show no fall on either graph (OTC ${cell('otc', 'random', 1)[0]:.0f}$ to ${cell('otc', 'random', 5)[0]:.0f}\\%$, Alpha ${cell('alpha', 'random', 1)[0]:.0f}$ to ${cell('alpha', 'random', 5)[0]:.0f}\\%$)", 'budget, random sources'),
+        (f"(${100 * no_s6['otc']:.0f}\\%$ of the OTC and ${100 * no_s6['alpha']:.0f}\\%$ of the Alpha targets)", 'budget, targets without other s6 ratings'),
+        (f"($R^2={mean_fit['otc']:.2f}$ on OTC and ${mean_fit['alpha']:.2f}$ on Alpha, over all rules and budgets), less well by the shift of the first source alone (${fit('otc', False, lambda s: s[0]):.2f}$ and ${fit('alpha', False, lambda s: s[0]):.2f}$), and not at all by their sum ($R^2$ below ${np.ceil(max(fit(d, False, np.sum) for d in BA)):.0f}$)", 'budget, dilution fits'),
+        (f"the mean of the single-edge shifts fits less well ($R^2={fit('otc', True, np.mean):.2f}$ and ${fit('alpha', True, np.mean):.2f}$)", 'budget, targets with other s6 ratings'),
+        (f"the mean absolute raters' term is ${100 * share['otc']:.1f}\\%$ (OTC) and ${100 * share['alpha']:.1f}\\%$ (Alpha) of the mean absolute target term, and at most ${100 * max(by_cell.values()):.1f}\\%$ for any rule and budget", 'budget, raters term'),
+        (f"only ${100 * min(moved):.0f}$ to ${100 * max(moved):.0f}\\%$ of the raters' embeddings move", 'budget, raters that move'),
+    ]
+    return [], supp
+
+
+def deployment_checks() -> tuple:
+    PM = load('poison_matrix_s5.json')
+    ctl = lambda d, k: PM[d]['matrix']['controls'][k]
+    assert all(round(PM[d]['matrix']['retrain_std_clean'], 2) == 0.05 for d in ('otc', 'alpha')), 'poisoning spread is not about 0.05'
+    # The single-run placement table and the total-only retraining sentence left the paper with the
+    # 2026-11-22 revision: moved_regime_checks() and retraining_checks() hold their numbers now.
+    paper = [
         (f"Distrust edges shift their mean total score by ${ctl('otc', 'dis_victim')['dR_vs_none']:.2f}$ (OTC) and ${ctl('alpha', 'dis_victim')['dR_vs_none']:.2f}$ (Alpha)", 'poisoning shift'),
-        (f"and ${ctl('otc', 'dis_victim')['flip_pct']:.0f}\\%$ and ${ctl('alpha', 'dis_victim')['flip_pct']:.0f}\\%$ of the target-run pairs flip", 'poisoning flips'),
-        (f"shift the score by ${ctl('otc', 'tru_victim')['dR_vs_none']:+.2f}$ and ${ctl('alpha', 'tru_victim')['dR_vs_none']:+.2f}$", 'poisoning trust control'),
         (f"by only ${ctl('otc', 'dis_unrelated')['dR_vs_none']:.2f}$ and ${ctl('alpha', 'dis_unrelated')['dR_vs_none']:.2f}$", 'poisoning placebo'),
+    ]
+    # Moved from Section VI-F to Supplement I with the 2026-11-22 case-study revision (first, total-only run).
+    supp = [
+        (f"shift the mean total score by ${ctl('otc', 'dis_victim')['dR_vs_none']:.2f}$ (OTC) and ${ctl('alpha', 'dis_victim')['dR_vs_none']:.2f}$ (Alpha), and ${ctl('otc', 'dis_victim')['flip_pct']:.0f}\\%$ and ${ctl('alpha', 'dis_victim')['flip_pct']:.0f}\\%$ of the target-run pairs flip", 'poisoning flips'),
+        (f"shift the score by ${ctl('otc', 'tru_victim')['dR_vs_none']:+.2f}$ and ${ctl('alpha', 'tru_victim')['dR_vs_none']:+.2f}$", 'poisoning trust control'),
         (f"are as damaging (${ctl('otc', 'dis_randsnap')['dR_vs_none']:.2f}$, ${ctl('alpha', 'dis_randsnap')['dR_vs_none']:.2f}$)", 'poisoning random snapshot'),
     ]
+    return paper, supp
 
 
 def source_checks() -> list:
@@ -231,19 +493,25 @@ def source_checks() -> list:
     assert out['edg60000'] >= 100, f"heuristic out-of-window share on Epinions-D below 100%: {out['edg60000']}"
     worst = min(P1[d]['mean_dr_appended']['expert'] for d in P1)
     small = max(abs(P1[d]['mean_dr_appended'][m]) for d in P1 for m in ('random', 'counterfactual'))
-    RR = load('random_source_sets.json')
-    sets = [100 * RR[d]['C_random_distribution']['B5']['rand_dR_median_mean'] / RR[d]['C_random_distribution']['B5']['opt_dR_mean'] for d in ('otc', 'alpha')]
+    # The fifty-random-source-sets result (random_source_sets.json) moved to Supplement F with the
+    # shortening of Section VI-F; it is no longer in the paper, so it has no fragment here.
     return [
         (f"the heuristic reaches ${min(expert):.0f}$ to ${max(expert):.0f}\\%$ of the optimized shift", 'heuristic range'),
-        (f"the adapted attacks ${min(adapted):.0f}$ to ${max(adapted):.0f}\\%$, and random sources ${min(rand):.0f}$ to ${max(rand):.0f}\\%$;", 'adapted and random ranges'),
-        (f"fifty random source sets per target give ${min(sets):.0f}$ to ${max(sets):.0f}\\%$", 'random source sets'),
+        (f"the adapted attacks ${min(adapted):.0f}$ to ${max(adapted):.0f}\\%$, and random sources ${min(rand):.0f}$ to ${max(rand):.0f}\\%$.", 'adapted and random ranges'),
         (f"shift reputation by at most ${small:.3f}$ in magnitude", 'out-of-window, random and optimized'),
         (f"reaches ${min(three):.0f}$ to ${max(three):.0f}\\%$ of the optimized in-window shift on OTC, Alpha, and Epinions-S (a shift of up to ${worst:.2f}$)", 'heuristic out-of-window'),
         (f"five optimized edges shift OTC reputation by ${P1['otc']['mean_dr_appended']['counterfactual']:+.3f}$ out-of-window and by ${P1['otc']['mean_dr']['counterfactual']:.3f}$ in-window", 'evaluators'),
     ]
 
 
-def defense_checks() -> list:
+def evolvegcn_h_checks() -> list:
+    """Low-reputation targets of the EvolveGCN-H release (Section VI-H, Table IX)."""
+    n = {d: load(f'evolvegcn_placement_egcn_h_{d}.json')[f'bitcoin{d}']['flip_low_B1']['n'] for d in ('otc', 'alpha')}
+    assert n['otc'] == 0, f"'no such target on OTC' not supported: {n}"
+    return [(f"EvolveGCN-H has no such target on OTC and {NUMBER_WORDS[n['alpha']]} on Alpha", 'EvolveGCN-H low-reputation targets')]
+
+
+def defense_checks() -> tuple:
     D, SY = load('p3_defense_adaptive.json'), load('p3_sybil.json')
     kn = lambda d, cell, fn: D[d][cell][fn]['k_n']
     frac = lambda d, cell, fn: f"{kn(d, cell, fn)[0]}/{kn(d, cell, fn)[1]}"
@@ -254,14 +522,20 @@ def defense_checks() -> list:
         assert base == D[d]['low_high_history_B1']['mean']['flip_rate'] == SY[d]['new_sybil_B1']['flip_rate'], d
     lh = 'low_low_history_B5'
     tpr5 = [load('detector_calib.json')[d]['detector']['test_disjoint']['tpr_at_5pct_fpr'] for d in ('otc', 'alpha')]
-    return [
+    # Shortening Section VII moved to Supplement I the account-type comparison at one edge (the
+    # assertion above still guards it), the low-history single-edge counts, and the adaptive
+    # attacker's mean shift; their fragments here follow the numbers that stay in the paper.
+    paper = [
         (f"(${min(tpr5):.2f}$ to ${max(tpr5):.2f}$ at $5\\%$)", 'detector at 5% false positives'),
-        (f"one distrust edge flips {of('otc', 'low_random_B1', 'mean')} targets on OTC and {of('alpha', 'low_random_B1', 'mean')} on Alpha whether its source", 'E13 one edge'),
-        (f"flips ${kn('otc', 'low_low_history_B1', 'mean')[0]}$ and ${kn('alpha', 'low_low_history_B1', 'mean')[0]}$. We therefore weight", 'E13 low-history accounts'),
         (f"falls from ${pc('otc', lh, 'mean')}\\%$ (${frac('otc', lh, 'mean')}$) to ${pc('otc', lh, 'rater_weighted')}\\%$ (${frac('otc', lh, 'rater_weighted')}$) on OTC and from ${pc('alpha', lh, 'mean')}\\%$ (${frac('alpha', lh, 'mean')}$) to ${pc('alpha', lh, 'rater_weighted')}\\%$ (${frac('alpha', lh, 'rater_weighted')}$) on Alpha", 'E13 weighting'),
-        (f"its shift stays at about ${D['otc']['low_high_history_B5']['rater_weighted']['dr']:.2f}$ (OTC) and ${D['alpha']['low_high_history_B5']['rater_weighted']['dr']:.2f}$ (Alpha), and it flips {of('otc', 'low_high_history_B5', 'rater_weighted')} and {of('alpha', 'low_high_history_B5', 'rater_weighted')} eligible targets, against {of('otc', 'low_high_history_B5', 'mean')} and {of('alpha', 'low_high_history_B5', 'mean')} without the defense", 'E13 adaptive attacker'),
+        (f"at $B=5$ it flips {of('otc', 'low_high_history_B5', 'rater_weighted')} and {of('alpha', 'low_high_history_B5', 'rater_weighted')} eligible targets, against {of('otc', 'low_high_history_B5', 'mean')} and {of('alpha', 'low_high_history_B5', 'mean')} without the defense", 'E13 adaptive attacker'),
+    ]
+    # moved from Section VII to Supplement I with the 2026-11-22 case-study revision
+    supp = [
+        (f"against {of('otc', 'low_random_B1', 'mean')} and {of('alpha', 'low_random_B1', 'mean')} without the weighting", 'E13 one edge'),
         (f"one edge from a random account flips {of('otc', 'low_random_B1', 'rater_weighted')} eligible targets on OTC and {of('alpha', 'low_random_B1', 'rater_weighted')} on Alpha, against {of('otc', 'low_random_B1', 'mean')} and {of('alpha', 'low_random_B1', 'mean')} without the weighting.", 'E13 random account under the weighting'),
     ]
+    return paper, supp
 
 def dense_table_checks(CS: dict) -> list:
     """Rows of the non-GNN table (Table VII) and the source-selection shares of Section VI-F,
@@ -291,21 +565,215 @@ def dense_table_checks(CS: dict) -> list:
     return checks
 
 
+def moved_detail_checks(C: dict, CS: dict) -> list:
+    """Two details that the 2026-11-22 case-study revision moved from Sections VI-C and VI-E to
+    Supplements C and D (supplement checks)."""
+    drop = lambda d, b: -C[d]['shift']['by_margin'][b]['opt']['median']
+    near = {d: sorted(drop(d, b) for b in ('<.05', '.05-.1')) for d in ('otc', 'alpha')}
+    wil = lambda d: CS[d]['common_by_raters']['<=10']['wilson|B1']['pct']
+    return [
+        (f"the median propagation-only drop of the optimized edge is ${near['otc'][0]:.2f}$ to ${near['otc'][1]:.2f}$ on OTC and ${near['alpha'][0]:.2f}$ to ${near['alpha'][1]:.2f}$ on Alpha, against ${drop('otc', '>=.3'):.2f}$ and ${drop('alpha', '>=.3'):.2f}$ for margins above $0.3$", 'cohort, drop near the threshold'),
+        (f"and ${wil('otc'):.0f}\\%$ (OTC) and ${wil('alpha'):.0f}\\%$ (Alpha) of the common targets with at most ten raters", 'common set, Wilson at most ten raters'),
+    ]
+
+
+CASE_DATA = (('otc', 'OTC'), ('alpha', 'Alpha'))
+CASE_FEATURES = (('node2vec', 'node2vec'), ('release', 'random'))
+CASE_DEGREES = (('train', 'training window'), ('test', 'test snapshot'))
+CASE_AGGS = (('mean', 'off'), ('robust', 'on'))
+
+
+def sci(x: float) -> str:
+    """LaTeX form of x with a one-digit mantissa, e.g. 1.7\\times10^{-6}."""
+    mantissa, exponent = f"{x:.1e}".split('e')
+    return f"{mantissa}\\times10^{{{int(exponent)}}}"
+
+
+def case_file(d: str, features: str, degree: str) -> dict:
+    """One result file of the TrustGuard case study (E15)."""
+    return load_rev(f"trustguard_casestudy_{d}{'_node2vec' if features == 'node2vec' else ''}{'_testdeg' if degree == 'test' else ''}.json")
+
+
+def casestudy_checks() -> tuple:
+    """TrustGuard case study (E15): Sections VI-A, I, IV, and VI-H; Supplement L and its three
+    tables. Values are means over the five seeds, as the paper prints them. Returns
+    (paper checks, supplement checks)."""
+    F = {(d, f, g): case_file(d, f, g) for d, _ in CASE_DATA for f, _ in CASE_FEATURES for g, _ in CASE_DEGREES}
+    rep = lambda k, agg: F[k]['summary'][agg]['repro']
+    ev = lambda d, f, agg: F[(d, f, 'train')]['summary'][agg]['evasion']   # the single-edge test runs in the training-window files
+    mcc = lambda k, agg, cond: rep(k, agg)[f'MCC_best_{cond}']
+    pub = {d: F[(d, 'node2vec', 'train')]['published_fig3_single_timeslot_MCC'] for d, _ in CASE_DATA}
+    gain = {d: pub[d]['attack_with_defense'] - pub[d]['attack_without_defense'] for d in pub}
+    effect = {k: mcc(k, 'robust', 'inwin_dis')['mean'] - mcc(k, 'mean', 'inwin_dis')['mean'] for k in F}
+    gap = [pub[k[0]]['no_attack'] - mcc(k, agg, 'clean')['mean'] for k in F for agg, _ in CASE_AGGS]
+    assert 0 < min(gap) and max(gap) < 0.03, f"'clean MCC reproduces within 0.03' not supported: {gap}"
+    ci = {k: paired_t_interval(mcc(k, 'robust', 'inwin_dis')['per_seed'], mcc(k, 'mean', 'inwin_dis')['per_seed']) for k in F}
+    assert all(hi < gain[k[0]] for k, (_, hi) in ci.items()), "'the 95% interval lies below the published gain in every cell' not supported"
+    assert all(mcc(k, agg, 'inwin_dis')['mean'] < pub[k[0]]['attack_without_defense'] for k in F for agg, _ in CASE_AGGS), "'our attack lowers MCC further' not supported"
+    gpu = [s['robust']['gpu_equivalence'] for J in F.values() for s in J['runs'].values() if 'gpu_equivalence' in s['robust']]
+    assert len(gpu) == len(F) and not any(g['values_differing_gt_1e-5'] for g in gpu), 'GPU port check missing or failed'
+    gpu_max = max(g['max_abs_diff'] for g in gpu)
+    assert gpu_max <= float(f"{gpu_max:.1e}"), 'GPU bound rounds down'
+    pm3 = lambda x: f"${x['mean']:.3f}\\pm{x['sd']:.3f}$"
+    rng = lambda xs, nd=2, sign='': f"${min(xs):{sign}.{nd}f}$ to ${max(xs):{sign}.{nd}f}$"
+    flip = lambda d, f, agg, src, sc: ev(d, f, agg)[f'{src}_{sc}_flip']['rate_pct']['mean']
+    # Single-edge test: one in-window rating against low-reputation targets, fixed weights.
+    big = ('alpha', 'node2vec', 'random')
+    changes = [flip(d, f, 'robust', s, 'prop') - flip(d, f, 'mean', s, 'prop') for d, _ in CASE_DATA for f, _ in CASE_FEATURES
+               for s in ('random', 'optimized') if (d, f, s) != big]
+    drop = flip(*big[:2], 'mean', 'random', 'prop') - flip(*big[:2], 'robust', 'random', 'prop')
+    assert drop > 2 * max(-min(changes), max(changes)), "'the only large reduction' not supported"
+    lam_out = max(ev(d, f, agg)['Lambda_out_max'] for d, _ in CASE_DATA for f, _ in CASE_FEATURES for agg, _ in CASE_AGGS)
+    assert lam_out < 3e-7, lam_out
+    lam_in = {(d, f, agg): ev(d, f, agg)['Lambda_in']['mean'] for d, _ in CASE_DATA for f, _ in CASE_FEATURES for agg, _ in CASE_AGGS}
+    low_lam = min(lam_in, key=lam_in.get)
+    assert low_lam == ('alpha', 'node2vec', 'robust'), f'smallest in-window Lambda is not Alpha, node2vec, defense on: {low_lam}'
+    rest = [v for k, v in lam_in.items() if k != low_lam]
+    # Retraining: MCC changes and label swaps per placement; target embedding change.
+    cells = [(k, agg) for k in F for agg, _ in CASE_AGGS]
+    lam_mcc = lambda m: [rep(k, agg)[f'Lambda_MCC_best_{m}']['mean'] for k, agg in cells]
+    dmcc = lambda c: [-rep(k, agg)[f'dMCC_best_{c}']['mean'] for k, agg in cells]
+    reach = lambda c: [rep(k, agg)[f'targets_{c}']['reach_dz_mean']['mean'] for k, agg in cells]
+    loss_only_dz = max(x for J in F.values() for s in J['runs'].values() for agg, _ in CASE_AGGS
+                       for c in ('app_dis', 'app_tru') for x in s[agg]['repro'][c]['reach_dz'])
+    assert loss_only_dz <= float(f"{loss_only_dz:.1e}"), loss_only_dz
+    assert max(abs(rep(k, agg)['dMCC_best_app_tru']['mean']) for k, agg in cells) < 0.02, "'relabelling them undoes this' not supported"
+    # Total score where the defense prunes the random rating (Alpha, node2vec, defense on).
+    recs = [x for s in F[('alpha', 'node2vec', 'train')]['runs'].values() for x in s['robust']['evasion']['targets']]
+    pruned = [x for x in recs if x['dz_in'] < 1e-5]
+    assert max(x['dz_in'] for x in pruned) <= 1.4e-6 and min(x['dz_in'] for x in recs if x not in pruned) > 1e-5, 'no gap between pruned and moved embeddings'
+    assert not any(x['dz_in'] < 1e-5 for s in F[('alpha', 'node2vec', 'train')]['runs'].values() for x in s['mean']['evasion']['targets']), 'an embedding stays unchanged with the defense off'
+    d_tot = [x['random']['R_tot'] - x['R_clean'] for x in pruned]
+    k_tot, k_prop = sum(x['random']['R_tot'] < 0.5 for x in pruned), sum(x['random']['R_prop'] < 0.5 for x in pruned)
+    o_on, a_on = flip('otc', 'node2vec', 'robust', 'optimized', 'prop'), flip('alpha', 'node2vec', 'robust', 'optimized', 'prop')
+    r_on = {d: flip(d, 'node2vec', 'robust', 'random', 'prop') for d, _ in CASE_DATA}
+    assert min(flip(d, f, agg, 'optimized', 'prop') for d, _ in CASE_DATA for f, _ in CASE_FEATURES for agg, _ in CASE_AGGS) > 50, "'most users near the threshold stay exposed to one optimized rating' not supported"
+    paper = [
+        (f"the defense changes the attacked MCC, an accuracy measure, by ${min(effect.values()):+.3f}$ to ${max(effect.values()):+.3f}$, where the paper reports ${gain['otc']:+.3f}$ and ${gain['alpha']:+.3f}$, outside our $95\\%$ intervals.", 'intro, case study'),
+        (f"With the defense on, one rating from a random account still flips ${r_on['otc']:.0f}\\%$ (OTC) and ${r_on['alpha']:.0f}\\%$ (Alpha) of the users just above the threshold, and an \\emph{{optimized}} one, the most damaging of $50$ candidates, ${o_on:.0f}\\%$ and ${a_on:.0f}\\%$.", 'intro, case study flips'),
+        (f"from ${pub['otc']['attack_without_defense']:.3f}$ to ${pub['otc']['attack_with_defense']:.3f}$ on OTC and from ${pub['alpha']['attack_without_defense']:.3f}$ to ${pub['alpha']['attack_with_defense']:.3f}$ on Alpha", 'case study, published gain'),
+        (f"which matches the released function to within ${sci(gpu_max)}$", 'case study, GPU port'),
+        (f"Clean MCC reproduces within $0.03$ (OTC {pm3(mcc(('otc', 'node2vec', 'train'), 'mean', 'clean'))}, Alpha {pm3(mcc(('alpha', 'node2vec', 'train'), 'mean', 'clean'))}, published ${pub['otc']['no_attack']:.3f}$ and ${pub['alpha']['no_attack']:.3f}$)", 'case study, clean MCC'),
+        (f"for the smaller attack on OTC, the attacked MCC is {pm3(mcc(('otc', 'node2vec', 'test'), 'mean', 'inwin_dis'))} with the defense off and {pm3(mcc(('otc', 'node2vec', 'test'), 'robust', 'inwin_dis'))} with it on", 'case study, OTC smaller attack'),
+        (f"the defense changes the attacked MCC by ${min(effect.values()):+.3f}$ to ${max(effect.values()):+.3f}$, where the paper reports ${gain['otc']:+.3f}$ and ${gain['alpha']:+.3f}$; in every cell, the $95\\%$ interval of the per-seed change ($t$-interval, five seeds) lies below the published gain.", 'case study, defense effect'),
+        ("Whatever the defense does to MCC, most users near the threshold stay exposed to one optimized rating.", 'case study, users near the threshold'),
+        (f"one optimized rating still flips ${o_on:.0f}\\%$ (OTC) and ${a_on:.0f}\\%$ (Alpha) of these targets under the propagation-only score with the defense on, against ${flip('otc', 'node2vec', 'mean', 'optimized', 'prop'):.0f}\\%$ and ${flip('alpha', 'node2vec', 'mean', 'optimized', 'prop'):.0f}\\%$ with it off.", 'case study, optimized flips'),
+        (f"The only large reduction is for random sources on Alpha (${flip(*big[:2], 'robust', 'random', 'prop'):.0f}\\%$ against ${flip(*big[:2], 'mean', 'random', 'prop'):.0f}\\%$); in the other seven comparisons, release features included, the defense changes the rate by {rng(changes, 0, '+')} points", 'case study, random sources'),
+        (f"($\\ls<3\\times10^{{-7}}$), whereas in-window ones give $\\ls={min(rest):.2f}$ to ${max(rest):.2f}$, or ${lam_in[low_lam]:.2f}$ on Alpha with the defense on.", 'case study, label swap at fixed weights'),
+        ("against less than $3\\times10^{-7}$ out-of-window", 'Check 2, out-of-window bound'),
+        (f"Relabelling the attack edges changes the MCC by {rng(lam_mcc('inwin'))}, and removing them moves the targets' embeddings by a distance $\\|\\Delta z\\|$ of ${min(reach('inwin_dis')):.1f}$ to ${max(reach('inwin_dis')):.1f}$ on average", 'case study, in-window under retraining'),
+        (f"lower the MCC by {rng(dmcc('app_dis'))} (the published attack: {rng(dmcc('inwin_dis'))}), and relabelling them undoes this, although no target's embedding moves by more than ${sci(loss_only_dz)}$", 'case study, loss-only under retraining'),
+        (f"prunes the random rating of ${len(pruned)}$ of the ${len(recs)}$ targets, leaving their embeddings unchanged ($\\|\\Delta z\\|\\le{sci(max(x['dz_in'] for x in pruned))}$)", 'case study, pruned ratings'),
+        (f"the propagation-only score barely moves, whereas the total score moves by ${min(d_tot):+.2f}$ to ${max(d_tot):+.2f}$. The defense blocked the model's response for these targets, yet ${k_tot}$ of them still fall below the threshold through the attacker's own term, {'none' if k_prop == 0 else k_prop} under the propagation-only score.", 'case study, total score'),
+        (f"close to the five-run rates of E15 with the same features (${flip('otc', 'release', 'mean', 'optimized', 'prop'):.0f}\\%$ and ${flip('alpha', 'release', 'mean', 'optimized', 'prop'):.0f}\\%$)", 'official releases, TrustGuard against E15'),
+    ]
+    return paper, casestudy_supplement(F, pub, pruned, recs)
+
+
+def casestudy_supplement(F: dict, pub: dict, pruned: list, recs: list) -> list:
+    """Supplement L: the three tables of the case study and the numbers of its text."""
+    rep = lambda k, agg: F[k]['summary'][agg]['repro']
+    mcc = lambda k, agg, cond: rep(k, agg)[f'MCC_best_{cond}']
+    pmt = lambda x: f"${x['mean']:.3f}{{\\pm}}{x['sd']:.3f}$"
+    supp = []
+    for d, name in CASE_DATA:
+        p = pub[d]
+        supp.append((f"{name} & \\multicolumn{{2}}{{l}}{{published}} & \\multicolumn{{2}}{{c}}{{${p['no_attack']:.3f}$}} & ${p['attack_without_defense']:.3f}$ & ${p['attack_with_defense']:.3f}$ & ${p['attack_with_defense'] - p['attack_without_defense']:+.3f}$ & \\\\", f'case MCC table, {d} published'))
+        for f, fname in CASE_FEATURES:
+            for g, gname in CASE_DEGREES:
+                k = (d, f, g)
+                eff = mcc(k, 'robust', 'inwin_dis')['mean'] - mcc(k, 'mean', 'inwin_dis')['mean']
+                lo, hi = paired_t_interval(mcc(k, 'robust', 'inwin_dis')['per_seed'], mcc(k, 'mean', 'inwin_dis')['per_seed'])
+                supp.append((f" & {fname} & {gname} & {pmt(mcc(k, 'mean', 'clean'))} & {pmt(mcc(k, 'robust', 'clean'))} & {pmt(mcc(k, 'mean', 'inwin_dis'))} & {pmt(mcc(k, 'robust', 'inwin_dis'))} & ${eff:+.3f}$ & [${lo:+.3f}$, ${hi:+.3f}$]\\\\", f'case MCC table, {d} {f} {g}'))
+    for d, name in CASE_DATA:
+        for f, fname in CASE_FEATURES:
+            for g, gname in CASE_DEGREES:
+                for agg, aname in CASE_AGGS:
+                    r = rep((d, f, g), agg)
+                    cells = [f"${r[f'dMCC_best_{c}']['mean']:+.3f}$" for c in ('inwin_dis', 'app_dis', 'graph_dis')]
+                    cells += [f"${r[f'Lambda_MCC_best_{m}']['mean']:.3f}$" for m in ('inwin', 'app', 'graph')]
+                    cells += [f"${r[f'targets_{c}']['reach_dz_mean']['mean']:.2f}$" for c in ('inwin_dis', 'graph_dis')]
+                    supp.append((f"{name} & {fname} & {gname} & {aname} & " + ' & '.join(cells) + "\\\\", f'case retraining table, {d} {f} {g} {agg}'))
+    for d, name in CASE_DATA:
+        for f, fname in CASE_FEATURES:
+            for agg, aname in CASE_AGGS:
+                b = F[(d, f, 'train')]['summary'][agg]['evasion']
+                cells = [f"${b['random_prop_flip']['pooled_n']}$"]
+                for src in ('random', 'optimized'):
+                    cells += [f"${b[f'{src}_{sc}_flip']['rate_pct']['mean']:.0f}$" for sc in ('prop', 'tot')]
+                    cells += [f"${b[f'{src}_{sc}_shift']['mean']:+.3f}$" for sc in ('prop', 'tot')]
+                cells.append(f"${b['Lambda_in']['mean']:.2f}$")
+                supp.append((f"{name} & {fname} & {aname} & " + ' & '.join(cells) + "\\\\", f'case single-edge table, {d} {f} {agg}'))
+    # Text of Supplement L.
+    att = {(d, g): [v['n_attack_edges'] for v in F[(d, 'node2vec', g)]['attack'].values()] for d, _ in CASE_DATA for g, _ in CASE_DEGREES}
+    tgt = {d: {v['n_targets'] for v in F[(d, 'node2vec', 'train')]['attack'].values()} for d, _ in CASE_DATA}
+    assert all(len(t) == 1 for t in tgt.values()), tgt
+    assert all(F[(d, f, g)]['attack'] == F[(d, 'node2vec', g)]['attack'] for d, _ in CASE_DATA for f, _ in CASE_FEATURES for g, _ in CASE_DEGREES), 'the two feature sets use different attacks'
+    span = lambda xs: f"${thousands(min(xs))}$ to ${thousands(max(xs))}$"
+    last = [rep(k, 'robust')['MCC_last_inwin_dis']['mean'] - rep(k, 'mean')['MCC_last_inwin_dis']['mean'] for k in F]
+    last_noise = max(abs(x) for k in F for agg, _ in CASE_AGGS for x in rep(k, agg)['dMCC_last_clean2']['per_seed'])
+    noise = max(abs(x) for k in F for agg, _ in CASE_AGGS for x in rep(k, agg)['dMCC_best_clean2']['per_seed'])
+    l1 = lambda f, key: [F[(d, f, g)]['summary']['robust']['repro']['targets_inwin_dis'][key]['L1_in']['mean'] for d, _ in CASE_DATA for g, _ in CASE_DEGREES]
+    assert round(100 * min(l1('release', 'coef_organic_share_zero') + l1('release', 'coef_share_zero')), 1) >= 99.9, "'prunes 99.9 to 100%' not supported"
+    per_seed = [sum(x['dz_in'] < 1e-5 for x in s['robust']['evasion']['targets']) for s in F[('alpha', 'node2vec', 'train')]['runs'].values()]
+    others = {(d, f): sum(x['dz_in'] < 1e-5 for s in F[(d, f, 'train')]['runs'].values() for x in s['robust']['evasion']['targets'])
+              for d, _ in CASE_DATA for f, _ in CASE_FEATURES if (d, f) != ('alpha', 'node2vec')}
+    n_ev = {(d, f): sum(len(s['robust']['evasion']['targets']) for s in F[(d, f, 'train')]['runs'].values()) for d, f in others}
+    own = [x['random']['R_tot'] * (x['n_raters'] + 1) - x['random']['R_prop'] * x['n_raters'] for x in pruned]
+    assert all(o < 0.5 for o, x in zip(own, pruned) if x['random']['R_tot'] < 0.5), "'whose attacker is predicted to distrust them' not supported"
+    lam_pr = float(np.mean([x['Lambda_in'] for x in pruned]))
+    runs = [s[agg] for J in F.values() for s in J['runs'].values() for agg, _ in CASE_AGGS if 'evasion' in s[agg]]
+    assert all(r['evasion']['n_low_all'] == r['evasion']['n_low_evaluated'] for r in runs), "'a cap never reached' not supported"
+    assert not any(x['dz_in'] < 1e-5 for r in runs if not r['robust_aggregation'] for x in r['evasion']['targets']), "'with the defense off this never happens' not supported"
+    cells = [(k, agg) for k in F for agg, _ in CASE_AGGS]
+    drop = lambda c: [-rep(k, agg)[f'dMCC_best_{c}']['mean'] for k, agg in cells]
+    rng = lambda xs: f"${min(xs):.2f}$ to ${max(xs):.2f}$"
+    swap = max(abs(rep(k, agg)['dMCC_best_app_tru']['mean']) for k, agg in cells)
+    assert swap < 0.015, swap
+    ev_all = [F[(d, f, 'train')]['summary'][agg]['evasion'] for d, _ in CASE_DATA for f, _ in CASE_FEATURES for agg, _ in CASE_AGGS]
+    dz_out = max(b['dz_out_max'] for b in ev_all)
+    assert max(b['Lambda_out_max'] for b in ev_all) < 3e-7 and dz_out <= float(f"{dz_out:.1e}"), dz_out
+    supp += [
+        (f"an edge appended after the window is a silent no-op ($\\ls<3\\times10^{{-7}}$, target-embedding change at most ${sci(dz_out)}$)", 'case study, appended edges'),
+        (f"distrust edges lower the MCC by {rng(drop('inwin_dis'))} in-window, by {rng(drop('app_dis'))} loss-only, and by {rng(drop('graph_dis'))} encoder-only. Relabelled as trust, loss-only edges change the MCC by less than $0.015$", 'case study, retraining placements'),
+        (f"adds {span(att[('otc', 'train')])} attack edges per seed on OTC (${tgt['otc'].pop()}$ targets) and {span(att[('alpha', 'train')])} on Alpha (${tgt['alpha'].pop()}$ targets); the test-snapshot reading adds {span(att[('otc', 'test')])} and {span(att[('alpha', 'test')])}", 'case study, attack sizes'),
+        (f"Two identical clean retrainings differ by up to ${noise:.3f}$ at the selected epoch. At the last epoch instead of the selected one, the defense changes the attacked MCC by ${min(last):+.3f}$ to ${max(last):+.3f}$ (identical retrainings: up to ${last_noise:.3f}$)", 'case study, last epoch'),
+        (f"prunes $99.9$ to $100\\%$ of all ratings in the first layer, the organic ones included; with node2vec features it prunes ${100 * min(l1('node2vec', 'coef_organic_share_zero')):.0f}$ to ${100 * max(l1('node2vec', 'coef_organic_share_zero')):.0f}\\%$ of the organic ratings and ${100 * min(l1('node2vec', 'coef_share_zero')):.0f}$ to ${100 * max(l1('node2vec', 'coef_share_zero')):.0f}\\%$ of the attack edges", 'case study, pruning by features'),
+        (f"per seed ${'$, $'.join(str(k) for k in per_seed)}$", 'case study, pruned ratings per seed'),
+        (f"OTC ${others[('otc', 'node2vec')]}$ of ${n_ev[('otc', 'node2vec')]}$; random features: OTC ${others[('otc', 'release')]}$ of ${n_ev[('otc', 'release')]}$, Alpha ${others[('alpha', 'release')]}$ of ${n_ev[('alpha', 'release')]}$", 'case study, pruned ratings elsewhere'),
+        (f"the attacker's own predicted trust averages ${np.mean(own):.2f}$, so the total score rises on average (by ${np.mean([x['random']['R_tot'] - x['R_clean'] for x in pruned]):+.3f}$), yet it falls below the threshold for ${sum(x['random']['R_tot'] < 0.5 for x in pruned)}$ targets", 'case study, own term'),
+        (f"the mean label sensitivity of these ${len(pruned)}$ ratings is ${lam_pr:.2f}$", 'case study, label sensitivity of pruned ratings'),
+        (f"the propagation-only score barely moves (largest change ${max(abs(x['random']['R_prop'] - x['R_clean']) for x in pruned):.4f}$)", 'case study, pruned ratings, propagation-only score'),
+    ]
+    return supp
+
+
 def main() -> int:
     tex_path = os.environ.get('GRAIL_PAPER_TEX', '')
     if not os.path.isfile(tex_path):
         sys.exit('set GRAIL_PAPER_TEX to the LaTeX source of the DSN paper (not part of this artifact)')
+    supp_path = os.environ.get('GRAIL_SUPP_TEX', os.path.join(os.path.dirname(tex_path), 'supplement.tex'))
+    if not os.path.isfile(supp_path):
+        sys.exit('set GRAIL_SUPP_TEX to the LaTeX source of the supplement (default: supplement.tex next to the paper)')
     with open(tex_path) as handle:
         tex = norm(handle.read())
+    with open(supp_path) as handle:
+        supp_tex = norm(handle.read())
     C = load('cohort_summary.json')
-    checks = (cohort_checks(C) + placement_checks() + statistics_checks(load('stats_hier_s10.json')) + strata_checks()
+    revision = (prospective_checks(), retraining_checks(), budget_checks(), casestudy_checks())
+    checks = (cohort_checks(C) + epinions_checks(C) + placement_checks() + statistics_checks(load('stats_hier_s10.json')) + strata_checks()
               + mechanism_checks(load('masked_control_s10.json'), load('common_set_summary.json'))
-              + deployment_checks() + source_checks() + defense_checks()
-              + dense_table_checks(load('common_set_summary.json')))
-    bad = [(frag, name) for frag, name in checks if norm(frag) not in tex] + every_model_failures(C)
+              + deployment_checks()[0] + source_checks() + evolvegcn_h_checks() + defense_checks()[0]
+              + dense_table_checks(load('common_set_summary.json')) + [c for paper, _ in revision for c in paper])
+    supp_checks = moved_regime_checks() + moved_detail_checks(C, load('common_set_summary.json')) + PLACEMENT_SUPP + deployment_checks()[1] + defense_checks()[1] + [c for _, supp in revision for c in supp]
+    bad = [(frag, name) for frag, name in checks if norm(frag) not in tex]
+    bad += [(frag, f'supplement: {name}') for frag, name in supp_checks if norm(frag) not in supp_tex]
+    bad += every_model_failures(C)
     for frag, name in bad:
         print(f"FAIL [{name}]: {frag[:170]}")
-    print(f"{len(checks) - len([b for b in bad if b[1] != 'every-model claim'])}/{len(checks)} number checks pass")
+    fails = lambda prefix: len([b for b in bad if b[1].startswith('supplement: ') == prefix and b[1] != 'every-model claim'])
+    print(f"{len(checks) - fails(False)}/{len(checks)} number checks pass in the paper, "
+          f"{len(supp_checks) - fails(True)}/{len(supp_checks)} in the supplement")
     return 1 if bad else 0
 
 

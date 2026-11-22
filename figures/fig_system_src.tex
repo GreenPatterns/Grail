@@ -29,8 +29,8 @@
 \begin{scope}[on background layer]
   \node[draw=cproc,line width=0.8pt,rounded corners=1.5pt,fill=cproc!5,fit=(s0)(s6),inner sep=1.6pt](pwin){};
 \end{scope}
-\node[cproc,anchor=south] at (pwin.north){\textbf{processed window} ($W=7$)};
-\node[cdead,anchor=south] at ($(s8.north)+(0,0.03)$){\textbf{not read}};
+\node[cproc,anchor=south] at (pwin.north){\textbf{processed window} ($W=7$, training)};
+\node[cdead,anchor=south] at ($(s8.north)+(0,0.03)$){\textbf{test, not read}};
 
 % encoder
 \node[box,draw=cproc,fill=cproc!6] (enc) at (2.1,-1.02) {encoder $\rightarrow$ embeddings $\rightarrow$ $P(\text{trust}\mid u,v)$};
@@ -53,7 +53,7 @@
 \node[catk,align=right,anchor=east] at (0.62,-3.4){distrust attack edge\\$a\rightarrow v$, in-window\\(inserted into s6)};
 
 % out-of-window edge
-\node[box,draw=cdead,fill=cdead!8,align=center,anchor=north] (a1) at ($(s8.south)+(0,-0.14)$){\textcolor{catk}{appended edge:}\\\textcolor{catk}{out-of-window}\\\textbf{\textcolor{cdead}{Artifact 1:}} silent no-op\\\textbf{\textcolor{cok}{Fix:}} label-swap test};
+\node[box,draw=cdead,fill=cdead!8,align=center,anchor=north] (a1) at ($(s8.south)+(0,-0.14)$){\textcolor{catk}{appended edge:}\\\textcolor{catk}{out-of-window}\\\textbf{\textcolor{cdead}{Artifact 1:}} silent no-op\\\textbf{\textcolor{cok}{Check:}} label-swap test};
 
 % the two scores
 \node[tag,draw=cover,fill=cover!8] (a2) at (2.3,-2.86) {\textbf{\textcolor{cover}{Artifact 2:}} the total score also\\averages the prediction for $a\rightarrow v$};

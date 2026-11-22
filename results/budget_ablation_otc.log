@@ -1,0 +1,40 @@
+[04:41:41] 
+============================================================
+  BUDGET ABLATION — otc
+============================================================
+[04:41:41] Training GDTE on otc (seed=42)...
+[04:44:49]   MCC=0.397±0.105, AUC=0.760±0.075, BAcc=0.680±0.047
+[04:47:36]   E4 repro low B=1: n=25 flip tot 64.0% prop 60.0% dR_prop -0.102
+[04:49:34]   E4 repro low B=3: n=25 flip tot 96.0% prop 64.0% dR_prop -0.1078
+[04:51:04]   E4 repro low B=5: n=25 flip tot 100.0% prop 64.0% dR_prop -0.0983
+[04:51:11]   [otc] target 1/25 done
+[04:51:18]   [otc] target 2/25 done
+[04:51:26]   [otc] target 3/25 done
+[04:51:33]   [otc] target 4/25 done
+[04:51:40]   [otc] target 5/25 done
+[04:51:47]   [otc] target 6/25 done
+[04:51:57]   [otc] target 7/25 done
+[04:52:03]   [otc] target 8/25 done
+[04:52:10]   [otc] target 9/25 done
+[04:52:17]   [otc] target 10/25 done
+[04:52:25]   [otc] target 11/25 done
+[04:52:32]   [otc] target 12/25 done
+[04:52:40]   [otc] target 13/25 done
+[04:52:52]   [otc] target 14/25 done
+[04:52:59]   [otc] target 15/25 done
+[04:53:07]   [otc] target 16/25 done
+[04:53:15]   [otc] target 17/25 done
+[04:53:23]   [otc] target 18/25 done
+[04:53:30]   [otc] target 19/25 done
+[04:53:36]   [otc] target 20/25 done
+[04:53:43]   [otc] target 21/25 done
+[04:53:49]   [otc] target 22/25 done
+[04:53:55]   [otc] target 23/25 done
+[04:54:00]   [otc] target 24/25 done
+[04:54:06]   [otc] target 25/25 done
+[04:54:06]   random       prop flip % B1..5: [52.0, 56.0, 60.0, 60.0, 60.0] dR_prop: [-0.0639, -0.0722, -0.0771, -0.0809, -0.0836]
+[04:54:06]   topB_tot     prop flip % B1..5: [64.0, 68.0, 68.0, 68.0, 64.0] dR_prop: [-0.1116, -0.1054, -0.1032, -0.1026, -0.1021]
+[04:54:06]   topB_prop    prop flip % B1..5: [68.0, 68.0, 68.0, 68.0, 64.0] dR_prop: [-0.1141, -0.109, -0.106, -0.1056, -0.1047]
+[04:54:06]   greedy_tot   prop flip % B1..5: [64.0, 68.0, 68.0, 68.0, 64.0] dR_prop: [-0.1116, -0.1078, -0.1044, -0.102, -0.101]
+[04:54:06]   greedy_prop  prop flip % B1..5: [68.0, 68.0, 68.0, 68.0, 64.0] dR_prop: [-0.1141, -0.111, -0.1085, -0.1065, -0.1053]
+[04:54:06] Wrote <artifacts>/results/budget_ablation_otc.json

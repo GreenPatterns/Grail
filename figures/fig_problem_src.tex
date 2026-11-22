@@ -22,9 +22,9 @@
 \foreach \i in {0,...,4} \draw[black!30,rounded corners=2pt] (\i*\G,0) rectangle ++(\W,\H);
 % Three raters u1..u3 and the target v at panel offset #1; edges labeled #1.
 \newcommand{\raters}[1]{%
-  \node[user] (u1) at (#1+0.45,2.95) {$u_1$};
-  \node[user] (u2) at (#1+1.65,3.2) {$u_2$};
-  \node[user] (u3) at (#1+2.85,2.95) {$u_3$};
+  \node[user] (u1) at (#1+0.45,2.95) {u1};
+  \node[user] (u2) at (#1+1.65,3.2) {u2};
+  \node[user] (u3) at (#1+2.85,2.95) {u3};
   \node[tgt] (v) at (#1+1.65,1.85) {$v$};}
 \newcommand{\redges}[1]{%
   \draw[rate] (u1) -- node[lab,pos=0.42] {#1} (v);
@@ -34,7 +34,7 @@
 % (a) Ratings
 \node[ttl] at (0.08,3.72) {(a) Ratings};
 \raters{0}\redges{$+$}
-\node[txt] at (1.65,1.3) {raters $u_i$ rate user $v$:\\ $+$ trust, $-$ distrust};
+\node[txt] at (1.65,1.3) {u1 to u3 rate user $v$:\\ $+$ trust, $-$ distrust};
 
 % (b) Reputation
 \node[ttl] at (\G+0.08,3.72) {(b) Reputation};
@@ -57,8 +57,10 @@
   \node[text=\dc] at (3*\G+0.305+\k*0.296,2.51) {\k};
 }
 \draw[decorate,decoration={brace,amplitude=3pt}] (3*\G+0.17,2.8) -- (3*\G+2.216,2.8)
-  node[midway,above=2pt] {read by the model};
-\node[txt,text=red!70!black] at (3*\G+1.65,2.05) {fake rating after $s_6$};
+  node[midway,above=2pt] {training (read)};
+\draw[decorate,decoration={brace,amplitude=3pt}] (3*\G+2.242,2.8) -- (3*\G+3.074,2.8)
+  node[midway,above=2pt] {test};
+\node[txt,text=red!70!black] at (3*\G+1.65,2.05) {fake rating after s6};
 \node[txt] at (3*\G+1.65,1.6) {never read: $R(v)$ is the\\ same for $+$ and $-$;\\ check: swap the label};
 
 % (e) Self-conditioning: in-window, raters drop to 0.45, the attacker's own prediction is 0.10
@@ -66,6 +68,6 @@
 \raters{4*\G}\redges{0.45}
 \node[atk] (a) at (4*\G+2.85,1.85) {$a$};
 \draw[fake] (a) -- node[lab,text=red!70!black] {0.10} (v);
-\node[txt] at (4*\G+1.65,1.3) {read: raters $0.55\to0.45$;\\ total $R=0.36$ adds $a$'s\\ 0.10, an echo of its label;\\ fix: omit $a$, $R=0.45$};
+\node[txt] at (4*\G+1.65,1.3) {read: raters $0.55\to0.45$;\\ total $R=0.36$ adds $a$'s\\ 0.10, possibly an echo;\\ fix: omit $a$, $R=0.45$};
 \end{tikzpicture}
 \end{document}

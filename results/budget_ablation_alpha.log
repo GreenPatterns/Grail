@@ -1,0 +1,40 @@
+[04:41:41] 
+============================================================
+  BUDGET ABLATION — alpha
+============================================================
+[04:41:41] Training GDTE on alpha (seed=42)...
+[04:44:01]   MCC=0.391±0.069, AUC=0.767±0.070, BAcc=0.686±0.077
+[04:46:32]   E4 repro low B=1: n=25 flip tot 84.0% prop 48.0% dR_prop -0.0749
+[04:48:16]   E4 repro low B=3: n=25 flip tot 92.0% prop 44.0% dR_prop -0.0627
+[04:49:59]   E4 repro low B=5: n=25 flip tot 92.0% prop 36.0% dR_prop -0.0473
+[04:50:22]   [alpha] target 1/25 done
+[04:50:35]   [alpha] target 2/25 done
+[04:50:41]   [alpha] target 3/25 done
+[04:50:53]   [alpha] target 4/25 done
+[04:51:05]   [alpha] target 5/25 done
+[04:51:12]   [alpha] target 6/25 done
+[04:51:19]   [alpha] target 7/25 done
+[04:51:27]   [alpha] target 8/25 done
+[04:51:34]   [alpha] target 9/25 done
+[04:51:41]   [alpha] target 10/25 done
+[04:51:48]   [alpha] target 11/25 done
+[04:51:56]   [alpha] target 12/25 done
+[04:52:02]   [alpha] target 13/25 done
+[04:52:09]   [alpha] target 14/25 done
+[04:52:17]   [alpha] target 15/25 done
+[04:52:24]   [alpha] target 16/25 done
+[04:52:32]   [alpha] target 17/25 done
+[04:52:39]   [alpha] target 18/25 done
+[04:52:46]   [alpha] target 19/25 done
+[04:52:53]   [alpha] target 20/25 done
+[04:53:01]   [alpha] target 21/25 done
+[04:53:08]   [alpha] target 22/25 done
+[04:53:16]   [alpha] target 23/25 done
+[04:53:24]   [alpha] target 24/25 done
+[04:53:31]   [alpha] target 25/25 done
+[04:53:31]   random       prop flip % B1..5: [20.0, 24.0, 20.0, 24.0, 28.0] dR_prop: [0.012, 0.0165, 0.0199, 0.0223, 0.0207]
+[04:53:31]   topB_tot     prop flip % B1..5: [56.0, 44.0, 36.0, 36.0, 36.0] dR_prop: [-0.0736, -0.0661, -0.0604, -0.0514, -0.0419]
+[04:53:31]   topB_prop    prop flip % B1..5: [56.0, 44.0, 36.0, 36.0, 36.0] dR_prop: [-0.0793, -0.0756, -0.0663, -0.0578, -0.0493]
+[04:53:31]   greedy_tot   prop flip % B1..5: [56.0, 44.0, 36.0, 36.0, 32.0] dR_prop: [-0.0736, -0.0646, -0.0545, -0.0449, -0.0336]
+[04:53:31]   greedy_prop  prop flip % B1..5: [56.0, 44.0, 36.0, 36.0, 36.0] dR_prop: [-0.0793, -0.0756, -0.0676, -0.0588, -0.0498]
+[04:53:31] Wrote <artifacts>/results/budget_ablation_alpha.json
