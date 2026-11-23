@@ -1,8 +1,8 @@
 # Artifact: Silent No-Ops and Self-Conditioning
 
 This folder holds the code, figures, result files and supplement of the anonymous submission
-*Silent No-Ops and Self-Conditioning: Two Evaluation Artifacts in Robustness Tests of Temporal
-Trust GNNs*. It also holds the datasets the code reads and the instructions for running every
+*What Robustness Tests of Temporal Trust GNNs Miss: Silent No-Ops, Self-Conditioning, and
+Per-User Fragility*. It also holds the datasets the code reads and the instructions for running every
 experiment. The model under test is GDTE (GNN for Dynamic Trust Evaluation), the paper's
 temporal trust GNN.
 

@@ -56,6 +56,7 @@ paper.
 | `../prospective_paired_{otc,alpha}.json` | E8 | Table VIII and Section VI-F (paired sliding-window test over ten runs, its pre-declared criterion, stored in the file before any outcome, and the verdict); Section I; Supplement J (total score) and Table S14 | `run_prospective_paired.py` |
 | `../retrain_prop.json` | E8, E9 | Section VI-F, retraining and poisoning controls rerun with both scores; Section I; Table S10 (columns T' and P') and Table S11 | `run_retrain_prop.py` |
 | `../budget_ablation_{otc,alpha}.json` | E4 | Section VI-C (the fall of the propagation-only flip rate with the budget), Section VI-D (raters' share of the change), Section V (the rerun's 64%); Supplement K and Table S15 | `run_budget_ablation.py` |
+| `../p1_sota_prop_{otc,alpha,epn,edgfull}.json` | E10 | Section VI-G (rerun with both scores: low-stratum flips under the total and the propagation-only score) and Table III (scores T, P); Supplement E and Table S5, bottom (propagation-only shift, its share of the optimized one, low-stratum flips per strategy and graph) | `run_p1_prop.py` |
 | `../trustguard_casestudy_{otc,alpha}{,_node2vec}{,_testdeg}.json` | E15 | Section VI-A (TrustGuard case study: reproduction of its Fig. 3 MCC, label swap and placement under retraining, single-edge test with robust aggregation off and on); Sections I, IV (Check 2 bound), VI-H (the five-run rates) and X; Supplement L and Tables S16 to S18 | `run_trustguard_casestudy.py` (`--features node2vec`, `--attack-degree test`); `report_trustguard_casestudy.py --tables` prints the summaries |
 
 ## Naming and notes
@@ -66,6 +67,12 @@ paper.
   which the paper calls Epinions-S.
 - `_s10` and `_s5` mark results pooled over ten or five runs (independently trained models).
 - In `trustguard_casestudy_*.json` (E15), `_node2vec` marks the node2vec input features (otherwise the release's random features) and `_testdeg` the attack size counted in the test snapshot (otherwise in the training window). The keys `mean` and `robust` are robust aggregation off and on; the conditions `inwin`, `app` and `graph` are the in-window, loss-only and encoder-only placements, `clean2` is the identical retraining, and `evasion` is the single-edge test. Each file covers seeds 40 to 44 and has a log of the same name.
+- `p1_sota_prop_*.json` (E10 rerun) keep the key names of `p1_sota*.json`: `counterfactual` is the
+  optimized strategy, `expert` the heuristic, `batch_trust` the batch gradient, `mean_dr` and
+  `mean_dr_appended` the in-window and out-of-window total shifts. New are `mean_dr_prop` (the
+  propagation-only shift), `share_prop_pct`, `flips` (`low_tot` and `low_prop`: low-stratum targets
+  flipped under each score) and the per-target `rows`; `batch_neutral` is not in the paper. Each
+  file has a log of the same name.
 - In `detector_calib.json`, the field `held_out_snapshots` reads `s7-s9`, but the calibration
   edges are those of snapshot s7 whose two endpoints appear in the processed window (1,046 on
   OTC, 883 on Alpha); the paper describes them so.
