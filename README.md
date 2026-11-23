@@ -37,7 +37,7 @@ code/
   analyze_*.py, make_*_table.py, make_tables.py, make_stats_paragraph.py
                           summaries and LaTeX table rows computed from the result files
   silent_noop_demo.py     the placement demo of Section 5
-  check_dsn_numbers.py    checks 119 numbers in the paper's LaTeX source and 130 in the
+  check_dsn_numbers.py    checks 130 numbers in the paper's LaTeX source and 154 in the
                           supplement's against the result files
   make_epinions_dated.py  builds Epinions-D and the other dated Epinions graphs from the raw release
   tests/                  unit tests (pytest)
@@ -153,12 +153,12 @@ scripts write versions with the older labels: `make_evidence_figure.py` writes a
 three-panel figure (`figures/fig_evidence.pdf`, not in the paper), and `make_cohort_figure.py`
 writes over `figures/fig_cohort.pdf`, the paper's Fig. 4. Rerun `make_dsn_figures.py` afterwards.
 
-`code/check_dsn_numbers.py` checks 119 numbers in the paper's text and 130 in the supplement's
+`code/check_dsn_numbers.py` checks 130 numbers in the paper's text and 154 in the supplement's
 against the result files, those of the revision experiments in `results/` included. It reads the
 LaTeX sources of the paper and the supplement, which are not part of this artifact:
 `GRAIL_PAPER_TEX=<paper>.tex python code/check_dsn_numbers.py` takes the supplement from
 `supplement.tex` next to the paper, or from the file that `GRAIL_SUPP_TEX` names, and prints
-`119/119 number checks pass in the paper, 130/130 in the supplement`.
+`130/130 number checks pass in the paper, 154/154 in the supplement`.
 
 ## 5. Placement demo (one GPU, about 1 minute; a CPU takes about 9 minutes)
 
